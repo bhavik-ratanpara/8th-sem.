@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import type { CreateRecipeInput } from '@/ai/flows/create-recipe-flow';
+import { type CreateRecipeInput } from '@/ai/schemas';
 
 const formSchema = z.object({
   dishName: z.string().min(2, 'Please enter a dish name.'),

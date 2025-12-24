@@ -1,21 +1,19 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useToast } from '@/hooks/use-toast';
 import { createRecipeAction } from '@/app/actions';
 import { Icons } from '@/components/icons';
 import { RecipeForm } from '@/components/recipe-form';
 import { RecipeDisplay } from '@/components/recipe-display';
-import { type CreateRecipeInput } from '@/ai/flows/create-recipe-flow';
+import { type CreateRecipeInput, type CreateRecipeOutput } from '@/ai/schemas';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 
 export default function Home() {
-  const [recipe, setRecipe] = useState<string | null>(null);
+  const [recipe, setRecipe] = useState<CreateRecipeOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentYear, setCurrentYear] = useState<number | null>(null);
-  const { toast } = useToast();
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear());
@@ -69,7 +67,7 @@ export default function Home() {
           )}
 
           <section className="mt-8">
-            <RecipeDisplay recipe={recipe} isLoading={isLoading} />
+            <RecipeDisplay recipe={recipe} setRecipe={setRecipe} isLoading={isLoading} />
           </section>
         </div>
       </main>

@@ -1,6 +1,8 @@
 'use server';
 
-import { createRecipe, type CreateRecipeInput } from '@/ai/flows/create-recipe-flow';
+import { createRecipe, type CreateRecipeOutput } from '@/ai/flows/create-recipe-flow';
+import { regenerateInstructions } from '@/ai/flows/regenerate-instructions-flow';
+import { type CreateRecipeInput, type RegenerateInstructionsInput } from '@/ai/schemas';
 import { z } from 'zod';
 
 const RecipeSchema = z.object({
@@ -11,7 +13,7 @@ const RecipeSchema = z.object({
     diet: z.enum(['Vegetarian', 'Non-Vegetarian']),
 });
 
-export async function createRecipeAction(input: CreateRecipeInput): Promise<string> {
+export async function createRecipeAction(input: CreateRecipeInput): Promise<CreateRecipeOutput> {
   const validationResult = RecipeSchema.safeParse(input);
 
   if (!validationResult.success) {
@@ -20,9 +22,19 @@ export async function createRecipeAction(input: CreateRecipeInput): Promise<stri
 
   try {
     const result = await createRecipe(validationResult.data);
-    return result.recipe;
+    return result;
   } catch (error) {
     console.error('Error creating recipe:', error);
     throw new Error('An unexpected error occurred while generating the recipe. Please try again later.');
   }
+}
+
+export async function regenerateInstructionsAction(input: RegenerateInstructionsInput): Promise<string> {
+    try {
+        const result = await regenerateInstructions(input);
+        return result.instructions;
+    } catch (error) {
+        console.error('Error regenerating instructions:', error);
+        throw new Error('An unexpected error occurred while regenerating the instructions. Please try again later.');
+    }
 }

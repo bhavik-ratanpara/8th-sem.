@@ -1,11 +1,16 @@
+'use client';
+
 import { ChefHat } from 'lucide-react';
 import { Card, CardContent, CardHeader } from './ui/card';
 import { Skeleton } from './ui/skeleton';
 import { RecipeCard } from './recipe-card';
 import { useEffect, useState } from 'react';
+import { type CreateRecipeOutput } from '@/ai/schemas';
+import { regenerateInstructionsAction } from '@/app/actions';
 
 type RecipeDisplayProps = {
-  recipe: string | null;
+  recipe: CreateRecipeOutput | null;
+  setRecipe: (recipe: CreateRecipeOutput | null) => void;
   isLoading: boolean;
 };
 
@@ -30,25 +35,45 @@ const RecipeSkeleton = () => (
   </Card>
 );
 
-export function RecipeDisplay({ recipe, isLoading }: RecipeDisplayProps) {
-  const [displayedRecipe, setDisplayedRecipe] = useState('');
-  
+export function RecipeDisplay({ recipe, setRecipe, isLoading }: RecipeDisplayProps) {
+  const [displayedRecipe, setDisplayedRecipe] = useState<CreateRecipeOutput | null>(null);
+  const [isRegenerating, setIsRegenerating] = useState(false);
+  const [ingredientsChanged, setIngredientsChanged] = useState(false);
+
   useEffect(() => {
-    if (!recipe) return;
-
-    let charIndex = 0;
-    setDisplayedRecipe('');
-
-    const intervalId = setInterval(() => {
-      setDisplayedRecipe(prev => prev + recipe[charIndex]);
-      charIndex++;
-      if (charIndex >= recipe.length) {
-        clearInterval(intervalId);
-      }
-    }, 10);
-
-    return () => clearInterval(intervalId);
+    if (recipe) {
+      setDisplayedRecipe(recipe);
+      setIngredientsChanged(false);
+    }
   }, [recipe]);
+
+  const handleIngredientRemove = (ingredientToRemove: string) => {
+    if (!displayedRecipe) return;
+
+    const newIngredients = displayedRecipe.ingredients.filter(
+      (ingredient) => ingredient !== ingredientToRemove
+    );
+    setDisplayedRecipe({ ...displayedRecipe, ingredients: newIngredients });
+    setIngredientsChanged(true);
+  };
+  
+  const handleRegenerate = async () => {
+    if (!displayedRecipe) return;
+    setIsRegenerating(true);
+    try {
+        const newInstructions = await regenerateInstructionsAction({
+            dishName: displayedRecipe.title,
+            ingredients: displayedRecipe.ingredients,
+        });
+        setDisplayedRecipe({ ...displayedRecipe, instructions: newInstructions });
+        setIngredientsChanged(false);
+    } catch (error) {
+        console.error("Failed to regenerate instructions", error);
+        // Optionally, show an error to the user
+    } finally {
+        setIsRegenerating(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -59,7 +84,7 @@ export function RecipeDisplay({ recipe, isLoading }: RecipeDisplayProps) {
     );
   }
 
-  if (!recipe) {
+  if (!displayedRecipe) {
     return (
        <div className="text-center py-10 px-4 border-2 border-dashed border-border rounded-lg bg-card/50">
         <ChefHat className="mx-auto h-12 w-12 text-muted-foreground" />
@@ -70,7 +95,13 @@ export function RecipeDisplay({ recipe, isLoading }: RecipeDisplayProps) {
 
   return (
     <div className="space-y-4">
-      <RecipeCard recipeString={displayedRecipe} />
+      <RecipeCard 
+        recipe={displayedRecipe} 
+        onIngredientRemove={handleIngredientRemove}
+        onRegenerate={handleRegenerate}
+        isRegenerating={isRegenerating}
+        ingredientsChanged={ingredientsChanged}
+      />
     </div>
   );
 }
