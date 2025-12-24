@@ -19,11 +19,11 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { type CreateRecipeInput } from '@/ai/schemas';
 
 const formSchema = z.object({
-  dishName: z.string().min(2, 'Please enter a dish name.'),
-  servings: z.coerce.number().min(1, 'Please enter a number of servings.'),
-  location: z.string().min(2, 'Please enter a location.'),
-  language: z.string().min(2, 'Please enter a language.'),
-  diet: z.enum(['Vegetarian', 'Non-Vegetarian']),
+  dishName: z.string().min(1, 'Dish name is required.'),
+  servings: z.coerce.number().min(1, 'Number of servings must be at least 1.'),
+  location: z.string().min(1, 'State, Country is required.'),
+  language: z.string().min(1, 'Language is required.'),
+  diet: z.enum(['Vegetarian', 'Non-Vegetarian'], { required_error: 'Please select a dietary preference.' }),
 });
 
 type RecipeFormProps = {
@@ -35,11 +35,10 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      dishName: 'pizza',
-      servings: 4,
-      location: 'india',
-      language: 'English',
-      diet: 'Vegetarian',
+      dishName: '',
+      servings: undefined,
+      location: '',
+      language: '',
     },
   });
 
@@ -77,7 +76,7 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
               <FormItem>
                 <FormLabel className="flex items-center gap-2"><Users size={16} /> Number of Servings</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="e.g., 4" {...field} />
+                  <Input type="number" placeholder="e.g., 4" {...field} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} value={field.value ?? ''} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
