@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from './ui/card';
 import { Skeleton } from './ui/skeleton';
 import { RecipeCard } from './recipe-card';
 import { useEffect, useState } from 'react';
-import { type CreateRecipeOutput } from '@/ai/schemas';
+import { type CreateRecipeOutput, type Ingredient } from '@/ai/schemas';
 import { regenerateInstructionsAction } from '@/app/actions';
 
 type RecipeDisplayProps = {
@@ -39,19 +39,23 @@ export function RecipeDisplay({ recipe, setRecipe, isLoading }: RecipeDisplayPro
   const [displayedRecipe, setDisplayedRecipe] = useState<CreateRecipeOutput | null>(null);
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [ingredientsChanged, setIngredientsChanged] = useState(false);
+  const [servings, setServings] = useState(1);
 
   useEffect(() => {
     if (recipe) {
       setDisplayedRecipe(recipe);
+      setServings(recipe.servings);
       setIngredientsChanged(false);
+    } else {
+      setDisplayedRecipe(null);
     }
   }, [recipe]);
 
-  const handleIngredientRemove = (ingredientToRemove: string) => {
+  const handleIngredientRemove = (ingredientToRemove: Ingredient) => {
     if (!displayedRecipe) return;
 
     const newIngredients = displayedRecipe.ingredients.filter(
-      (ingredient) => ingredient !== ingredientToRemove
+      (ingredient) => ingredient.name !== ingredientToRemove.name
     );
     setDisplayedRecipe({ ...displayedRecipe, ingredients: newIngredients });
     setIngredientsChanged(true);
@@ -63,7 +67,7 @@ export function RecipeDisplay({ recipe, setRecipe, isLoading }: RecipeDisplayPro
     try {
         const newInstructions = await regenerateInstructionsAction({
             dishName: displayedRecipe.title,
-            ingredients: displayedRecipe.ingredients,
+            ingredients: displayedRecipe.ingredients.map(i => i.name),
         });
         setDisplayedRecipe({ ...displayedRecipe, instructions: newInstructions });
         setIngredientsChanged(false);
@@ -101,6 +105,8 @@ export function RecipeDisplay({ recipe, setRecipe, isLoading }: RecipeDisplayPro
         onRegenerate={handleRegenerate}
         isRegenerating={isRegenerating}
         ingredientsChanged={ingredientsChanged}
+        servings={servings}
+        onServingsChange={setServings}
       />
     </div>
   );

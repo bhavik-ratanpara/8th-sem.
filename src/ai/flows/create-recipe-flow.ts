@@ -21,6 +21,7 @@ const prompt = ai.definePrompt({
   
 The entire output, including the title, description, ingredients, and instructions, must be in the specified language.
 The step-by-step instructions must be a numbered list in markdown format. Each step must be on a new line (e.g., 1. Chop vegetables.\\n2. Heat oil.).
+For ingredients, provide the name, quantity, and unit for each item.
 
 Dish Name: {{{dishName}}}
 Number of Servings: {{{servings}}}
@@ -38,6 +39,10 @@ const createRecipeFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await prompt(input);
+    // Ensure the output includes the original servings count
+    if (output) {
+      output.servings = input.servings;
+    }
     return output!;
   }
 );
