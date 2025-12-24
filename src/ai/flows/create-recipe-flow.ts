@@ -17,7 +17,9 @@ const prompt = ai.definePrompt({
   name: 'createRecipePrompt',
   input: {schema: CreateRecipeInputSchema},
   output: {schema: CreateRecipeOutputSchema},
-  prompt: `You are an expert chef. Create a recipe for the following dish. Please provide a title, a short description, a list of ingredients, and step-by-step instructions.
+  prompt: `You are an expert chef. Create a recipe for the following dish. 
+  
+The entire output, including the title, description, ingredients, and instructions, must be in the specified language.
 
 Dish Name: {{{dishName}}}
 Number of Servings: {{{servings}}}
