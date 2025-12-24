@@ -8,15 +8,18 @@ import { RecipeDisplay } from '@/components/recipe-display';
 import { type CreateRecipeInput, type CreateRecipeOutput } from '@/ai/schemas';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Home() {
   const [recipe, setRecipe] = useState<CreateRecipeOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentYear, setCurrentYear] = useState<number | null>(null);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear());
+    setIsClient(true);
   }, []);
 
   const handleGenerateRecipe = async (input: CreateRecipeInput) => {
@@ -51,7 +54,21 @@ export default function Home() {
       <main className="flex-grow container mx-auto px-4 pb-16">
         <div className="max-w-3xl mx-auto">
           <section className="bg-card p-6 md:p-8 rounded-lg shadow-lg border border-border">
-            <RecipeForm onSubmit={handleGenerateRecipe} isLoading={isLoading} />
+            {isClient ? (
+              <RecipeForm onSubmit={handleGenerateRecipe} isLoading={isLoading} />
+            ) : (
+              <div className="space-y-6">
+                <Skeleton className="h-8 w-1/3" />
+                <div className="grid md:grid-cols-2 gap-6">
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                </div>
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-12 w-full" />
+              </div>
+            )}
           </section>
 
           {error && (
