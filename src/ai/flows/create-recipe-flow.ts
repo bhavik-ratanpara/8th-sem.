@@ -20,6 +20,7 @@ const prompt = ai.definePrompt({
   prompt: `You are an expert chef. Create a recipe for the following dish. 
   
 The entire output, including the title, description, ingredients, and instructions, must be in the specified language.
+The step-by-step instructions must be a numbered list in markdown format (e.g., 1. Chop vegetables. 2. Heat oil.).
 
 Dish Name: {{{dishName}}}
 Number of Servings: {{{servings}}}

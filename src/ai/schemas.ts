@@ -18,7 +18,7 @@ export const CreateRecipeOutputSchema = z.object({
     title: z.string().describe('The title of the recipe.'),
     description: z.string().describe('A short, engaging description of the dish.'),
     ingredients: z.array(z.string()).describe('A list of ingredients for the recipe.'),
-    instructions: z.string().describe('The step-by-step instructions for the recipe in markdown format.'),
+    instructions: z.string().describe('The step-by-step instructions for the recipe, formatted as a numbered list in markdown.'),
 });
 export type CreateRecipeOutput = z.infer<typeof CreateRecipeOutputSchema>;
 
@@ -30,6 +30,6 @@ export const RegenerateInstructionsInputSchema = z.object({
 export type RegenerateInstructionsInput = z.infer<typeof RegenerateInstructionsInputSchema>;
 
 export const RegenerateInstructionsOutputSchema = z.object({
-  instructions: z.string().describe('The newly generated step-by-step instructions in markdown format.'),
+  instructions: z.string().describe('The newly generated step-by-step instructions, formatted as a numbered list in markdown.'),
 });
 export type RegenerateInstructionsOutput = z.infer<typeof RegenerateInstructionsOutputSchema>;
