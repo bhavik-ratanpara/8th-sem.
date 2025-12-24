@@ -39,13 +39,13 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <header className="py-12">
+      <header className="py-8 md:py-12">
         <div className="container mx-auto px-4 text-center">
-          <Icons.Logo className="w-20 h-20 mx-auto mb-4 text-primary" />
-          <h1 className="text-5xl md:text-6xl font-headline font-bold">
+          <Icons.Logo className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 text-primary" />
+          <h1 className="text-4xl md:text-6xl font-headline font-bold">
             COOKING LAB
           </h1>
-          <p className="text-muted-foreground mt-2 text-lg max-w-2xl mx-auto">
+          <p className="text-muted-foreground mt-2 text-md md:text-lg max-w-2xl mx-auto">
             Your personal AI chef. Create any recipe, for any number of people, from anywhere in the world.
           </p>
         </div>

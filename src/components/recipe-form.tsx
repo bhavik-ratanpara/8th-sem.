@@ -52,11 +52,11 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
         <div className="flex items-center gap-2 mb-4">
             <Utensils className="w-6 h-6 text-primary" />
-            <h2 className="text-2xl font-headline font-bold">CREATE A NEW RECIPE</h2>
+            <h2 className="text-xl md:text-2xl font-headline font-bold">CREATE A NEW RECIPE</h2>
         </div>
-        <p className="text-muted-foreground -mt-2 mb-6">Fill in the details below and let our AI chef craft a recipe for you.</p>
+        <p className="text-muted-foreground -mt-2 mb-6 text-sm md:text-base">Fill in the details below and let our AI chef craft a recipe for you.</p>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
             name="dishName"
@@ -121,7 +121,7 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
                 <RadioGroup
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                  className="flex flex-col space-y-1"
+                  className="flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0"
                 >
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>

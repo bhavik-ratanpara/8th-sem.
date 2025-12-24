@@ -26,7 +26,7 @@ Remaining Ingredients:
 - {{{this}}}
 {{/each}}
 
-Please generate new step-by-step instructions for the dish using only the remaining ingredients. Provide the instructions in markdown format.
+Please generate new step-by-step instructions for the dish using only the remaining ingredients. The instructions must be a numbered list in markdown format (e.g., 1. Chop vegetables. 2. Heat oil.).
 `,
 });
 
