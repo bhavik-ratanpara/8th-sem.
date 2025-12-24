@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { createRecipeAction } from '@/app/actions';
 import { Icons } from '@/components/icons';
@@ -14,7 +14,12 @@ export default function Home() {
   const [recipe, setRecipe] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentYear, setCurrentYear] = useState<number | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
 
   const handleGenerateRecipe = async (input: CreateRecipeInput) => {
     setIsLoading(true);
@@ -70,7 +75,7 @@ export default function Home() {
       </main>
 
       <footer className="text-center p-6 text-muted-foreground text-sm">
-        <p>&copy; {new Date().getFullYear()} Cooking Lab. All rights reserved.</p>
+        <p>&copy; {currentYear} Cooking Lab. All rights reserved.</p>
       </footer>
     </div>
   );
