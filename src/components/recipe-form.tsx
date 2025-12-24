@@ -87,7 +87,7 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
             name="location"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="flex items-center gap-2"><MapPin size={16} /> State, Country</FormLabel>
+                <FormLabel className="flex items-center gap-2"><MapPin size={16} /> State, Country (For specific taste)</FormLabel>
                 <FormControl>
                   <Input placeholder="e.g., California, USA" {...field} />
                 </FormControl>
