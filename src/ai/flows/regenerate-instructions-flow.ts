@@ -26,7 +26,9 @@ Remaining Ingredients:
 - {{{this}}}
 {{/each}}
 
-Please generate new step-by-step instructions for the dish using only the remaining ingredients. The instructions must be a numbered list in markdown format. Each step must be on a new line (e.g., 1. Chop vegetables.\\n2. Heat oil.).
+Please generate new step-by-step instructions for the dish using only the remaining ingredients.
+The instructions must be a numbered list in markdown format. Crucially, each step must be separated by a newline character (\\n).
+For example: "1. Do this.\\n2. Do that.\\n3. Do another thing."
 `,
 });
 
