@@ -34,7 +34,7 @@ export function RecipeCard({ recipe, onIngredientRemove, onRegenerate, isRegener
             {recipe.ingredients.map((ingredient, index) => (
               <li key={index} className="flex items-center justify-between group">
                 <span>- {ingredient}</span>
-                <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100" onClick={() => onIngredientRemove(ingredient)}>
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onIngredientRemove(ingredient)}>
                   <Trash2 className="h-4 w-4 text-destructive" />
                 </Button>
               </li>

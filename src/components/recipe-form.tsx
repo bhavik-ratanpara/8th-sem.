@@ -142,7 +142,7 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
           )}
         />
 
-        <Button type="submit" disabled={isLoading} className="w-full text-lg py-6 bg-primary hover:bg-primary/90 text-primary-foreground">
+        <Button type="submit" disabled={isLoading} className="w-full text-base md:text-lg py-5 md:py-6 bg-primary hover:bg-primary/90 text-primary-foreground">
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
