@@ -39,6 +39,7 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
       servings: undefined,
       location: '',
       language: '',
+      diet: 'Vegetarian',
     },
   });
 
