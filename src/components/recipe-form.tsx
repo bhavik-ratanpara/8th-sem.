@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Loader2, Utensils, MapPin, Languages, Users, Vegan, Beef } from 'lucide-react';
+import { Loader2, Utensils, MapPin, Languages, Users, Vegan, Beef, UtensilsCrossed } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Form,
