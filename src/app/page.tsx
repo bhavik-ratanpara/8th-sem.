@@ -38,7 +38,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
+    <div className="flex flex-col min-h-screen text-foreground">
       <header className="py-8 md:py-12">
         <div className="container mx-auto px-4 text-center">
           <Icons.Logo className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 text-primary" />
