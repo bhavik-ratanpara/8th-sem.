@@ -42,8 +42,10 @@ export default function Home() {
       <header className="py-8 md:py-12">
         <div className="container mx-auto px-4 text-center">
           <Icons.Logo className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 text-primary" />
-          <h1 className="text-4xl md:text-5xl font-headline font-bold">
-            COOKING LAB
+          <h1 className="text-4xl md:text-5xl font-headline font-bold wave-text">
+            {'COOKING LAB'.split('').map((letter, index) => (
+              <span key={index}>{letter === ' ' ? '\u00A0' : letter}</span>
+            ))}
           </h1>
           <p className="text-muted-foreground mt-2 text-sm md:text-base max-w-2xl mx-auto">
             Your personal AI chef. Create any recipe, for any number of people, from anywhere in the world.
