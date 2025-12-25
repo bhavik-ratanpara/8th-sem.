@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
+import { BackgroundAnimation } from '@/components/background-animation';
 
 export const metadata: Metadata = {
   title: 'Cooking Lab',
@@ -23,7 +24,8 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        {children}
+        <BackgroundAnimation />
+        <main className="relative z-10">{children}</main>
         <Toaster />
       </body>
     </html>
