@@ -2,7 +2,8 @@
 
 import { createRecipe, type CreateRecipeOutput } from '@/ai/flows/create-recipe-flow';
 import { regenerateInstructions } from '@/ai/flows/regenerate-instructions-flow';
-import { type CreateRecipeInput, type RegenerateInstructionsInput } from '@/ai/schemas';
+import { suggestDishes } from '@/ai/flows/suggest-dishes-flow';
+import { type CreateRecipeInput, type RegenerateInstructionsInput, type SuggestDishesInput, type SuggestDishesOutput } from '@/ai/schemas';
 import { z } from 'zod';
 
 const RecipeSchema = z.object({
@@ -36,5 +37,15 @@ export async function regenerateInstructionsAction(input: RegenerateInstructions
     } catch (error) {
         console.error('Error regenerating instructions:', error);
         throw new Error('An unexpected error occurred while regenerating the instructions. Please try again later.');
+    }
+}
+
+export async function suggestDishesAction(input: SuggestDishesInput): Promise<SuggestDishesOutput> {
+    try {
+        const result = await suggestDishes(input);
+        return result;
+    } catch (error) {
+        console.error('Error suggesting dishes:', error);
+        throw new Error('An unexpected error occurred while generating suggestions. Please try again later.');
     }
 }

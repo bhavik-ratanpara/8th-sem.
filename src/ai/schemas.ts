@@ -42,3 +42,21 @@ export const RegenerateInstructionsOutputSchema = z.object({
   instructions: z.string().describe('The newly generated step-by-step instructions, formatted as a numbered list in markdown.'),
 });
 export type RegenerateInstructionsOutput = z.infer<typeof RegenerateInstructionsOutputSchema>;
+
+
+// Schema for suggesting dishes
+export const SuggestDishesInputSchema = z.object({
+  thoughts: z.string().describe("The user's abstract thoughts, mood, or cravings."),
+});
+export type SuggestDishesInput = z.infer<typeof SuggestDishesInputSchema>;
+
+export const DishSuggestionSchema = z.object({
+    dish_name: z.string().describe('Name of the Dish'),
+    description: z.string().describe("A short, appetizing one-line description of why this fits the user's thought."),
+    difficulty: z.enum(['Easy', 'Medium', 'Hard']).describe('The difficulty to prepare the dish.'),
+});
+
+export const SuggestDishesOutputSchema = z.object({
+  suggestions: z.array(DishSuggestionSchema),
+});
+export type SuggestDishesOutput = z.infer<typeof SuggestDishesOutputSchema>;

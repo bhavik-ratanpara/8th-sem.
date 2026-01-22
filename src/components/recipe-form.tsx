@@ -17,6 +17,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { type CreateRecipeInput } from '@/ai/schemas';
+import { useEffect } from 'react';
 
 const formSchema = z.object({
   dishName: z.string().min(1, 'Dish name is required.'),
@@ -29,9 +30,10 @@ const formSchema = z.object({
 type RecipeFormProps = {
   onSubmit: (values: CreateRecipeInput) => void;
   isLoading: boolean;
+  selectedDishName?: string | null;
 };
 
-export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
+export function RecipeForm({ onSubmit, isLoading, selectedDishName }: RecipeFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,6 +44,12 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
       diet: 'Vegetarian',
     },
   });
+  
+  useEffect(() => {
+    if (selectedDishName) {
+      form.setValue('dishName', selectedDishName);
+    }
+  }, [selectedDishName, form]);
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     onSubmit(values);

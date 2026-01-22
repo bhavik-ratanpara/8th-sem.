@@ -9,6 +9,7 @@ import { type CreateRecipeInput, type CreateRecipeOutput } from '@/ai/schemas';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { DishSuggester } from '@/components/dish-suggester';
 
 export default function Home() {
   const [recipe, setRecipe] = useState<CreateRecipeOutput | null>(null);
@@ -16,6 +17,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [currentYear, setCurrentYear] = useState<number | null>(null);
   const [isClient, setIsClient] = useState(false);
+  const [selectedDish, setSelectedDish] = useState<string | null>(null);
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear());
@@ -36,6 +38,13 @@ export default function Home() {
       setIsLoading(false);
     }
   };
+  
+  const handleSuggestionSelect = (dishName: string) => {
+    setSelectedDish(dishName);
+    // Scroll to the recipe form
+    document.getElementById('recipe-form')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
 
   return (
     <div className="flex flex-col min-h-screen text-foreground">
@@ -55,9 +64,16 @@ export default function Home() {
 
       <main className="flex-grow container mx-auto px-4 pb-16">
         <div className="max-w-3xl mx-auto">
-          <section className="bg-card p-6 md:p-8 rounded-lg shadow-lg border border-border">
+
+          {isClient ? (
+              <DishSuggester onSuggestionSelect={handleSuggestionSelect} />
+            ) : (
+              <Skeleton className="h-72 w-full mb-8" />
+          )}
+
+          <section id="recipe-form" className="bg-card p-6 md:p-8 rounded-lg shadow-lg border border-border">
             {isClient ? (
-              <RecipeForm onSubmit={handleGenerateRecipe} isLoading={isLoading} />
+              <RecipeForm onSubmit={handleGenerateRecipe} isLoading={isLoading} selectedDishName={selectedDish} />
             ) : (
               <div className="space-y-6">
                 <Skeleton className="h-8 w-1/3" />
