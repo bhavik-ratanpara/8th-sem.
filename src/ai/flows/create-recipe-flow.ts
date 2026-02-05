@@ -30,8 +30,8 @@ State, Country: {{{location}}}
 Language: {{{language}}}
 Dietary Preference: {{{diet}}}
 {{#if modifications}}
-Important: The user has provided the following constraints or modifications. You must adhere to them.
-Constraints: {{{modifications}}}
+CRITICAL INSTRUCTION: The user has provided specific modifications. You MUST follow these instructions exactly as written. They are absolute requirements, not suggestions. Failure to adhere to these constraints will result in a failed task.
+Constraints to follow: {{{modifications}}}
 {{/if}}
 `,
 });
