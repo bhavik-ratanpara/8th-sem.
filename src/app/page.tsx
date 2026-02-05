@@ -29,7 +29,13 @@ export default function Home() {
     setIsLoading(true);
     setError(null);
     setRecipe(null);
-    setOriginalRecipeInput(input);
+    
+    // Only save the base recipe details on the very first request.
+    // Regeneration requests will have the `modifications` property.
+    if (!input.modifications) {
+      setOriginalRecipeInput(input);
+    }
+
     try {
       const newRecipe = await createRecipeAction(input);
       setRecipe(newRecipe);

@@ -12,6 +12,7 @@ const RecipeSchema = z.object({
     location: z.string().min(1, 'State, Country is required.'),
     language: z.string().min(1, 'Language is required.'),
     diet: z.enum(['Vegetarian', 'Non-Vegetarian'], { required_error: 'Dietary preference is required.' }),
+    modifications: z.string().optional(),
 });
 
 export async function createRecipeAction(input: CreateRecipeInput): Promise<CreateRecipeOutput> {
