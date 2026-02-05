@@ -1,17 +1,21 @@
 'use client';
 
-import { ChefHat } from 'lucide-react';
+import { ChefHat, Loader2, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardHeader } from './ui/card';
 import { Skeleton } from './ui/skeleton';
 import { RecipeCard } from './recipe-card';
 import { useEffect, useState } from 'react';
-import { type CreateRecipeOutput, type Ingredient } from '@/ai/schemas';
+import { type CreateRecipeOutput, type Ingredient, type CreateRecipeInput } from '@/ai/schemas';
 import { regenerateInstructionsAction } from '@/app/actions';
+import { Textarea } from './ui/textarea';
+import { Button } from './ui/button';
 
 type RecipeDisplayProps = {
   recipe: CreateRecipeOutput | null;
   setRecipe: (recipe: CreateRecipeOutput | null) => void;
   isLoading: boolean;
+  originalInput: CreateRecipeInput | null;
+  onRegenerate: (input: CreateRecipeInput) => Promise<void>;
 };
 
 const RecipeSkeleton = () => (
@@ -35,11 +39,12 @@ const RecipeSkeleton = () => (
   </Card>
 );
 
-export function RecipeDisplay({ recipe, setRecipe, isLoading }: RecipeDisplayProps) {
+export function RecipeDisplay({ recipe, setRecipe, isLoading, originalInput, onRegenerate }: RecipeDisplayProps) {
   const [displayedRecipe, setDisplayedRecipe] = useState<CreateRecipeOutput | null>(null);
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [ingredientsChanged, setIngredientsChanged] = useState(false);
   const [servings, setServings] = useState(1);
+  const [modificationText, setModificationText] = useState('');
 
   useEffect(() => {
     if (recipe) {
@@ -61,7 +66,7 @@ export function RecipeDisplay({ recipe, setRecipe, isLoading }: RecipeDisplayPro
     setIngredientsChanged(true);
   };
   
-  const handleRegenerate = async () => {
+  const handleInstructionRegenerate = async () => {
     if (!displayedRecipe) return;
     setIsRegenerating(true);
     try {
@@ -79,7 +84,13 @@ export function RecipeDisplay({ recipe, setRecipe, isLoading }: RecipeDisplayPro
     }
   };
 
-  if (isLoading) {
+  const handleRecipeRegenerate = async () => {
+    if (!originalInput || !modificationText.trim()) return;
+    await onRegenerate({ ...originalInput, modifications: modificationText });
+    setModificationText('');
+  };
+
+  if (isLoading && !recipe) {
     return (
       <div className="space-y-8">
         <h2 className="text-2xl font-headline font-semibold text-center text-primary">Crafting your recipe...</h2>
@@ -102,12 +113,34 @@ export function RecipeDisplay({ recipe, setRecipe, isLoading }: RecipeDisplayPro
       <RecipeCard 
         recipe={displayedRecipe} 
         onIngredientRemove={handleIngredientRemove}
-        onRegenerate={handleRegenerate}
+        onRegenerate={handleInstructionRegenerate}
         isRegenerating={isRegenerating}
         ingredientsChanged={ingredientsChanged}
         servings={servings}
         onServingsChange={setServings}
       />
+
+      <div className="bg-card p-6 md:p-8 rounded-lg shadow-lg border border-border">
+          <h3 className="text-xl font-headline font-bold mb-4">Need to make a change?</h3>
+          <Textarea
+            value={modificationText}
+            onChange={(e) => setModificationText(e.target.value)}
+            placeholder="Don't have certain ingredients or equipment? Tell us what to avoid or substitute..."
+            rows={3}
+            className="text-base md:text-sm"
+          />
+          <Button
+            onClick={handleRecipeRegenerate}
+            disabled={isLoading || !modificationText.trim()}
+            className="w-full mt-4"
+          >
+            {isLoading ? (
+              <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Regenerating...</>
+            ) : (
+              <><RefreshCw className="mr-2 h-4 w-4" />Regenerate Recipe</>
+            )}
+          </Button>
+      </div>
     </div>
   );
 }

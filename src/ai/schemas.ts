@@ -19,6 +19,7 @@ export const CreateRecipeInputSchema = z.object({
     location: z.string().describe('The state and country to tailor the recipe to (e.g., for local ingredients).'),
     language: z.string().describe('The language the recipe should be written in.'),
     diet: z.enum(['Vegetarian', 'Non-Vegetarian']).describe('The dietary preference.'),
+    modifications: z.string().optional().describe("User-provided constraints or modifications for the recipe (e.g., 'no oven', 'allergic to nuts')."),
 });
 export type CreateRecipeInput = z.infer<typeof CreateRecipeInputSchema>;
 

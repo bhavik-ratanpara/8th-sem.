@@ -18,6 +18,7 @@ export default function Home() {
   const [currentYear, setCurrentYear] = useState<number | null>(null);
   const [isClient, setIsClient] = useState(false);
   const [selectedDish, setSelectedDish] = useState<string | null>(null);
+  const [originalRecipeInput, setOriginalRecipeInput] = useState<CreateRecipeInput | null>(null);
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear());
@@ -28,6 +29,7 @@ export default function Home() {
     setIsLoading(true);
     setError(null);
     setRecipe(null);
+    setOriginalRecipeInput(input);
     try {
       const newRecipe = await createRecipeAction(input);
       setRecipe(newRecipe);
@@ -102,7 +104,13 @@ export default function Home() {
           )}
 
           <section className="mt-8">
-            <RecipeDisplay recipe={recipe} setRecipe={setRecipe} isLoading={isLoading} />
+            <RecipeDisplay
+              recipe={recipe}
+              setRecipe={setRecipe}
+              isLoading={isLoading}
+              originalInput={originalRecipeInput}
+              onRegenerate={handleGenerateRecipe}
+            />
           </section>
         </div>
       </main>

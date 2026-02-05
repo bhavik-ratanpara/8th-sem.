@@ -29,6 +29,10 @@ Number of Servings: {{{servings}}}
 State, Country: {{{location}}}
 Language: {{{language}}}
 Dietary Preference: {{{diet}}}
+{{#if modifications}}
+Important: The user has provided the following constraints or modifications. You must adhere to them.
+Constraints: {{{modifications}}}
+{{/if}}
 `,
 });
 
