@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { createRecipeAction } from '@/app/actions';
-import { Icons } from '@/components/icons';
 import { RecipeForm } from '@/components/recipe-form';
 import { RecipeDisplay } from '@/components/recipe-display';
 import { type CreateRecipeInput, type CreateRecipeOutput } from '@/ai/schemas';
@@ -56,21 +55,19 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen text-foreground">
-      <header className="py-8 md:py-12">
-        <div className="container mx-auto px-4 text-center">
-          <Icons.Logo className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 text-primary" />
-          <h1 className="text-4xl md:text-5xl font-headline font-bold wave-text">
-            {'COOKING LAB'.split('').map((letter, index) => (
-              <span key={index}>{letter === ' ' ? '\u00A0' : letter}</span>
-            ))}
-          </h1>
-          <p className="text-muted-foreground mt-2 text-sm md:text-base max-w-2xl mx-auto">
-            Your personal AI chef. Create any recipe, for any number of people, from anywhere in the world.
-          </p>
-        </div>
-      </header>
 
-      <main className="flex-grow container mx-auto px-4 pb-16">
+      <main className="flex-grow container mx-auto px-4 pb-16 pt-8 md:pt-12">
+        <div className="text-center mb-8 md:mb-12">
+            <h1 className="text-4xl md:text-5xl font-headline font-bold wave-text">
+                {'COOKING LAB'.split('').map((letter, index) => (
+                <span key={index}>{letter === ' ' ? ' ' : letter}</span>
+                ))}
+            </h1>
+            <p className="text-muted-foreground mt-2 text-sm md:text-base max-w-2xl mx-auto">
+                Your personal AI chef. Create any recipe, for any number of people, from anywhere in the world.
+            </p>
+        </div>
+
         <div className="max-w-3xl mx-auto">
 
           {isClient ? (
