@@ -22,7 +22,7 @@ export async function GET(request: Request) {
   const searchQuery = `how to make ${query} recipe`;
   const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=${encodeURIComponent(
     searchQuery
-  )}&type=video&videoDuration=medium&order=viewCount&key=${YOUTUBE_API_KEY}`;
+  )}&type=video&videoDuration=medium&order=relevance&key=${YOUTUBE_API_KEY}`;
 
   try {
     const response = await fetch(url, { next: { revalidate: 3600 } }); // Cache for 1 hour
