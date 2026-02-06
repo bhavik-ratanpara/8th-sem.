@@ -19,10 +19,10 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'YouTube API key is missing from the server environment.' }, { status: 500 });
   }
   
-  const searchQuery = `${query} recipe`;
+  const searchQuery = `how to make ${query} recipe`;
   const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=${encodeURIComponent(
     searchQuery
-  )}&type=video&order=viewCount&key=${YOUTUBE_API_KEY}`;
+  )}&type=video&videoDuration=medium&order=viewCount&key=${YOUTUBE_API_KEY}`;
 
   try {
     const response = await fetch(url, { next: { revalidate: 3600 } }); // Cache for 1 hour
