@@ -22,7 +22,8 @@ const prompt = ai.definePrompt({
 The entire output, including the title, description, ingredients, and instructions, must be in the specified language.
 The step-by-step instructions must be a numbered list in markdown format. Crucially, each step must be separated by a newline character (\\n).
 For example: "1. Do this.\\n2. Do that.\\n3. Do another thing."
-For ingredients, provide the name, quantity, and unit for each item.
+
+CRITICAL: For ingredients, provide the name, quantity, and unit for each item. The quantities must be realistic and accurate for the specified number of servings. The core recipe and its quantities should not change if only the language is different.
 
 Dish Name: {{{dishName}}}
 Number of Servings: {{{servings}}}
