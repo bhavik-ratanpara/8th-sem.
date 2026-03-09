@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth, useFirestore } from '@/firebase';
 import { 
   signInWithEmailAndPassword, 
@@ -34,10 +34,15 @@ const loginSchema = z.object({
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const auth = useAuth();
   const db = useFirestore();
   const router = useRouter();
   const { toast } = useToast();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -102,6 +107,8 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
+
+  if (!isMounted) return null;
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-3.5rem)] px-4">
