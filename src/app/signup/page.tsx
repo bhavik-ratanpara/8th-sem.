@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAuth, useFirestore } from '@/firebase';
+import { useAuth, useFirestore, setDocumentNonBlocking } from '@/firebase';
 import { 
   createUserWithEmailAndPassword, 
   updateProfile,
   GoogleAuthProvider,
   signInWithPopup
 } from 'firebase/auth';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, serverTimestamp } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -55,8 +55,9 @@ export default function SignupPage() {
     },
   });
 
-  const createUserProfile = async (user: any, name: string) => {
-    await setDoc(doc(db, 'users', user.uid), {
+  const createUserProfile = (user: any, name: string) => {
+    // Non-blocking Firestore write to store non-sensitive profile info
+    setDocumentNonBlocking(doc(db, 'users', user.uid), {
       id: user.uid,
       email: user.email,
       displayName: name,
@@ -64,15 +65,16 @@ export default function SignupPage() {
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
       fridgeIngredientIds: [],
-    });
+    }, { merge: true });
   };
 
   const onSignup = async (values: z.infer<typeof signupSchema>) => {
     setIsLoading(true);
     try {
+      // Firebase Authentication securely handles the email and password
       const result = await createUserWithEmailAndPassword(auth, values.email, values.password);
       await updateProfile(result.user, { displayName: values.displayName });
-      await createUserProfile(result.user, values.displayName);
+      createUserProfile(result.user, values.displayName);
       router.push('/');
     } catch (error: any) {
       toast({
@@ -90,7 +92,7 @@ export default function SignupPage() {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      await createUserProfile(result.user, result.user.displayName || 'New Chef');
+      createUserProfile(result.user, result.user.displayName || 'New Chef');
       router.push('/');
     } catch (error: any) {
       toast({

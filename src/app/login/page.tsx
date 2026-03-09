@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAuth, useFirestore } from '@/firebase';
+import { useAuth, useFirestore, setDocumentNonBlocking } from '@/firebase';
 import { 
   signInWithEmailAndPassword, 
   GoogleAuthProvider, 
   signInWithPopup 
 } from 'firebase/auth';
-import { doc, setDoc, serverTimestamp, getDoc } from 'firebase/firestore';
+import { doc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -56,8 +56,9 @@ export default function LoginPage() {
     const userRef = doc(db, 'users', user.uid);
     const userDoc = await getDoc(userRef);
     
+    // Non-blocking update to sync user activity/existence
     if (!userDoc.exists()) {
-      await setDoc(userRef, {
+      setDocumentNonBlocking(userRef, {
         id: user.uid,
         email: user.email,
         displayName: user.displayName || 'New Chef',
@@ -67,7 +68,7 @@ export default function LoginPage() {
         fridgeIngredientIds: [],
       }, { merge: true });
     } else {
-      await setDoc(userRef, {
+      setDocumentNonBlocking(userRef, {
         updatedAt: serverTimestamp(),
       }, { merge: true });
     }
@@ -76,6 +77,7 @@ export default function LoginPage() {
   const onEmailLogin = async (values: z.infer<typeof loginSchema>) => {
     setIsLoading(true);
     try {
+      // Passwords are sent directly to Firebase Auth and never stored by our app
       const result = await signInWithEmailAndPassword(auth, values.email, values.password);
       await syncUserToFirestore(result.user);
       router.push('/');
