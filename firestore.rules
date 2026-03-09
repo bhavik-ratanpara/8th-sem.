@@ -1,0 +1,97 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * FRIDGE RECIPE SECURITY RULES - PROTOTYPING MODE
+     * 
+     * CORE PHILOSOPHY:
+     * This ruleset implements a strict user-ownership model designed for privacy and 
+     * relational integrity. It prioritizes secure authorization while maintaining 
+     * flexibility for data schema evolution during the prototyping phase.
+     * 
+     * DATA STRUCTURE:
+     * - /users/{userId}: Primary user profile. The document ID matches the Firebase Auth UID.
+     * - /users/{userId}/recipes/{recipeId}: Private recipes owned by the parent user.
+     * - /ingredients/{ingredientId}: A global master list of ingredients.
+     * 
+     * KEY SECURITY DECISIONS:
+     * 1. Path-Based Ownership: Authorization for user data and recipes is derived 
+     *    primarily from the document path wildcards, ensuring that users can only 
+     *    access their own specific data tree.
+     * 2. Relational Integrity: On document creation, the rules enforce that internal 
+     *    linkage fields (like `userId`) match the path wildcards and the authenticated 
+     *    user's UID.
+     * 3. Denormalization: The `userId` is stored directly on recipe documents to allow 
+     *    for efficient, single-document authorization checks without needing `get()` calls.
+     * 4. Restricted Master List: The `ingredients` collection is a read-only resource 
+     *    for authenticated users. No client-side writes are permitted to maintain the 
+     *    integrity of the master list.
+     */
+
+    // --- GLOBAL HELPER FUNCTIONS ---
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * Checks if the user owns the existing document and ensures the document exists.
+     * Used primarily for update and delete operations.
+     */
+    function isExistingOwner(userId) {
+      return resource != null && isOwner(userId);
+    }
+
+    // --- COLLECTION RULES ---
+
+    /**
+     * @description Rules for the User profile documents.
+     * @path /users/{userId}
+     * @allow Authenticated user (create) where request.auth.uid == userId.
+     * @deny User A (update) attempting to modify User B's profile.
+     * @principle Enforces strict ownership and path-to-data consistency for the root user entity.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Rules for the master ingredients list.
+     * @path /ingredients/{ingredientId}
+     * @allow Any signed-in user (get, list).
+     * @deny Any user (create, update, delete) - this is a read-only master list for clients.
+     * @principle Provides global read access for reference data while preventing unauthorized modifications.
+     */
+    match /ingredients/{ingredientId} {
+      allow get, list: if isSignedIn();
+      
+      // CRITICAL: Cannot implement owner-only writes. The 'Ingredient' entity is a master list 
+      // and does not have an 'ownerId' or 'authorId' field defined for user-management.
+      allow create, update, delete: if false; // TODO: Add admin-only roles or ownership fields if user-contributions are needed.
+    }
+
+    /**
+     * @description Rules for recipes stored within a user's private subcollection.
+     * @path /users/{userId}/recipes/{recipeId}
+     * @allow User (create) a recipe under their own path with their UID in the userId field.
+     * @deny User A (list) recipes under /users/userB/recipes.
+     * @principle Implements subcollection isolation and enforces immutable ownership links.
+     */
+    match /users/{userId}/recipes/{recipeId} {
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.userId == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isExistingOwner(userId);
+    }
+  }
+}
