@@ -1,71 +1,41 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Background: Soft Warm Beige (#FDFBF7) */
-    --background: 36 67% 98%;
-    --foreground: 24 7% 16%; /* Dark Charcoal */
+    /* High-End Dark Palette */
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
     
-    --card: 0 0% 100%;
-    --card-foreground: 24 7% 16%;
+    --card: 240 10% 6%;
+    --card-foreground: 0 0% 98%;
     
-    --popover: 0 0% 100%;
-    --popover-foreground: 24 7% 16%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
     
-    /* Primary: Burnt Orange (#BF511F) */
-    --primary: 19 72% 44%;
-    --primary-foreground: 36 67% 98%;
+    /* Premium Gold Accent (#D4AF37) */
+    --primary: 45 64% 52%;
+    --primary-foreground: 240 10% 3.9%;
     
-    --secondary: 36 30% 90%;
-    --secondary-foreground: 24 7% 16%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
     
-    --muted: 36 20% 94%;
-    --muted-foreground: 24 7% 40%;
+    --muted: 240 3.7% 12%;
+    --muted-foreground: 240 5% 64.9%;
     
-    /* Accent: Golden Yellow (#D4A017) */
-    --accent: 43 80% 46%;
-    --accent-foreground: 36 67% 98%;
+    --accent: 45 64% 52%;
+    --accent-foreground: 0 0% 98%;
     
-    --destructive: 0 84% 60%;
+    --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     
-    --border: 36 15% 85%;
-    --input: 36 15% 85%;
-    --ring: 19 72% 44%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 45 64% 52%;
     
-    --radius: 1rem;
-  }
-
-  .dark {
-    --background: 24 10% 10%;
-    --foreground: 36 67% 98%;
-    
-    --card: 24 10% 12%;
-    --card-foreground: 36 67% 98%;
-    
-    --popover: 24 10% 10%;
-    --popover-foreground: 36 67% 98%;
-    
-    --primary: 19 72% 44%;
-    --primary-foreground: 36 67% 98%;
-    
-    --secondary: 24 10% 20%;
-    --secondary-foreground: 36 67% 98%;
-    
-    --muted: 24 10% 15%;
-    --muted-foreground: 36 10% 70%;
-    
-    --accent: 43 80% 46%;
-    --accent-foreground: 36 67% 98%;
-    
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 0 0% 98%;
-    
-    --border: 24 10% 20%;
-    --input: 24 10% 20%;
-    --ring: 19 72% 44%;
+    --radius: 0.75rem;
   }
 }
 
@@ -81,38 +51,29 @@
   }
 }
 
-.hero-gradient {
-  background: radial-gradient(circle at 50% 50%, hsla(19, 72%, 44%, 0.08), transparent 70%);
+.academy-card {
+  @apply bg-card rounded-xl border border-border shadow-2xl transition-all duration-300 hover:border-primary/30;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 100%);
 }
 
-.pill-button {
-  @apply rounded-full px-8 py-6 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg;
+.input-glow {
+  @apply bg-background/50 border-border focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all;
 }
 
-.culinary-card {
-  @apply bg-card rounded-2xl border border-border/50 shadow-sm hover:shadow-md transition-all duration-300;
+.btn-premium {
+  @apply rounded-full px-8 py-3 font-bold uppercase tracking-widest text-xs transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg;
 }
 
 /* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.8s ease-out forwards;
+.animate-slide-up {
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.ingredient-float {
-  position: fixed;
-  font-size: 2.5rem;
-  opacity: 0.1;
-  z-index: -1;
-  pointer-events: none;
-  animation: float 15s infinite ease-in-out;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-40px) rotate(15deg); }
+.glass-nav {
+  @apply bg-background/80 backdrop-blur-md border-b border-border/50;
 }

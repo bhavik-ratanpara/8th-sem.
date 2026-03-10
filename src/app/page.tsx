@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -42,12 +43,11 @@ export default function Home() {
     try {
       const newRecipe = await createRecipeAction(input);
       setRecipe(newRecipe);
-      // Smooth scroll to recipe
       setTimeout(() => {
         document.getElementById('recipe-section')?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
     } catch (e: any) {
-      setError(e.message || 'An unexpected error occurred.');
+      setError(e.message || 'Academy Intelligence Error: Failed to generate masterpiece.');
     } finally {
       setIsLoading(false);
     }
@@ -61,67 +61,63 @@ export default function Home() {
   if (!isClient) return null;
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative pt-20 pb-16 md:pt-32 md:pb-24 overflow-hidden">
-        <div className="hero-gradient absolute inset-0 -z-10" />
-        <div className="ingredient-float top-20 left-[10%]">🌿</div>
-        <div className="ingredient-float top-40 right-[15%]">🧄</div>
-        <div className="ingredient-float bottom-20 left-[20%]">🍅</div>
-        
-        <div className="container mx-auto px-4 text-center animate-fade-in">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-bold text-xs uppercase tracking-widest mb-6">
+      <section className="relative pt-32 pb-24 md:pt-48 md:pb-36 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.05),transparent_70%)]" />
+        <div className="container mx-auto px-4 text-center relative z-10 animate-slide-up">
+          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary/10 text-primary font-bold text-[10px] uppercase tracking-[0.2em] border border-primary/20 mb-8">
             <Sparkles className="w-4 h-4" />
-            Culinary AI Excellence
+            Premier Culinary Intelligence
           </div>
-          <h1 className="text-5xl md:text-7xl font-headline font-bold mb-6 max-w-4xl mx-auto leading-tight italic">
-            Master the Art of <span className="text-primary not-italic">Fine Dining</span> at Home
+          <h1 className="text-6xl md:text-8xl font-headline font-bold mb-8 max-w-5xl mx-auto leading-[1.1] italic">
+            Master the Art of <span className="text-primary not-italic">High Cuisine</span>
           </h1>
-          <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto font-medium">
-            Join our elite digital food lab where artificial intelligence meets gourmet inspiration. 
-            Create, refine, and master any dish with professional precision.
+          <p className="text-muted-foreground text-xl md:text-2xl max-w-3xl mx-auto font-medium leading-relaxed">
+            Enter the elite digital laboratory where professional chef knowledge meets high-precision AI. 
+            Craft, refine, and master any masterpiece with absolute technical accuracy.
           </p>
           {!user && (
-            <div className="mt-10 flex flex-wrap justify-center gap-4">
-              <Button asChild className="pill-button text-lg bg-primary hover:bg-primary/90" size="lg">
-                <Link href="/signup">Join the Lab</Link>
+            <div className="mt-14 flex flex-wrap justify-center gap-6">
+              <Button asChild className="btn-premium text-sm bg-primary hover:bg-primary/90 text-background h-14" size="lg">
+                <Link href="/signup">Establish Chef Profile</Link>
               </Button>
-              <Button asChild variant="outline" className="pill-button text-lg border-primary/20 text-primary" size="lg">
-                <Link href="/login">Sign In</Link>
+              <Button asChild variant="outline" className="btn-premium text-sm border-primary/40 text-primary hover:bg-primary/5 h-14" size="lg">
+                <Link href="/login">Return to Academy</Link>
               </Button>
             </div>
           )}
         </div>
       </section>
 
-      <main className="container mx-auto px-4 pb-24">
-        <div className="max-w-4xl mx-auto">
+      <main className="container mx-auto px-4 pb-32">
+        <div className="max-w-5xl mx-auto">
           {isUserLoading ? (
             <div className="space-y-12">
-              <Skeleton className="h-96 w-full rounded-3xl" />
-              <Skeleton className="h-[500px] w-full rounded-3xl" />
+              <Skeleton className="h-96 w-full rounded-2xl bg-card" />
+              <Skeleton className="h-[600px] w-full rounded-2xl bg-card" />
             </div>
           ) : user ? (
-            <div className="space-y-16">
+            <div className="space-y-24">
               <DishSuggester onSuggestionSelect={handleSuggestionSelect} />
 
-              <div id="recipe-form" className="scroll-mt-24">
+              <div id="recipe-form" className="scroll-mt-32">
                 <RecipeForm onSubmit={handleGenerateRecipe} isLoading={isLoading} selectedDishName={selectedDish} />
               </div>
 
               {error && (
-                 <div className="animate-fade-in">
-                    <Alert variant="destructive" className="rounded-2xl border-destructive/50">
+                 <div className="animate-slide-up">
+                    <Alert variant="destructive" className="rounded-xl border-destructive/50 bg-destructive/5">
                         <AlertCircle className="h-5 w-5" />
-                        <AlertTitle className="font-headline text-lg">Culinary Error</AlertTitle>
-                        <AlertDescription className="text-base">
+                        <AlertTitle className="font-headline text-xl italic">Academy Intelligence Alert</AlertTitle>
+                        <AlertDescription className="text-base mt-2">
                             {error}
                         </AlertDescription>
                     </Alert>
                  </div>
               )}
 
-              <div id="recipe-section" className="scroll-mt-24">
+              <div id="recipe-section" className="scroll-mt-32">
                 <RecipeDisplay
                   recipe={recipe}
                   setRecipe={setRecipe}
@@ -132,39 +128,37 @@ export default function Home() {
               </div>
             </div>
           ) : (
-            <Card className="culinary-card border-dashed border-2 bg-card/50 backdrop-blur-xl py-12">
-              <CardHeader className="text-center">
-                <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-6">
+            <Card className="academy-card border-dashed border-2 bg-card/40 backdrop-blur-xl py-16 px-8 text-center max-w-2xl mx-auto">
+              <CardHeader>
+                <div className="mx-auto bg-primary/10 p-6 rounded-full w-fit mb-8 border border-primary/20">
                   <Lock className="h-10 w-10 text-primary" />
                 </div>
-                <CardTitle className="text-3xl font-headline font-bold mb-2 italic">Exclusive Access</CardTitle>
-                <CardDescription className="text-lg">
-                  Please authenticate to enter the professional Cooking Lab.
+                <CardTitle className="text-4xl font-headline font-bold mb-4 italic">Academy Credential Required</CardTitle>
+                <CardDescription className="text-xl font-medium">
+                  Professional-grade recipes and academy intelligence are reserved for registered practitioners.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="flex flex-col items-center gap-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-center">
-                  <div className="space-y-2">
-                    <BookOpen className="h-6 w-6 text-accent mx-auto" />
-                    <p className="font-bold text-sm uppercase tracking-wider">AI Recipes</p>
+              <CardContent className="space-y-12">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div className="space-y-3">
+                    <BookOpen className="h-7 w-7 text-primary/60 mx-auto" />
+                    <p className="font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Master Recipes</p>
                   </div>
-                  <div className="space-y-2">
-                    <Sparkles className="h-6 w-6 text-accent mx-auto" />
-                    <p className="font-bold text-sm uppercase tracking-wider">Smart Suggestions</p>
+                  <div className="space-y-3">
+                    <Sparkles className="h-7 w-7 text-primary/60 mx-auto" />
+                    <p className="font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Smart Curation</p>
                   </div>
-                  <div className="space-y-2">
-                    <ChefHat className="h-6 w-6 text-accent mx-auto" />
-                    <p className="font-bold text-sm uppercase tracking-wider">Chef Tutorials</p>
+                  <div className="space-y-3">
+                    <ChefHat className="h-7 w-7 text-primary/60 mx-auto" />
+                    <p className="font-bold text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Academy Tips</p>
                   </div>
                 </div>
-                <div className="flex gap-4 w-full max-w-sm">
-                  <Button asChild className="flex-1 pill-button bg-primary" size="lg">
-                    <Link href="/login">
-                      <LogIn className="mr-2 h-5 w-5" />
-                      Log In
-                    </Link>
-                  </Button>
-                </div>
+                <Button asChild className="btn-premium bg-primary text-background h-14 w-full" size="lg">
+                  <Link href="/login">
+                    <LogIn className="mr-3 h-5 w-5" />
+                    Authenticate Profile
+                  </Link>
+                </Button>
               </CardContent>
             </Card>
           )}

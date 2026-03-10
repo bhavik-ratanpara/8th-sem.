@@ -1,14 +1,14 @@
+
 'use client';
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Loader2, Utensils, MapPin, Languages, Users, Vegan, Beef, Sparkles } from 'lucide-react';
+import { Loader2, Utensils, MapPin, Languages, Users, Vegan, Beef, Sparkles, ChefHat } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,11 +20,11 @@ import { type CreateRecipeInput } from '@/ai/schemas';
 import { useEffect } from 'react';
 
 const formSchema = z.object({
-  dishName: z.string().min(1, 'Please specify the dish name.'),
-  servings: z.coerce.number().min(1, 'At least 1 serving is required.'),
-  location: z.string().min(1, 'Specify a location for local flavor.'),
-  language: z.string().min(1, 'Select a language for the recipe.'),
-  diet: z.enum(['Vegetarian', 'Non-Vegetarian'], { required_error: 'Select a dietary preference.' }),
+  dishName: z.string().min(1, 'Identify the master dish name.'),
+  servings: z.coerce.number().min(1, 'Minimum 1 serving required.'),
+  location: z.string().min(1, 'Regional context is required.'),
+  language: z.string().min(1, 'Specify preferred language.'),
+  diet: z.enum(['Vegetarian', 'Non-Vegetarian'], { required_error: 'Select dietary preference.' }),
 });
 
 type RecipeFormProps = {
@@ -56,31 +56,31 @@ export function RecipeForm({ onSubmit, isLoading, selectedDishName }: RecipeForm
   };
 
   return (
-    <div className="culinary-card p-8 md:p-12 animate-fade-in">
+    <div className="academy-card p-10 md:p-14 animate-slide-up">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-10">
-          <div className="text-center md:text-left space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent font-bold text-[10px] uppercase tracking-widest">
-                <Utensils className="w-3 h-3" />
-                Recipe Creation
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-12">
+          <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary font-bold text-[10px] uppercase tracking-widest border border-primary/20">
+                <ChefHat className="w-3.5 h-3.5" />
+                Recipe Initialization
               </div>
-              <h2 className="text-3xl md:text-4xl font-headline font-bold italic">Craft Your Masterpiece</h2>
-              <p className="text-muted-foreground text-base max-w-xl">
-                Define the parameters for your next culinary creation. Our AI chef will tailor every detail to your needs.
+              <h2 className="text-4xl md:text-5xl font-headline font-bold italic">Initialize Your Masterpiece</h2>
+              <p className="text-muted-foreground text-base max-w-xl font-medium">
+                Configure the technical parameters for your next culinary project. Our Academy intelligence will tailor the results to your exact specifications.
               </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
             <FormField
               control={form.control}
               name="dishName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                    <Utensils size={14} className="text-primary" /> Dish Name
+                  <FormLabel className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
+                    <Utensils size={12} className="text-primary" /> Master Dish Name
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Boeuf Bourguignon" className="rounded-xl border-border/50 h-12 bg-background/50" {...field} />
+                    <Input placeholder="e.g., Osso Buco alla Milanese" className="input-glow h-12 text-base" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -91,11 +91,11 @@ export function RecipeForm({ onSubmit, isLoading, selectedDishName }: RecipeForm
               name="servings"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                    <Users size={14} className="text-primary" /> Guest Count
+                  <FormLabel className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
+                    <Users size={12} className="text-primary" /> Serving Count
                   </FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="4" className="rounded-xl border-border/50 h-12 bg-background/50" {...field} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} value={field.value ?? ''} />
+                    <Input type="number" placeholder="4" className="input-glow h-12 text-base" {...field} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} value={field.value ?? ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -106,11 +106,11 @@ export function RecipeForm({ onSubmit, isLoading, selectedDishName }: RecipeForm
               name="location"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                    <MapPin size={14} className="text-primary" /> Regional Influence
+                  <FormLabel className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
+                    <MapPin size={12} className="text-primary" /> Regional Origin
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Tuscany, Italy" className="rounded-xl border-border/50 h-12 bg-background/50" {...field} />
+                    <Input placeholder="e.g., Lombardy, Italy" className="input-glow h-12 text-base" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -121,11 +121,11 @@ export function RecipeForm({ onSubmit, isLoading, selectedDishName }: RecipeForm
               name="language"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                    <Languages size={14} className="text-primary" /> Language
+                  <FormLabel className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
+                    <Languages size={12} className="text-primary" /> Output Language
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="English" className="rounded-xl border-border/50 h-12 bg-background/50" {...field} />
+                    <Input placeholder="English" className="input-glow h-12 text-base" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -137,28 +137,28 @@ export function RecipeForm({ onSubmit, isLoading, selectedDishName }: RecipeForm
             control={form.control}
             name="diet"
             render={({ field }) => (
-              <FormItem className="space-y-4">
-                <FormLabel className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Dietary Preference</FormLabel>
+              <FormItem className="space-y-6">
+                <FormLabel className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Dietary Specification</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                     className="flex flex-col sm:flex-row gap-4"
                   >
-                    <FormItem className="flex items-center space-x-3 space-y-0 px-6 py-4 rounded-2xl border border-border/50 bg-background/30 hover:bg-accent/5 transition-colors cursor-pointer flex-1">
+                    <FormItem className="flex items-center space-x-3 space-y-0 px-8 py-5 rounded-xl border border-border bg-card/50 hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer flex-1 group">
                       <FormControl>
-                        <RadioGroupItem value="Vegetarian" className="border-accent text-accent" />
+                        <RadioGroupItem value="Vegetarian" className="border-primary" />
                       </FormControl>
-                      <FormLabel className="font-bold flex items-center gap-2 cursor-pointer">
-                        <Vegan className="text-accent w-4 h-4" /> Vegetarian
+                      <FormLabel className="font-bold flex items-center gap-3 cursor-pointer text-sm">
+                        <Vegan className="text-primary w-5 h-5" /> Vegetarian Focus
                       </FormLabel>
                     </FormItem>
-                    <FormItem className="flex items-center space-x-3 space-y-0 px-6 py-4 rounded-2xl border border-border/50 bg-background/30 hover:bg-accent/5 transition-colors cursor-pointer flex-1">
+                    <FormItem className="flex items-center space-x-3 space-y-0 px-8 py-5 rounded-xl border border-border bg-card/50 hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer flex-1 group">
                       <FormControl>
-                        <RadioGroupItem value="Non-Vegetarian" className="border-primary text-primary" />
+                        <RadioGroupItem value="Non-Vegetarian" className="border-primary" />
                       </FormControl>
-                      <FormLabel className="font-bold flex items-center gap-2 cursor-pointer">
-                        <Beef className="text-primary w-4 h-4" /> Non-Vegetarian
+                      <FormLabel className="font-bold flex items-center gap-3 cursor-pointer text-sm">
+                        <Beef className="text-primary w-5 h-5" /> Comprehensive Diet
                       </FormLabel>
                     </FormItem>
                   </RadioGroup>
@@ -168,14 +168,14 @@ export function RecipeForm({ onSubmit, isLoading, selectedDishName }: RecipeForm
             )}
           />
 
-          <Button type="submit" disabled={isLoading} className="pill-button w-full h-16 text-lg bg-accent hover:bg-accent/90 text-white shadow-xl">
+          <Button type="submit" disabled={isLoading} className="btn-premium w-full h-16 text-sm bg-primary hover:bg-primary/90 text-background">
             {isLoading ? (
               <>
-                <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                Crafting...
+                <Loader2 className="mr-3 h-5 w-5 animate-spin" />
+                Processing Academy Intelligence...
               </>
             ) : (
-              <>Initialize Recipe <Sparkles className="ml-2 h-5 w-5"/></>
+              <span className="flex items-center gap-2">Initialize Recipe Generation <Sparkles className="w-4 h-4" /></span>
             )}
           </Button>
         </form>
