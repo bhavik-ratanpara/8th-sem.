@@ -5,13 +5,13 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 0 0% 7%;
+    --foreground: 224 71% 4%;
     
-    --card: 0 0% 98%;
-    --card-foreground: 0 0% 7%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
     
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 7%;
+    --popover-foreground: 224 71% 4%;
     
     --primary: 221.2 83.2% 53.3%;
     --primary-foreground: 210 40% 98%;
@@ -37,32 +37,32 @@
 
   .dark {
     --background: 0 0% 6%;
-    --foreground: 210 40% 98%;
+    --foreground: 0 0% 94%;
     
-    --card: 0 0% 10%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 11%;
+    --card-foreground: 0 0% 94%;
     
     --popover: 0 0% 6%;
-    --popover-foreground: 210 40% 98%;
+    --popover-foreground: 0 0% 94%;
     
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
     
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 94%;
     
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 240 5% 65%;
     
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 94%;
     
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
     
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
+    --ring: 221.2 83.2% 53.3%;
   }
 }
 
@@ -71,22 +71,27 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-body antialiased;
+    @apply bg-background text-foreground font-sans antialiased;
     font-size: 15px;
-    line-height: 1.6;
+    line-height: 1.7;
   }
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-tight text-foreground;
-    letter-spacing: -0.02em;
+  h1 {
+    @apply text-[32px] font-bold tracking-[-0.03em];
+  }
+  h2 {
+    @apply text-[24px] font-semibold tracking-[-0.02em];
+  }
+  h3 {
+    @apply text-[18px] font-semibold;
   }
 }
 
 .saas-card {
-  @apply bg-card rounded-lg border border-border shadow-[0_1px_3px_rgba(0,0,0,0.06)] transition-all duration-200;
+  @apply bg-card rounded-lg border border-border shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:shadow-[0_1px_4px_rgba(0,0,0,0.3)] transition-all duration-200;
 }
 
 .input-saas {
-  @apply bg-background border-input focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all rounded-md h-10 px-3 text-sm;
+  @apply bg-background border-input text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all rounded-md h-10 px-3 text-sm;
 }
 
 .btn-saas {
@@ -98,7 +103,7 @@
 }
 
 .btn-secondary-saas {
-  @apply btn-saas border border-input bg-background hover:bg-accent hover:text-accent-foreground;
+  @apply btn-saas border border-input bg-secondary text-secondary-foreground hover:bg-secondary/80;
 }
 
 .max-content {
@@ -107,4 +112,9 @@
 
 .section-padding {
   @apply py-10 md:py-16;
+}
+
+/* Remove any legacy gradient background utilities */
+.bg-gradient-mesh, .bg-mesh, .blob-bg {
+  display: none !important;
 }

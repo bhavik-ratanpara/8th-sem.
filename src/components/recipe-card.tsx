@@ -12,6 +12,7 @@ import ReactMarkdown from 'react-markdown';
 import { type CreateRecipeOutput, type Ingredient } from '@/ai/schemas';
 import { Button } from './ui/button';
 import { Trash2, RefreshCw, Minus, Plus, Users, UtensilsCrossed, Clock, ChevronRight } from 'lucide-react';
+import { Badge } from './ui/badge';
 
 type RecipeCardProps = {
   recipe: CreateRecipeOutput;
@@ -41,36 +42,39 @@ export function RecipeCard({
   };
 
   return (
-    <div className="saas-card overflow-hidden">
-      <CardHeader className="p-6 md:p-8 bg-muted/20 border-b border-border">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div className="space-y-1">
-            <CardTitle className="text-2xl font-bold tracking-tight">{recipe.title}</CardTitle>
-            <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed">
+    <div className="saas-card overflow-hidden bg-card border-border">
+      <CardHeader className="p-8 md:p-10 bg-secondary/30 border-b border-border">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 mb-1">
+               <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 hover:bg-primary/5 rounded-full px-3">Recipe Guide</Badge>
+            </div>
+            <CardTitle className="text-3xl font-bold tracking-tight text-foreground">{recipe.title}</CardTitle>
+            <p className="text-muted-foreground max-w-2xl text-base leading-relaxed">
               {recipe.description}
             </p>
           </div>
-          <div className="flex items-center gap-3 bg-background border border-border rounded-md p-1 h-9">
+          <div className="flex items-center gap-2 bg-background border border-border rounded-lg p-1.5 h-12 shadow-sm">
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7"
+              className="h-9 w-9 hover:bg-secondary"
               onClick={() => onServingsChange(Math.max(1, servings - 1))}
               disabled={servings <= 1}
             >
-              <Minus className="h-3 w-3" />
+              <Minus className="h-4 w-4" />
             </Button>
-            <div className="flex items-center gap-1.5 px-1 min-w-[50px] justify-center">
-              <span className="text-xs font-semibold">{servings}</span>
-              <span className="text-[11px] text-muted-foreground uppercase font-bold tracking-tight">Servings</span>
+            <div className="flex items-center gap-2 px-3 min-w-[70px] justify-center border-x border-border/50">
+              <span className="text-base font-bold text-foreground">{servings}</span>
+              <span className="text-[13px] text-muted-foreground font-medium">Servings</span>
             </div>
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7"
+              className="h-9 w-9 hover:bg-secondary"
               onClick={() => onServingsChange(servings + 1)}
             >
-              <Plus className="h-3 w-3" />
+              <Plus className="h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -78,24 +82,24 @@ export function RecipeCard({
       
       <div className="grid grid-cols-1 lg:grid-cols-12">
         {/* Ingredients Column */}
-        <div className="lg:col-span-4 p-6 md:p-8 border-b lg:border-b-0 lg:border-r border-border bg-card/30">
-          <h3 className="text-[13px] font-bold uppercase tracking-wider text-muted-foreground mb-6">Ingredients</h3>
-          <ul className="space-y-4">
+        <div className="lg:col-span-4 p-8 md:p-10 border-b lg:border-b-0 lg:border-r border-border bg-secondary/10">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-primary mb-8">Essential Ingredients</h3>
+          <ul className="space-y-5">
             {recipe.ingredients.map((ingredient, index) => (
-              <li key={index} className="flex items-start justify-between group">
-                <div className="space-y-0.5">
-                  <div className="text-sm font-medium">{ingredient.name}</div>
-                  <div className="text-[12px] text-muted-foreground font-medium">
+              <li key={index} className="flex items-start justify-between group py-2 border-b border-border/30 last:border-0">
+                <div className="space-y-1">
+                  <div className="text-sm font-semibold text-foreground">{ingredient.name}</div>
+                  <div className="text-[13px] text-muted-foreground font-medium">
                     {scaleIngredient(ingredient)}
                   </div>
                 </div>
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity hover:text-destructive" 
+                  className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-all hover:text-destructive hover:bg-destructive/10" 
                   onClick={() => onIngredientRemove(ingredient)}
                 >
-                  <Trash2 className="h-3.5 w-3.5" />
+                  <Trash2 className="h-4 w-4" />
                 </Button>
               </li>
             ))}
@@ -103,24 +107,24 @@ export function RecipeCard({
         </div>
 
         {/* Instructions Column */}
-        <div className="lg:col-span-8 p-6 md:p-8">
-          <h3 className="text-[13px] font-bold uppercase tracking-wider text-muted-foreground mb-6">Instructions</h3>
-          <div className="prose prose-sm prose-slate max-w-none prose-p:leading-relaxed prose-li:leading-relaxed prose-li:mb-2">
+        <div className="lg:col-span-8 p-8 md:p-10 bg-card">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-primary mb-8">Culinary Instructions</h3>
+          <div className="prose prose-sm dark:prose-invert prose-slate max-w-none prose-p:text-foreground/90 prose-p:leading-loose prose-li:text-foreground/90 prose-li:leading-loose prose-li:mb-4 marker:text-primary">
             <ReactMarkdown>{recipe.instructions}</ReactMarkdown>
           </div>
         </div>
       </div>
 
       {ingredientsChanged && (
-        <div className="p-4 bg-primary/5 border-t border-border">
-          <Button onClick={onRegenerate} disabled={isRegenerating} className="w-full h-10 text-sm font-medium bg-primary text-primary-foreground">
+        <div className="p-6 bg-primary/5 border-t border-border">
+          <Button onClick={onRegenerate} disabled={isRegenerating} className="w-full h-12 text-sm font-semibold bg-primary text-primary-foreground rounded-lg shadow-sm hover:bg-primary/90">
             {isRegenerating ? (
               <>
-                <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                Refining...
+                <RefreshCw className="mr-3 h-4 w-4 animate-spin" />
+                Refining Culinary Plan...
               </>
             ) : (
-              'Apply Changes'
+              'Apply Modifications'
             )}
           </Button>
         </div>

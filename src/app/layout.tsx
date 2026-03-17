@@ -6,8 +6,8 @@ import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'Cooking Lab | Professional Culinary Intelligence',
-  description: 'A minimalist platform for professional-grade recipe generation and culinary productivity.',
+  title: 'Cooking Lab | Professional Culinary Academy',
+  description: 'A minimalist, high-performance platform for professional-grade recipe generation and culinary intelligence.',
 };
 
 export default function RootLayout({
@@ -25,50 +25,51 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-body antialiased bg-background text-foreground selection:bg-primary/10">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <body className="font-sans antialiased bg-background text-foreground selection:bg-primary/10">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <FirebaseClientProvider>
             <Header />
             <div className="pt-16 min-h-screen flex flex-col">
               <main className="flex-1">{children}</main>
-              <footer className="border-t border-border bg-background py-12 mt-auto">
+              <footer className="border-t border-border bg-background py-16 mt-auto">
                 <div className="max-content px-4">
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold">Cooking Lab</h3>
-                      <p className="text-muted-foreground text-sm">
-                        Minimalist culinary intelligence for professionals.
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+                    <div className="space-y-6">
+                      <h3 className="text-lg font-semibold tracking-tight">Cooking Lab</h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed">
+                        Precision-crafted culinary intelligence for professional chefs and home enthusiasts alike.
                       </p>
                     </div>
                     <div>
-                      <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Platform</h4>
-                      <ul className="space-y-2 text-sm">
+                      <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-6">Platform</h4>
+                      <ul className="space-y-3 text-sm">
                         <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Recipes</a></li>
-                        <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Courses</a></li>
-                        <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Docs</a></li>
+                        <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Academy</a></li>
+                        <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Documentation</a></li>
                       </ul>
                     </div>
                     <div>
-                      <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Company</h4>
-                      <ul className="space-y-2 text-sm">
-                        <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">About</a></li>
-                        <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Blog</a></li>
-                        <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Contact</a></li>
+                      <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-6">Company</h4>
+                      <ul className="space-y-3 text-sm">
+                        <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Our Vision</a></li>
+                        <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Culinary Blog</a></li>
+                        <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Contact Support</a></li>
                       </ul>
                     </div>
                     <div>
-                      <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Legal</h4>
-                      <ul className="space-y-2 text-sm">
-                        <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</a></li>
-                        <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Terms</a></li>
+                      <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-6">Legal</h4>
+                      <ul className="space-y-3 text-sm">
+                        <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Terms of Service</a></li>
                       </ul>
                     </div>
                   </div>
-                  <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground">
-                    <div>&copy; {new Date().getFullYear()} Cooking Lab. Built for efficiency.</div>
-                    <div className="flex gap-6">
-                      <span className="cursor-pointer hover:text-foreground">Twitter</span>
-                      <span className="cursor-pointer hover:text-foreground">GitHub</span>
+                  <div className="border-t border-border mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-muted-foreground">
+                    <div>&copy; {new Date().getFullYear()} Cooking Lab Academy. Engineered for excellence.</div>
+                    <div className="flex gap-8">
+                      <span className="cursor-pointer hover:text-foreground transition-colors">Twitter</span>
+                      <span className="cursor-pointer hover:text-foreground transition-colors">GitHub</span>
+                      <span className="cursor-pointer hover:text-foreground transition-colors">LinkedIn</span>
                     </div>
                   </div>
                 </div>

@@ -3,12 +3,13 @@
 import { useState, useEffect } from 'react';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { Loader2, Search, LogOut, User as UserIcon, ChefHat, Menu } from 'lucide-react';
+import { Loader2, Search, LogOut, User as UserIcon, ChefHat, Moon, Sun } from 'lucide-react';
 import { Popover, PopoverContent } from '@/components/ui/popover';
 import { YoutubeSearchResults, type YouTubeVideo } from './youtube-search-results';
 import { useAuth, useUser } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { useTheme } from 'next-themes';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +19,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 
 export function Header() {
@@ -27,9 +27,15 @@ export function Header() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [popoverOpen, setPopoverOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   
+  const { theme, setTheme } = useTheme();
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -63,16 +69,16 @@ export function Header() {
   };
 
   return (
-    <header className="fixed top-0 z-50 w-full bg-background border-b border-border h-16">
+    <header className="fixed top-0 z-50 w-full bg-background border-b border-border h-16 transition-colors duration-200">
       <div className="max-content flex h-full items-center px-4 justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <ChefHat className="h-5 w-5 text-primary" />
-          <span className="font-semibold text-lg tracking-tight">
+          <ChefHat className="h-6 w-6 text-primary" />
+          <span className="font-bold text-xl tracking-tight text-foreground">
             Cooking Lab
           </span>
         </Link>
 
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-4">
             {!isUserLoading && user && (
               <div className="hidden md:block">
                 <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
@@ -81,8 +87,8 @@ export function Header() {
                             <PopoverPrimitive.Anchor asChild>
                                 <Input
                                     type="search"
-                                    placeholder="Search tutorials..."
-                                    className="pr-10 h-9 bg-secondary border-none"
+                                    placeholder="Search culinary guides..."
+                                    className="pr-10 h-10 bg-secondary/50 border-border focus:ring-primary/20"
                                     value={query}
                                     onChange={(e) => {
                                         setQuery(e.target.value);
@@ -96,21 +102,32 @@ export function Header() {
                                 type="submit"
                                 size="icon"
                                 variant="ghost"
-                                className="absolute right-0 top-0 h-full w-9"
+                                className="absolute right-0 top-0 h-full w-10 hover:bg-transparent"
                                 disabled={isLoading}
                             >
-                                {isLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Search className="h-4 w-4 text-muted-foreground" />}
+                                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4 text-muted-foreground" />}
                             </Button>
                         </form>
                     </div>
-                    <PopoverContent className="w-[400px] mt-2 p-0 rounded-lg shadow-lg" align="end">
+                    <PopoverContent className="w-[400px] mt-2 p-0 rounded-lg shadow-xl bg-popover border-border" align="end">
                         <YoutubeSearchResults videos={videos} isLoading={isLoading} error={error} />
                     </PopoverContent>
                 </Popover>
               </div>
             )}
 
-            <nav className="flex items-center space-x-4">
+            <nav className="flex items-center space-x-2">
+              {mounted && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-10 w-10 rounded-md hover:bg-secondary"
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                >
+                  {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                </Button>
+              )}
+
               {!isUserLoading && (
                 <>
                   {user ? (
@@ -118,43 +135,43 @@ export function Header() {
                       <Link href="/" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hidden sm:block">Dashboard</Link>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                            <Avatar className="h-8 w-8">
+                          <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                            <Avatar className="h-10 w-10 border border-border">
                               <AvatarImage src={user.photoURL || ''} alt={user.displayName || 'User'} />
-                              <AvatarFallback className="text-xs">
-                                {user.displayName?.charAt(0) || user.email?.charAt(0) || <UserIcon className="h-4 w-4" />}
+                              <AvatarFallback className="text-xs font-medium">
+                                {user.displayName?.charAt(0) || user.email?.charAt(0) || <UserIcon className="h-5 w-5" />}
                               </AvatarFallback>
                             </Avatar>
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56" align="end">
-                          <DropdownMenuLabel className="font-normal">
+                        <DropdownMenuContent className="w-64 mt-2" align="end">
+                          <DropdownMenuLabel className="font-normal px-4 py-3">
                             <div className="flex flex-col space-y-1">
-                              <p className="text-sm font-medium">{user.displayName || 'Chef'}</p>
+                              <p className="text-sm font-semibold">{user.displayName || 'Chef'}</p>
                               <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                             </div>
                           </DropdownMenuLabel>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem onClick={handleLogout} className="text-destructive">
-                            <LogOut className="mr-2 h-4 w-4" />
-                            <span>Sign Out</span>
+                          <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive px-4 py-3 cursor-pointer">
+                            <LogOut className="mr-3 h-4 w-4" />
+                            <span className="font-medium">Sign Out</span>
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
                   ) : (
                     <div className="flex gap-2">
-                      <Button asChild variant="ghost" size="sm" className="font-medium">
+                      <Button asChild variant="ghost" size="sm" className="font-medium text-sm h-10 px-4">
                         <Link href="/login">Sign In</Link>
                       </Button>
-                      <Button asChild size="sm" className="font-medium bg-primary text-primary-foreground">
+                      <Button asChild size="sm" className="font-medium text-sm bg-primary text-primary-foreground h-10 px-5 rounded-md hover:bg-primary/90">
                         <Link href="/signup">Get Started</Link>
                       </Button>
                     </div>
                   )}
                 </>
               )}
-              {isUserLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+              {isUserLoading && <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />}
             </nav>
         </div>
       </div>
