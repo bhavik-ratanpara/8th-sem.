@@ -24,14 +24,14 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, Chrome, User, Mail, Lock, Sparkles } from 'lucide-react';
+import { Loader2, Chrome, User, Mail, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 
 const signupSchema = z.object({
   displayName: z.string().min(2, 'Name must be at least 2 characters.'),
-  email: z.string().email('Please enter a valid culinary email.'),
-  password: z.string().min(6, 'Security codes must be at least 6 characters.'),
+  email: z.string().email('Please enter a valid email.'),
+  password: z.string().min(6, 'Password must be at least 6 characters.'),
 });
 
 export default function SignupPage() {
@@ -77,7 +77,7 @@ export default function SignupPage() {
     } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Registration Failed",
+        title: "Error",
         description: error.message,
       });
     } finally {
@@ -90,12 +90,12 @@ export default function SignupPage() {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      createUserProfile(result.user, result.user.displayName || 'Distinguished Chef');
+      createUserProfile(result.user, result.user.displayName || 'Chef');
       router.push('/');
     } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Google Auth Failed",
+        title: "Error",
         description: error.message,
       });
     } finally {
@@ -106,32 +106,24 @@ export default function SignupPage() {
   if (!isMounted) return null;
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-3.5rem)] px-4 py-20 bg-muted/20">
-      <div className="hero-gradient absolute inset-0 -z-10" />
-      <Card className="w-full max-w-lg culinary-card border-none shadow-2xl p-4 overflow-hidden animate-fade-in">
-        <div className="h-2 bg-accent absolute top-0 left-0 right-0" />
-        <CardHeader className="space-y-4 text-center pt-12">
-          <div className="bg-accent/10 p-4 rounded-full w-fit mx-auto mb-2">
-            <Sparkles className="h-8 w-8 text-accent" />
-          </div>
-          <CardTitle className="text-4xl font-headline font-bold italic">Join the Lab</CardTitle>
-          <CardDescription className="text-base">
-            Establish your professional culinary identity today.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-8 p-8">
+    <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-4 bg-background">
+      <div className="w-full max-w-[400px] space-y-8">
+        <div className="text-center space-y-2">
+          <h1 className="text-2xl font-bold tracking-tight">Create an account</h1>
+          <p className="text-sm text-muted-foreground">Begin your professional culinary journey.</p>
+        </div>
+
+        <div className="saas-card p-6 md:p-8">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSignup)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSignup)} className="space-y-5">
               <FormField
                 control={form.control}
                 name="displayName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                      <User className="w-3.5 h-3.5" /> Professional Name
-                    </FormLabel>
+                    <FormLabel className="text-[13px] font-medium text-muted-foreground">Full name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Chef Jean-Pierre" className="h-12 rounded-xl border-border/50 bg-background/50" {...field} />
+                      <Input placeholder="Alex Chef" className="input-saas" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -142,11 +134,9 @@ export default function SignupPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                      <Mail className="w-3.5 h-3.5" /> Email
-                    </FormLabel>
+                    <FormLabel className="text-[13px] font-medium text-muted-foreground">Email address</FormLabel>
                     <FormControl>
-                      <Input placeholder="chef@cookinglab.com" className="h-12 rounded-xl border-border/50 bg-background/50" {...field} />
+                      <Input placeholder="name@example.com" className="input-saas" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -157,49 +147,46 @@ export default function SignupPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                      <Lock className="w-3.5 h-3.5" /> Security Code
-                    </FormLabel>
+                    <FormLabel className="text-[13px] font-medium text-muted-foreground">Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="••••••••" className="h-12 rounded-xl border-border/50 bg-background/50" {...field} />
+                      <Input type="password" placeholder="••••••••" className="input-saas" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="pill-button w-full h-14 text-lg bg-accent hover:bg-accent/90 text-white shadow-xl" disabled={isLoading}>
-                {isLoading ? <Loader2 className="mr-3 h-5 w-5 animate-spin" /> : 'Begin Journey'}
+              <Button type="submit" className="w-full bg-primary text-primary-foreground h-10 font-medium" disabled={isLoading}>
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Create Account'}
               </Button>
             </form>
           </Form>
 
-          <div className="relative">
+          <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-border/50" />
+              <span className="w-full border-t border-border" />
             </div>
-            <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-[0.2em]">
-              <span className="bg-card px-4 text-muted-foreground">Or establish via</span>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
             </div>
           </div>
 
-          <Button variant="outline" type="button" disabled={isLoading} onClick={onGoogleLogin} className="pill-button w-full h-14 border-primary/20 text-primary hover:bg-primary/5 transition-all">
+          <Button variant="outline" type="button" disabled={isLoading} onClick={onGoogleLogin} className="w-full h-10 border-border">
             {isLoading ? (
-              <Loader2 className="mr-3 h-5 w-5 animate-spin" />
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
-              <Chrome className="mr-3 h-5 w-5 text-primary" />
+              <Chrome className="mr-2 h-4 w-4" />
             )}{" "}
-            Google Identity
+            Google
           </Button>
-        </CardContent>
-        <CardFooter className="flex flex-col space-y-4 text-center pb-12">
-          <div className="text-sm text-muted-foreground">
-            Already established?{" "}
-            <Link href="/login" className="text-primary hover:underline font-bold transition-colors ml-1">
-              Sign In
-            </Link>
-          </div>
-        </CardFooter>
-      </Card>
+        </div>
+
+        <p className="text-center text-sm text-muted-foreground">
+          Already have an account?{" "}
+          <Link href="/login" className="text-primary font-medium hover:underline">
+            Sign in
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

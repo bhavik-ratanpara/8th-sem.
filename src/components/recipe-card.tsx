@@ -11,7 +11,7 @@ import {
 import ReactMarkdown from 'react-markdown';
 import { type CreateRecipeOutput, type Ingredient } from '@/ai/schemas';
 import { Button } from './ui/button';
-import { Trash2, RefreshCw, Minus, Plus, Users, UtensilsCrossed } from 'lucide-react';
+import { Trash2, RefreshCw, Minus, Plus, Users, UtensilsCrossed, Clock, ChevronRight } from 'lucide-react';
 
 type RecipeCardProps = {
   recipe: CreateRecipeOutput;
@@ -41,100 +41,90 @@ export function RecipeCard({
   };
 
   return (
-    <Card className="culinary-card border-none shadow-xl overflow-hidden animate-fade-in">
-      <div className="h-3 bg-primary" />
-      <CardHeader className="p-8 md:p-12 text-center bg-muted/30">
-        <div className="flex justify-center mb-6">
-          <UtensilsCrossed className="h-10 w-10 text-primary opacity-50" />
+    <div className="saas-card overflow-hidden">
+      <CardHeader className="p-6 md:p-8 bg-muted/20 border-b border-border">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div className="space-y-1">
+            <CardTitle className="text-2xl font-bold tracking-tight">{recipe.title}</CardTitle>
+            <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed">
+              {recipe.description}
+            </p>
+          </div>
+          <div className="flex items-center gap-3 bg-background border border-border rounded-md p-1 h-9">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              onClick={() => onServingsChange(Math.max(1, servings - 1))}
+              disabled={servings <= 1}
+            >
+              <Minus className="h-3 w-3" />
+            </Button>
+            <div className="flex items-center gap-1.5 px-1 min-w-[50px] justify-center">
+              <span className="text-xs font-semibold">{servings}</span>
+              <span className="text-[11px] text-muted-foreground uppercase font-bold tracking-tight">Servings</span>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              onClick={() => onServingsChange(servings + 1)}
+            >
+              <Plus className="h-3 w-3" />
+            </Button>
+          </div>
         </div>
-        <CardTitle className="font-headline text-4xl md:text-5xl italic mb-4">{recipe.title}</CardTitle>
-        <CardDescription className="text-lg text-muted-foreground font-medium max-w-2xl mx-auto leading-relaxed">
-          {recipe.description}
-        </CardDescription>
       </CardHeader>
       
-      <CardContent className="p-8 md:p-12 space-y-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* Ingredients Column */}
-          <div className="lg:col-span-5 space-y-8">
-            <div className="flex justify-between items-center border-b border-primary/10 pb-4">
-              <h3 className="font-headline text-2xl italic">Ingredients</h3>
-              <div className="flex items-center gap-3 bg-background rounded-full p-1 border shadow-sm">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 rounded-full"
-                  onClick={() => onServingsChange(Math.max(1, servings - 1))}
-                  disabled={servings <= 1}
-                >
-                  <Minus className="h-3 w-3" />
-                </Button>
-                <div className="flex items-center gap-2 px-1">
-                  <Users className="h-3 w-3 text-primary" />
-                  <span className="font-bold text-sm min-w-[1rem] text-center">{servings}</span>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 rounded-full"
-                  onClick={() => onServingsChange(servings + 1)}
-                >
-                  <Plus className="h-3 w-3" />
-                </Button>
-              </div>
-            </div>
-            <ul className="space-y-4">
-              {recipe.ingredients.map((ingredient, index) => (
-                <li key={index} className="flex items-start justify-between group py-2">
-                  <div className="flex gap-4 items-baseline">
-                    <span className="h-1.5 w-1.5 rounded-full bg-accent shrink-0 mt-2.5" />
-                    <div className="flex flex-col">
-                      <span className="font-bold text-base">{ingredient.name}</span>
-                      <span className="text-sm text-muted-foreground uppercase tracking-widest font-bold text-[10px]">
-                        {scaleIngredient(ingredient)}
-                      </span>
-                    </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12">
+        {/* Ingredients Column */}
+        <div className="lg:col-span-4 p-6 md:p-8 border-b lg:border-b-0 lg:border-r border-border bg-card/30">
+          <h3 className="text-[13px] font-bold uppercase tracking-wider text-muted-foreground mb-6">Ingredients</h3>
+          <ul className="space-y-4">
+            {recipe.ingredients.map((ingredient, index) => (
+              <li key={index} className="flex items-start justify-between group">
+                <div className="space-y-0.5">
+                  <div className="text-sm font-medium">{ingredient.name}</div>
+                  <div className="text-[12px] text-muted-foreground font-medium">
+                    {scaleIngredient(ingredient)}
                   </div>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/10" 
-                    onClick={() => onIngredientRemove(ingredient)}
-                  >
-                    <Trash2 className="h-4 w-4 text-destructive" />
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          </div>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity hover:text-destructive" 
+                  onClick={() => onIngredientRemove(ingredient)}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-          {/* Instructions Column */}
-          <div className="lg:col-span-7 space-y-8">
-            <h3 className="font-headline text-2xl italic border-b border-primary/10 pb-4">Culinary Instructions</h3>
-            <div className="prose prose-slate max-w-none prose-headings:font-headline prose-headings:italic prose-p:leading-relaxed prose-li:leading-relaxed">
-              <ReactMarkdown>{recipe.instructions}</ReactMarkdown>
-            </div>
+        {/* Instructions Column */}
+        <div className="lg:col-span-8 p-6 md:p-8">
+          <h3 className="text-[13px] font-bold uppercase tracking-wider text-muted-foreground mb-6">Instructions</h3>
+          <div className="prose prose-sm prose-slate max-w-none prose-p:leading-relaxed prose-li:leading-relaxed prose-li:mb-2">
+            <ReactMarkdown>{recipe.instructions}</ReactMarkdown>
           </div>
         </div>
-      </CardContent>
+      </div>
 
       {ingredientsChanged && (
-        <CardFooter className="p-8 md:p-12 bg-muted/10 border-t">
-            <Button onClick={onRegenerate} disabled={isRegenerating} className="pill-button w-full h-14 text-lg shadow-lg">
-                {isRegenerating ? (
-                    <>
-                        <RefreshCw className="mr-3 h-5 w-5 animate-spin" />
-                        Refining Instructions...
-                    </>
-                ) : (
-                    <>
-                        <RefreshCw className="mr-3 h-5 w-5" />
-                        Refine to Ingredients
-                    </>
-                )}
-            </Button>
-        </CardFooter>
+        <div className="p-4 bg-primary/5 border-t border-border">
+          <Button onClick={onRegenerate} disabled={isRegenerating} className="w-full h-10 text-sm font-medium bg-primary text-primary-foreground">
+            {isRegenerating ? (
+              <>
+                <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                Refining...
+              </>
+            ) : (
+              'Apply Changes'
+            )}
+          </Button>
+        </div>
       )}
-    </Card>
+    </div>
   );
 }
