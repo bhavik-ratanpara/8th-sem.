@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -23,7 +22,6 @@ export function TypewriterHero() {
   const [showCursor, setShowCursor] = useState(true);
   const { user } = useUser();
 
-  // Reference the metadata from src/lib/placeholder-images.json
   const heroImageData = PlaceHolderImages.find(img => img.id === 'hero-food-cutout');
 
   useEffect(() => {
@@ -82,7 +80,6 @@ export function TypewriterHero() {
 
       {/* Right Side - Content (52% width) */}
       <div className="w-full md:w-[52%] flex flex-col items-center md:items-start text-center md:text-left md:pl-[48px] order-2">
-        {/* Heading using Cal Sans */}
         <h1 
           className="font-extrabold leading-[1.08] tracking-[-0.04em] mb-0" 
           style={{ 
@@ -100,7 +97,6 @@ export function TypewriterHero() {
           </span>
         </h1>
 
-        {/* Subtext with Crustaceans Signature font */}
         <p 
           className="mt-4 text-[22px] font-normal leading-[1.8] text-[#6b7280] dark:text-[#a1a1aa] max-w-[420px]"
           style={{ fontFamily: "'Crustaceans Signature', cursive" }}
@@ -108,7 +104,6 @@ export function TypewriterHero() {
           Get accurate recipes, exact quantities, and step-by-step guidance — powered by AI.
         </p>
 
-        {/* Buttons */}
         <div className="mt-7 flex flex-wrap items-center justify-center md:justify-start gap-[10px]">
           <Button 
             onClick={user ? handleScrollToForm : undefined}
