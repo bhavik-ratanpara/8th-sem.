@@ -72,7 +72,7 @@ export function TypewriterHero() {
             fontSize: 'clamp(36px, 5vw, 56px)' 
           }}
         >
-          <span className="block text-[#0f0f0f] dark:text-[#ffffff]">Cook Smarter,</span>
+          <span className="block text-[#0f0f0f] dark:text-white">Cook Smarter,</span>
           <span className="block min-h-[1.2em] text-[#2563eb] dark:text-[#60a5fa]">
             {currentWord}
             <span className={cn(
