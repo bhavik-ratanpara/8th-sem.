@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -6,6 +5,7 @@ import { useUser } from '@/firebase';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import Link from 'next/link';
 
 const words = [
   'Not Harder.',
@@ -22,8 +22,8 @@ export function TypewriterHero() {
   const [showCursor, setShowCursor] = useState(true);
   const { user } = useUser();
 
-  // Find the hero image from the placeholder library
-  const heroImage = PlaceHolderImages.find(img => img.id === 'hero-food-cutout');
+  // Find the hero image from the placeholder library (mapped to local path /hero-food.png)
+  const heroImageData = PlaceHolderImages.find(img => img.id === 'hero-food-cutout');
 
   useEffect(() => {
     const blink = setInterval(() => {
@@ -66,23 +66,22 @@ export function TypewriterHero() {
   };
 
   return (
-    <section className="w-full flex flex-col md:flex-row items-center gap-10 min-h-[520px] px-5 md:px-[60px] py-12 md:py-12 bg-background overflow-hidden">
+    <section className="w-full flex flex-col md:flex-row items-center gap-10 min-h-[520px] px-5 md:px-[60px] py-12 md:py-20 bg-background overflow-hidden">
       {/* Left Side - Cutout Image */}
       <div className="w-full md:w-[48%] order-1 flex justify-start">
         <div className="relative w-full max-w-[480px]">
-          {heroImage && (
-            <img
-              src={heroImage.imageUrl}
-              alt={heroImage.description}
-              className="w-full h-auto object-contain bg-transparent"
-              data-ai-hint={heroImage.imageHint}
-            />
-          )}
+          {/* Using the local image reference from public folder */}
+          <img
+            src={heroImageData?.imageUrl || "/hero-food.png"}
+            alt="Chef"
+            className="w-full h-auto object-contain bg-transparent border-none"
+            style={{ background: 'none' }}
+          />
         </div>
       </div>
 
       {/* Right Side - Content */}
-      <div className="w-full md:w-[52%] flex flex-col items-center md:items-start text-center md:text-left md:pl-[48px] order-2">
+      <div className="w-full md:w-[52%] flex flex-col items-start text-left md:pl-[48px] order-2">
         {/* Heading */}
         <h1 
           className="font-extrabold leading-[1.08] tracking-[-0.04em] mb-0" 
@@ -101,16 +100,16 @@ export function TypewriterHero() {
           </span>
         </h1>
 
-        {/* Subtext with Signature font */}
+        {/* Subtext with Crustaceans Signature font */}
         <p 
-          className="mt-4 text-[22px] font-normal leading-[1.8] text-[#a1a1aa] dark:text-[#a1a1aa]"
+          className="mt-4 text-[22px] font-normal leading-[1.8] text-[#a1a1aa] dark:text-[#a1a1aa] max-w-[420px]"
           style={{ fontFamily: "'Crustaceans Signature', cursive" }}
         >
           Get accurate recipes, exact quantities, and step-by-step guidance — powered by AI.
         </p>
 
         {/* Buttons */}
-        <div className="mt-7 flex flex-wrap items-center justify-center md:justify-start gap-[10px]">
+        <div className="mt-7 flex flex-wrap items-center justify-start gap-[10px]">
           <Button 
             onClick={user ? handleScrollToForm : undefined}
             asChild={!user}
@@ -119,7 +118,7 @@ export function TypewriterHero() {
             {user ? (
               <span>Generate a Recipe</span>
             ) : (
-              <a href="/signup">Generate a Recipe</a>
+              <Link href="/signup">Generate a Recipe</Link>
             )}
           </Button>
           <Button 
