@@ -23,6 +23,7 @@ export function TypewriterHero() {
   const [showCursor, setShowCursor] = useState(true);
   const { user } = useUser();
 
+  // Reference the metadata from src/lib/placeholder-images.json
   const heroImageData = PlaceHolderImages.find(img => img.id === 'hero-food-cutout');
 
   useEffect(() => {
@@ -67,21 +68,21 @@ export function TypewriterHero() {
 
   return (
     <section className="w-full flex flex-col md:flex-row items-center gap-10 min-h-[520px] px-5 md:px-[60px] py-12 md:py-20 bg-background overflow-hidden">
-      {/* Left Side - Cutout Image */}
+      {/* Left Side - Cutout Image (48% width) */}
       <div className="w-full md:w-[48%] order-1 flex justify-start">
         <div className="relative w-full max-w-[480px]">
           <img
             src={heroImageData?.imageUrl || "/hero-food.png"}
-            alt="Chef"
+            alt="Chef or Food Subject"
             className="w-full h-auto object-contain bg-transparent border-none max-h-[280px] md:max-h-full"
             style={{ background: 'none' }}
           />
         </div>
       </div>
 
-      {/* Right Side - Content */}
+      {/* Right Side - Content (52% width) */}
       <div className="w-full md:w-[52%] flex flex-col items-center md:items-start text-center md:text-left md:pl-[48px] order-2">
-        {/* Heading */}
+        {/* Heading using Cal Sans */}
         <h1 
           className="font-extrabold leading-[1.08] tracking-[-0.04em] mb-0" 
           style={{ 
