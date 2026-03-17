@@ -5,7 +5,8 @@ import { useAuth, useFirestore, setDocumentNonBlocking } from '@/firebase';
 import { 
   signInWithEmailAndPassword, 
   GoogleAuthProvider, 
-  signInWithPopup 
+  signInWithRedirect,
+  getRedirectResult
 } from 'firebase/auth';
 import { doc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
@@ -41,7 +42,25 @@ export default function LoginPage() {
 
   useEffect(() => {
     setIsMounted(true);
-  }, []);
+    // Handle the result after redirect comes back
+    getRedirectResult(auth)
+      .then(async (result) => {
+        if (result?.user) {
+          await syncUserToFirestore(result.user);
+          router.push("/");
+        }
+      })
+      .catch((error) => {
+        console.error("Auth error:", error);
+        if (error.code === 'auth/unauthorized-domain') {
+          toast({
+            variant: "destructive",
+            title: "Domain Not Authorized",
+            description: "Please add this domain to the Authorized Domains list in the Firebase Console.",
+          });
+        }
+      });
+  }, [auth, router, toast]);
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -89,16 +108,13 @@ export default function LoginPage() {
     setIsLoading(true);
     const provider = new GoogleAuthProvider();
     try {
-      const result = await signInWithPopup(auth, provider);
-      await syncUserToFirestore(result.user);
-      router.push('/');
+      await signInWithRedirect(auth, provider);
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Error",
         description: error.message,
       });
-    } finally {
       setIsLoading(false);
     }
   };
@@ -109,7 +125,7 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-4 bg-background">
       <div className="w-full max-w-[400px] space-y-8">
         <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold tracking-tight">Welcome Back</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Welcome Back</h1>
           <p className="text-sm text-secondary-foreground">Please sign in to your account.</p>
         </div>
 

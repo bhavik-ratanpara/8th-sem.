@@ -126,7 +126,6 @@ export function RecipeForm({ onSubmit, isLoading, selectedDishName }: RecipeForm
                 <FormLabel className="text-[13px] font-medium text-foreground">Diet Type</FormLabel>
                 <FormControl>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {/* Vegetarian Card */}
                     <label 
                       htmlFor="diet-veg"
                       className={cn(
@@ -159,7 +158,6 @@ export function RecipeForm({ onSubmit, isLoading, selectedDishName }: RecipeForm
                       </div>
                     </label>
 
-                    {/* Non-Vegetarian Card */}
                     <label 
                       htmlFor="diet-nonveg"
                       className={cn(
@@ -198,7 +196,7 @@ export function RecipeForm({ onSubmit, isLoading, selectedDishName }: RecipeForm
             )}
           />
 
-          <Button type="submit" disabled={isLoading} className="w-full bg-primary text-primary-foreground h-12 font-semibold rounded-md text-base shadow-sm hover:brightness-110 active:scale-[0.98] transition-all">
+          <Button type="submit" disabled={isLoading} className="w-full bg-primary text-primary-foreground h-12 font-semibold rounded-md text-base shadow-sm">
             {isLoading ? (
               <>
                 <Loader2 className="mr-3 h-5 w-5 animate-spin" />

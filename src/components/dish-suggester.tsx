@@ -54,7 +54,7 @@ export function DishSuggester({ onSuggestionSelect }: DishSuggesterProps) {
 
   return (
     <div className="space-y-8">
-      <div className="card-saas p-6 bg-card border border-border shadow-sm rounded-lg">
+      <div className="bg-card border border-border p-6 shadow-sm rounded-lg">
         <div className="flex items-center gap-2 mb-4">
           <Sparkles className="w-4 h-4 text-primary" />
           <h2 className="text-sm font-semibold uppercase tracking-wider text-secondary-foreground">AI Recipe Assistant</h2>

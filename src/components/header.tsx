@@ -9,15 +9,6 @@ import { YoutubeSearchResults, type YouTubeVideo } from './youtube-search-result
 import { useAuth, useUser } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { useTheme } from 'next-themes';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 
@@ -29,13 +20,36 @@ export function Header() {
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   
-  const { theme, setTheme } = useTheme();
+  // FIX: Read initial state from localStorage or system on first render
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    const saved = localStorage.getItem("theme");
+    if (saved) return saved === "dark";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
+
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
 
+  // FIX: Apply theme on mount and ensure state is correctly synced
   useEffect(() => {
     setMounted(true);
+    const saved = localStorage.getItem("theme");
+    const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const theme = saved || (systemDark ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", theme);
+    setIsDark(theme === "dark");
   }, []);
+
+  const toggleTheme = () => {
+    setIsDark(prev => {
+      const newTheme = !prev;
+      const themeName = newTheme ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", themeName);
+      localStorage.setItem("theme", themeName);
+      return newTheme;
+    });
+  };
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -69,7 +83,7 @@ export function Header() {
   };
 
   return (
-    <header className="fixed top-0 z-50 w-full bg-background border-b border-border h-16 transition-colors duration-200">
+    <header className="fixed top-0 z-50 w-full bg-background border-b border-border h-16">
       <div className="max-content flex h-full items-center px-4 justify-between">
         <Link href="/" className="flex items-center gap-2">
           <ChefHat className="h-6 w-6 text-primary" />
@@ -122,9 +136,9 @@ export function Header() {
                   variant="ghost"
                   size="icon"
                   className="h-10 w-10 rounded-md hover:bg-secondary"
-                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  onClick={toggleTheme}
                 >
-                  {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                  {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                 </Button>
               )}
 
@@ -178,3 +192,12 @@ export function Header() {
     </header>
   );
 }
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
