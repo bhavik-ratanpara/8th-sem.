@@ -1,11 +1,9 @@
-
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useUser } from '@/firebase';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Link from 'next/link';
 
 const words = [
@@ -22,8 +20,6 @@ export function TypewriterHero() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showCursor, setShowCursor] = useState(true);
   const { user } = useUser();
-
-  const heroImageData = PlaceHolderImages.find(img => img.id === 'hero-food-cutout');
 
   useEffect(() => {
     const blink = setInterval(() => {
@@ -66,21 +62,29 @@ export function TypewriterHero() {
   };
 
   return (
-    <section className="w-full flex flex-col md:flex-row items-center gap-10 min-h-[520px] px-5 md:px-[60px] py-12 md:py-20 bg-background overflow-hidden">
-      {/* Left Side - Cutout Image (48% width) */}
-      <div className="w-full md:w-[48%] order-1 flex justify-start">
-        <div className="relative w-full max-w-[480px]">
-          <img
-            src={heroImageData?.imageUrl || "/hero-food.png"}
-            alt="Chef or Food Subject"
-            className="w-full h-auto object-contain bg-transparent border-none max-h-[280px] md:max-h-full"
-            style={{ background: 'none' }}
-          />
-        </div>
+    <section className="w-full flex flex-col md:flex-row items-center gap-12 min-h-[500px] px-5 md:px-[60px] py-12 md:py-20 bg-background overflow-hidden">
+      {/* Left Side - Cutout Image (45% width) */}
+      <div className="w-full md:w-[45%] order-1 flex justify-center md:justify-start">
+        <img
+          src="/hero-food.png"
+          alt="Chef"
+          style={{
+            width: "100%",
+            maxWidth: "460px",
+            height: "auto",
+            objectFit: "contain",
+            background: "none",
+            border: "none",
+            borderRadius: "0",
+            boxShadow: "none",
+            display: "block"
+          }}
+          className="max-h-[280px] md:max-h-full"
+        />
       </div>
 
-      {/* Right Side - Content (52% width) */}
-      <div className="w-full md:w-[52%] flex flex-col items-center md:items-start text-center md:text-left md:pl-[48px] order-2">
+      {/* Right Side - Content (55% width) */}
+      <div className="w-full md:w-[55%] flex flex-col items-center md:items-start text-center md:text-left md:pl-[32px] order-2">
         <h1 
           className="font-extrabold leading-[1.08] tracking-[-0.04em] mb-0" 
           style={{ 
@@ -99,7 +103,7 @@ export function TypewriterHero() {
         </h1>
 
         <p 
-          className="mt-4 text-[22px] font-normal leading-[1.8] text-[#6b7280] dark:text-[#a1a1aa] max-w-[420px]"
+          className="mt-4 text-[22px] font-normal leading-[1.8] text-[#6b7280] dark:text-[#a1a1aa] max-w-[400px]"
           style={{ fontFamily: "'Crustaceans Signature', cursive" }}
         >
           Get accurate recipes, exact quantities, and step-by-step guidance — powered by AI.
@@ -119,7 +123,7 @@ export function TypewriterHero() {
           </Button>
           <Button 
             variant="outline" 
-            className="h-auto py-[11px] px-6 text-sm font-medium rounded-lg border-border bg-transparent text-[#6b7280] dark:text-[#71717a] hover:text-foreground transition-all"
+            className="h-auto py-[11px] px-6 text-sm font-medium rounded-lg border-[#e5e7eb] dark:border-[#2a2a2a] bg-transparent text-[#6b7280] dark:text-[#71717a] hover:text-[#0f0f0f] dark:hover:text-white hover:border-[#0f0f0f] dark:hover:border-[#3f3f46] transition-all"
           >
             See How It Works
           </Button>
