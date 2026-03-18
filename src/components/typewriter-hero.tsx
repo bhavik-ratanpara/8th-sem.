@@ -63,14 +63,14 @@ export function TypewriterHero() {
   };
 
   return (
-    <section className="w-full flex flex-col md:flex-row items-center justify-center gap-3 md:gap-12 min-h-[100svh] md:min-h-[520px] px-5 md:px-[60px] py-4 md:py-20 bg-background overflow-hidden">
+    <section className="w-full flex flex-col md:flex-row items-center justify-center gap-2 md:gap-12 min-h-fit md:min-h-[520px] px-5 md:px-[60px] py-4 md:py-20 bg-background overflow-hidden">
       {/* Right Side (Above on Mobile) — Radar */}
-      <div className="order-1 md:order-2 w-[min(280px,75vw)] h-[min(280px,75vw)] md:w-[420px] md:h-[420px] flex items-center justify-center flex-shrink-0">
+      <div className="order-1 md:order-2 w-[min(260px,80vw)] h-[min(260px,80vw)] md:w-[420px] md:h-[420px] flex items-center justify-center flex-shrink-0 p-0 m-0">
         <RadarFeatures />
       </div>
 
       {/* Left Side (Below on Mobile) - Content */}
-      <div className="order-2 md:order-1 w-full md:w-[55%] flex flex-col items-center md:items-start text-center md:text-left px-0">
+      <div className="order-2 md:order-1 w-full md:w-[55%] flex flex-col items-center md:items-start text-center md:text-left px-0 mt-2 md:mt-0">
         <h1 
           className="font-extrabold leading-[1.08] tracking-[-0.04em] mb-0" 
           style={{ 

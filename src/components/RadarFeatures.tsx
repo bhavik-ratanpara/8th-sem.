@@ -157,10 +157,12 @@ export function RadarFeatures() {
     <div 
       ref={containerRef}
       className="relative w-full aspect-square flex items-center justify-center overflow-visible"
+      style={{ padding: 0, margin: 0, lineHeight: 0 }}
     >
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full pointer-events-none"
+        style={{ display: 'block', padding: 0, margin: 0 }}
       />
 
       {size > 0 && features.map((feature) => {
