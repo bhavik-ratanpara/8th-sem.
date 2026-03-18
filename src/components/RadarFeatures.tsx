@@ -11,20 +11,22 @@ const features = [
 ]
 
 export function RadarFeatures() {
+  const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const angleRef = useRef(0)
   const animRef = useRef<number>()
   const [theme, setTheme] = useState<'light' | 'dark'>('light')
-  const [size, setSize] = useState(420)
+  const [size, setSize] = useState(0)
 
   useEffect(() => {
-    const handleResize = () => {
-      const newSize = Math.min(420, window.innerWidth * 0.85)
-      setSize(newSize)
+    const updateSize = () => {
+      if (containerRef.current) {
+        setSize(containerRef.current.offsetWidth)
+      }
     }
 
-    handleResize()
-    window.addEventListener('resize', handleResize)
+    updateSize()
+    window.addEventListener('resize', updateSize)
 
     const observer = new MutationObserver(() => {
       const currentTheme = document.documentElement.getAttribute('data-theme') as 'light' | 'dark'
@@ -34,27 +36,35 @@ export function RadarFeatures() {
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
     setTheme((document.documentElement.getAttribute('data-theme') as 'light' | 'dark') || 'light')
 
+    return () => {
+      window.removeEventListener('resize', updateSize)
+      observer.disconnect()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (size === 0) return
+
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    canvas.width = size
+    canvas.height = size
+
+    const cx = size / 2
+    const cy = size / 2
+    const maxR = size / 2 - 20
+
     const draw = () => {
-      const canvas = canvasRef.current
-      if (!canvas) return
-      const ctx = canvas.getContext('2d')
-      if (!ctx) return
-
-      const currentSize = Math.min(420, window.innerWidth * 0.85)
-      canvas.width = currentSize
-      canvas.height = currentSize
-
-      const cx = currentSize / 2
-      const cy = currentSize / 2
-      const maxR = currentSize / 2 - 20
-
-      ctx.clearRect(0, 0, currentSize, currentSize)
+      ctx.clearRect(0, 0, size, size)
 
       // Draw circles
       for (let i = 1; i <= 4; i++) {
         ctx.beginPath()
         ctx.arc(cx, cy, (maxR / 4) * i, 0, Math.PI * 2)
-        ctx.strokeStyle = 'rgba(37, 99, 235, 0.15)'
+        ctx.strokeStyle = theme === 'light' ? 'rgba(37, 99, 235, 0.1)' : 'rgba(37, 99, 235, 0.15)'
         ctx.lineWidth = 1
         ctx.stroke()
       }
@@ -63,7 +73,7 @@ export function RadarFeatures() {
       ctx.beginPath()
       ctx.moveTo(cx - maxR, cy)
       ctx.lineTo(cx + maxR, cy)
-      ctx.strokeStyle = 'rgba(37, 99, 235, 0.1)'
+      ctx.strokeStyle = 'rgba(37, 99, 235, 0.08)'
       ctx.lineWidth = 1
       ctx.stroke()
 
@@ -79,7 +89,7 @@ export function RadarFeatures() {
       ctx.moveTo(cx, cy)
       ctx.arc(cx, cy, maxR, sweepAngle - Math.PI / 4, sweepAngle)
       ctx.closePath()
-      ctx.fillStyle = 'rgba(37, 99, 235, 0.08)'
+      ctx.fillStyle = theme === 'light' ? 'rgba(37, 99, 235, 0.04)' : 'rgba(37, 99, 235, 0.08)'
       ctx.fill()
 
       // Draw sweep line
@@ -89,13 +99,13 @@ export function RadarFeatures() {
         cx + Math.cos(sweepAngle) * maxR,
         cy + Math.sin(sweepAngle) * maxR
       )
-      ctx.strokeStyle = 'rgba(37, 99, 235, 0.8)'
+      ctx.strokeStyle = 'rgba(37, 99, 235, 0.6)'
       ctx.lineWidth = 2
       ctx.stroke()
 
       // Draw center dot
       ctx.beginPath()
-      ctx.arc(cx, cy, 4, 0, Math.PI * 2)
+      ctx.arc(cx, cy, 3, 0, Math.PI * 2)
       ctx.fillStyle = '#2563eb'
       ctx.fill()
 
@@ -106,16 +116,16 @@ export function RadarFeatures() {
         const x = cx + Math.cos(angle) * r
         const y = cy + Math.sin(angle) * r
 
-        const glow = ctx.createRadialGradient(x, y, 0, x, y, 12)
-        glow.addColorStop(0, 'rgba(96, 165, 250, 0.4)')
+        const glow = ctx.createRadialGradient(x, y, 0, x, y, 10)
+        glow.addColorStop(0, 'rgba(96, 165, 250, 0.3)')
         glow.addColorStop(1, 'rgba(96, 165, 250, 0)')
         ctx.beginPath()
-        ctx.arc(x, y, 12, 0, Math.PI * 2)
+        ctx.arc(x, y, 10, 0, Math.PI * 2)
         ctx.fillStyle = glow
         ctx.fill()
 
         ctx.beginPath()
-        ctx.arc(x, y, 4, 0, Math.PI * 2)
+        ctx.arc(x, y, 3, 0, Math.PI * 2)
         ctx.fillStyle = '#60a5fa'
         ctx.fill()
       })
@@ -127,13 +137,11 @@ export function RadarFeatures() {
     draw()
     return () => {
       if (animRef.current) cancelAnimationFrame(animRef.current)
-      window.removeEventListener('resize', handleResize)
-      observer.disconnect()
     }
-  }, [])
+  }, [size, theme])
 
   const labelStyle = theme === 'light' ? {
-    background: 'rgba(255, 255, 255, 0.85)',
+    background: 'rgba(255, 255, 255, 0.9)',
     color: '#2563eb',
     border: '1px solid rgba(37, 99, 235, 0.2)',
   } : {
@@ -146,26 +154,16 @@ export function RadarFeatures() {
   const cy = size / 2
 
   return (
-    <div style={{
-      position: 'relative',
-      width: `min(420px, 85vw)`,
-      height: `min(420px, 85vw)`,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}>
+    <div 
+      ref={containerRef}
+      className="relative w-full aspect-square flex items-center justify-center overflow-visible"
+    >
       <canvas
         ref={canvasRef}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%'
-        }}
+        className="absolute inset-0 w-full h-full pointer-events-none"
       />
 
-      {features.map((feature) => {
+      {size > 0 && features.map((feature) => {
         const angle = (feature.angle * Math.PI) / 180
         const r = (size / 2) * feature.distance
         const x = cx + Math.cos(angle) * r
@@ -180,8 +178,8 @@ export function RadarFeatures() {
               top: y,
               transform: 'translate(-50%, -50%)',
               borderRadius: '999px',
-              padding: '4px 10px',
-              fontSize: size < 350 ? '9px' : '11px',
+              padding: size < 300 ? '3px 8px' : '4px 10px',
+              fontSize: size < 300 ? '9px' : '11px',
               fontWeight: 500,
               whiteSpace: 'nowrap',
               pointerEvents: 'none',
@@ -203,12 +201,12 @@ export function RadarFeatures() {
         textAlign: 'center',
         zIndex: 2,
         pointerEvents: 'none',
-        marginTop: size < 350 ? '20px' : '30px',
+        marginTop: size < 300 ? '20px' : '30px',
       }}>
         <div style={{
-          fontSize: size < 350 ? '9px' : '11px',
-          color: '#60a5fa',
-          fontWeight: 600,
+          fontSize: size < 300 ? '9px' : '11px',
+          color: '#2563eb',
+          fontWeight: 700,
           letterSpacing: '0.1em',
           textTransform: 'uppercase',
         }}>
