@@ -1,6 +1,7 @@
+
 'use client';
 
-import { Loader2, Settings2 } from 'lucide-react';
+import { Loader2, Settings2, Bookmark, Check, History } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
 import { RecipeCard } from './recipe-card';
 import { useEffect, useState } from 'react';
@@ -8,6 +9,10 @@ import { type CreateRecipeOutput, type Ingredient, type CreateRecipeInput } from
 import { regenerateInstructionsAction } from '@/app/actions';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
+import { saveRecipe } from '@/lib/save-recipe';
+import { useUser } from '@/firebase';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
 
 type RecipeDisplayProps = {
   recipe: CreateRecipeOutput | null;
@@ -45,12 +50,19 @@ export function RecipeDisplay({ recipe, setRecipe, isLoading, originalInput, onR
   const [ingredientsChanged, setIngredientsChanged] = useState(false);
   const [servings, setServings] = useState(1);
   const [modificationText, setModificationText] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const [hasSaved, setHasSaved] = useState(false);
+
+  const { user } = useUser();
+  const { toast } = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     if (recipe) {
       setDisplayedRecipe(recipe);
       setServings(recipe.servings);
       setIngredientsChanged(false);
+      setHasSaved(false);
     } else {
       setDisplayedRecipe(null);
     }
@@ -102,6 +114,45 @@ export function RecipeDisplay({ recipe, setRecipe, isLoading, originalInput, onR
     setModificationText('');
   };
 
+  const handleSaveRecipe = async () => {
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+    if (!displayedRecipe || !originalInput) return;
+
+    setIsSaving(true);
+    try {
+      const structuredIngredients = displayedRecipe.ingredients.map(i => `${i.name} (${i.quantity} ${i.unit || ''})`);
+      const structuredSteps = displayedRecipe.instructions.split('\n').filter(s => s.trim().length > 0);
+
+      await saveRecipe(user.uid, {
+        recipeName: displayedRecipe.title,
+        cuisine: originalInput.location,
+        servings: servings,
+        dietType: originalInput.diet,
+        language: originalInput.language,
+        ingredients: structuredIngredients,
+        steps: structuredSteps,
+        isFavourite: false
+      });
+
+      setHasSaved(true);
+      toast({
+        title: "Recipe Saved! 🎉",
+        description: "Find it anytime in My Recipes",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Could not save",
+        description: "Please try again later.",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   if (isLoading && !recipe) {
     return (
       <div className="space-y-6">
@@ -133,6 +184,35 @@ export function RecipeDisplay({ recipe, setRecipe, isLoading, originalInput, onR
         servings={servings}
         onServingsChange={setServings}
       />
+
+      {/* Action Buttons */}
+      <div className="flex flex-wrap gap-4">
+        <Button 
+          onClick={handleSaveRecipe} 
+          disabled={isSaving || hasSaved}
+          className={cn(
+            "h-12 px-8 font-semibold text-sm transition-all shadow-md rounded-lg gap-2",
+            hasSaved ? "bg-green-600 hover:bg-green-700 text-white" : "bg-primary text-primary-foreground"
+          )}
+        >
+          {isSaving ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : hasSaved ? (
+            <Check className="h-4 w-4" />
+          ) : (
+            <Bookmark className="h-4 w-4" />
+          )}
+          {hasSaved ? 'Saved ✓' : 'Save Recipe'}
+        </Button>
+        <Button 
+          variant="outline" 
+          onClick={() => router.push('/history')}
+          className="h-12 px-8 font-semibold text-sm border-primary text-primary hover:bg-primary/5 rounded-lg gap-2"
+        >
+          <History className="h-4 w-4" />
+          View My Recipes
+        </Button>
+      </div>
 
       <div className="bg-card border border-border p-6 rounded-lg shadow-sm">
           <div className="flex items-center gap-2 mb-4">
