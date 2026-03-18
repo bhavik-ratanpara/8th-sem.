@@ -29,12 +29,16 @@ export function RadarFeatures() {
     window.addEventListener('resize', updateSize)
 
     const observer = new MutationObserver(() => {
-      const currentTheme = document.documentElement.getAttribute('data-theme') as 'light' | 'dark'
-      setTheme(currentTheme || 'light')
+      if (typeof document !== 'undefined') {
+        const currentTheme = document.documentElement.getAttribute('data-theme') as 'light' | 'dark'
+        setTheme(currentTheme || 'light')
+      }
     })
     
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
-    setTheme((document.documentElement.getAttribute('data-theme') as 'light' | 'dark') || 'light')
+    if (typeof document !== 'undefined') {
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+      setTheme((document.documentElement.getAttribute('data-theme') as 'light' | 'dark') || 'light')
+    }
 
     return () => {
       window.removeEventListener('resize', updateSize)
