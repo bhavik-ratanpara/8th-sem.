@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Loader2, Settings2, Bookmark, Check, History } from 'lucide-react';
@@ -13,6 +12,7 @@ import { saveRecipe } from '@/lib/save-recipe';
 import { useUser } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 type RecipeDisplayProps = {
   recipe: CreateRecipeOutput | null;
