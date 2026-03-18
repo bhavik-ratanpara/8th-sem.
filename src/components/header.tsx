@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { Loader2, Search, LogOut, User as UserIcon, ChefHat, Moon, Sun, BookMarked, Star } from 'lucide-react';
+import { Loader2, Search, LogOut, User as UserIcon, ChefHat, Moon, Sun, BookMarked, Star, X } from 'lucide-react';
 import { Popover, PopoverContent } from '@/components/ui/popover';
 import { YoutubeSearchResults, type YouTubeVideo } from './youtube-search-results';
 import { useAuth, useUser } from '@/firebase';
@@ -11,6 +11,7 @@ import { signOut } from 'firebase/auth';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import Link from 'next/link';
 import * as PopoverPrimitive from "@radix-ui/react-popover";
+import { cn } from '@/lib/utils';
 
 export function Header() {
   const [query, setQuery] = useState('');
@@ -20,6 +21,7 @@ export function Header() {
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   
   const [isDark, setIsDark] = useState<boolean>(() => {
@@ -92,26 +94,27 @@ export function Header() {
   };
 
   return (
-    <header className="fixed top-0 z-50 w-full bg-background border-b border-border h-16">
-      <div className="max-content flex h-full items-center px-4 justify-between">
-        <Link href="/" className="flex items-center gap-2">
+    <header className="fixed top-0 z-50 w-full bg-background border-b border-border min-h-[4rem]">
+      <div className="max-content flex h-16 items-center px-4 justify-between">
+        <Link href="/" className={cn("flex items-center gap-2", isMobileSearchOpen && "hidden sm:flex")}>
           <ChefHat className="h-6 w-6 text-primary" />
           <span className="font-bold text-xl tracking-tight text-foreground">
             Cooking Lab
           </span>
         </Link>
 
-        <div className="flex items-center space-x-4">
+        <div className={cn("flex items-center space-x-2 md:space-x-4 flex-1 justify-end")}>
             {!isUserLoading && user && (
-              <div className="hidden md:block">
+              <div className={cn("flex-1 max-w-sm", !isMobileSearchOpen && "hidden md:block")}>
                 <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-                    <div className="relative w-full max-w-sm">
-                        <form onSubmit={handleSearch}>
+                    <div className="relative w-full">
+                        <form onSubmit={handleSearch} className="flex items-center gap-2">
                             <PopoverPrimitive.Anchor asChild>
                                 <Input
                                     type="search"
-                                    placeholder="Search for tutorials..."
+                                    placeholder="Search tutorials..."
                                     className="pr-10 h-10 bg-secondary/50 border-border"
+                                    autoFocus={isMobileSearchOpen}
                                     value={query}
                                     onChange={(e) => {
                                         setQuery(e.target.value);
@@ -132,7 +135,7 @@ export function Header() {
                             </Button>
                         </form>
                     </div>
-                    <PopoverContent className="w-[400px] mt-2 p-0 rounded-lg shadow-xl bg-popover border-border" align="end">
+                    <PopoverContent className="w-[calc(100vw-2rem)] md:w-[400px] mt-2 p-0 rounded-lg shadow-xl bg-popover border-border" align="end">
                         <YoutubeSearchResults videos={videos} isLoading={isLoading} error={error} />
                     </PopoverContent>
                 </Popover>
@@ -140,7 +143,18 @@ export function Header() {
             )}
 
             <nav className="flex items-center space-x-2">
-              {mounted && (
+              {!isUserLoading && user && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="md:hidden h-10 w-10"
+                  onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
+                >
+                  {isMobileSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
+                </Button>
+              )}
+
+              {mounted && !isMobileSearchOpen && (
                 <Button
                   variant="ghost"
                   size="icon"
@@ -151,7 +165,7 @@ export function Header() {
                 </Button>
               )}
 
-              {!isUserLoading && (
+              {!isUserLoading && !isMobileSearchOpen && (
                 <>
                   {user ? (
                     <div className="relative flex items-center gap-4" ref={dropdownRef}>

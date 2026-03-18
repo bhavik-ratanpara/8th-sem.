@@ -64,13 +64,18 @@ export function TypewriterHero() {
 
   return (
     <section className="w-full flex flex-col md:flex-row items-center gap-12 min-h-[520px] px-5 md:px-[60px] py-12 md:py-20 bg-background overflow-hidden">
-      {/* Left Side - Content (55% width) */}
+      {/* Right Side (Above on Mobile) — Radar */}
+      <div className="w-full md:w-[45%] flex items-center justify-center p-5 order-1 md:order-2">
+        <RadarFeatures />
+      </div>
+
+      {/* Left Side (Below on Mobile) - Content */}
       <div className="w-full md:w-[55%] flex flex-col items-center md:items-start text-center md:text-left order-2 md:order-1">
         <h1 
           className="font-extrabold leading-[1.08] tracking-[-0.04em] mb-0" 
           style={{ 
             fontFamily: "'Cal Sans', Inter, sans-serif", 
-            fontSize: 'clamp(36px, 5vw, 56px)' 
+            fontSize: 'clamp(32px, 5vw, 56px)' 
           }}
         >
           <span className="block text-[#0f0f0f] dark:text-white">Cook Smarter,</span>
@@ -84,7 +89,7 @@ export function TypewriterHero() {
         </h1>
 
         <p 
-          className="mt-4 text-[22px] font-normal leading-[1.8] text-[#6b7280] dark:text-[#a1a1aa] max-w-[420px]"
+          className="mt-4 text-[18px] md:text-[22px] font-normal leading-[1.8] text-[#6b7280] dark:text-[#a1a1aa] max-w-[420px]"
           style={{ fontFamily: "'Crustaceans Signature', cursive" }}
         >
           Get accurate recipes, exact quantities, and step-by-step guidance — powered by AI.
@@ -109,18 +114,6 @@ export function TypewriterHero() {
             See How It Works
           </Button>
         </div>
-      </div>
-
-      {/* Right Side — Radar */}
-      <div style={{
-        flex: "0 0 45%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "20px",
-        order: "1"
-      }} className="w-full md:w-[45%] order-1 md:order-2">
-        <RadarFeatures />
       </div>
     </section>
   );
