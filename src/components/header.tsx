@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -161,12 +160,17 @@ export function Header() {
                       
                       <Button 
                         variant="ghost" 
-                        className="relative h-10 w-10 rounded-full overflow-hidden border border-border"
+                        size="icon"
+                        className="relative rounded-full overflow-hidden border border-border p-0"
                         onClick={() => setDropdownOpen(!dropdownOpen)}
                       >
                         <Avatar className="h-full w-full">
-                          <AvatarImage src={user.photoURL || ''} alt={user.displayName || 'User'} />
-                          <AvatarFallback className="text-xs font-medium">
+                          <AvatarImage 
+                            src={user.photoURL || ''} 
+                            alt={user.displayName || 'User'} 
+                            className="object-cover"
+                          />
+                          <AvatarFallback className="text-xs font-medium bg-secondary flex items-center justify-center h-full w-full">
                             {user.displayName?.charAt(0) || user.email?.charAt(0) || <UserIcon className="h-5 w-5" />}
                           </AvatarFallback>
                         </Avatar>
