@@ -17,10 +17,11 @@ import { Input } from '@/components/ui/input';
 import { type CreateRecipeInput } from '@/ai/schemas';
 import { useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
   dishName: z.string().min(1, 'Please enter a recipe name.'),
-  servings: z.coerce.number().min(1, 'Please enter 1 or more servings.'),
+  servings: z.coerce.number().min(1, 'Minimum 1 serving.').max(100, 'Maximum 100 servings.'),
   location: z.string().min(1, 'Please enter a region or cuisine.'),
   language: z.string().min(1, 'Please enter a language.'),
   diet: z.enum(['Vegetarian', 'Non-Vegetarian'], { required_error: 'Please pick a diet type.' }),
@@ -33,6 +34,7 @@ type RecipeFormProps = {
 };
 
 export function RecipeForm({ onSubmit, isLoading, selectedDishName }: RecipeFormProps) {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -84,7 +86,32 @@ export function RecipeForm({ onSubmit, isLoading, selectedDishName }: RecipeForm
                 <FormItem>
                   <FormLabel className="text-[13px] font-medium text-foreground">Number of Servings</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="4" className="input-saas h-12" {...field} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} value={field.value ?? ''} />
+                    <Input 
+                      type="number" 
+                      min="1" 
+                      max="100" 
+                      placeholder="4" 
+                      className="input-saas h-12" 
+                      {...field} 
+                      onChange={(e) => {
+                        let val = e.target.value;
+                        if (val === '') {
+                          field.onChange(undefined);
+                          return;
+                        }
+                        let value = parseInt(val);
+                        if (isNaN(value) || value < 1) {
+                          value = 1;
+                          toast({ description: "Minimum 1 serving", duration: 2000 });
+                        }
+                        if (value > 100) {
+                          value = 100;
+                          toast({ description: "Maximum 100 servings", duration: 2000 });
+                        }
+                        field.onChange(value);
+                      }} 
+                      value={field.value ?? ''} 
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
