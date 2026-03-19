@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { ProtectedRoute } from '@/components/protected-route';
 import { useUser } from '@/firebase';
-import { getSavedRecipes, deleteRecipe, toggleFavourite, type SavedRecipe } from '@/lib/save-recipe';
+import { getSavedRecipes, deleteRecipe, toggleFavourite, shareRecipePublic, unshareRecipePublic, type SavedRecipe } from '@/lib/save-recipe';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Star, Trash2, Eye, Search, BookMarked, Filter, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Star, Trash2, Search, BookMarked, Filter, ArrowRight, ArrowLeft, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
@@ -32,7 +32,6 @@ function HistoryContent() {
         const data = await getSavedRecipes(user.uid);
         setRecipes(data);
         
-        // Handle URL-based filter (e.g. ?filter=favourite)
         const filterParam = searchParams.get('filter');
         if (filterParam === 'favourite') {
           setFilteredRecipes(data.filter(r => r.isFavourite));
@@ -51,12 +50,10 @@ function HistoryContent() {
   useEffect(() => {
     let result = recipes;
     
-    // Diet filter
     if (dietFilter !== 'All') {
       result = result.filter(r => r.dietType === dietFilter);
     }
     
-    // Search filter
     if (searchQuery.trim()) {
       result = result.filter(r => 
         r.recipeName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -64,7 +61,6 @@ function HistoryContent() {
       );
     }
 
-    // Special handling for fav filter from dropdown
     if (searchParams.get('filter') === 'favourite') {
       result = result.filter(r => r.isFavourite);
     }
@@ -101,9 +97,53 @@ function HistoryContent() {
     }
   };
 
+  const handleToggleShare = async (recipe: SavedRecipe) => {
+    if (!user || !recipe.id) return;
+    
+    try {
+      if (recipe.isPublic) {
+        if (!window.confirm("Remove this recipe from Explore? It will still be in your My Recipes.")) return;
+        
+        // Optimistic UI
+        setRecipes(prev => prev.map(r => 
+          r.id === recipe.id ? { ...r, isPublic: false } : r
+        ));
+        
+        await unshareRecipePublic(user.uid, recipe.id);
+        
+        toast({
+          title: "Removed from Explore",
+          description: "Recipe still saved in My Recipes.",
+        });
+      } else {
+        // Optimistic UI
+        setRecipes(prev => prev.map(r => 
+          r.id === recipe.id ? { ...r, isPublic: true } : r
+        ));
+        
+        await shareRecipePublic(
+          user.uid,
+          user.displayName || 'Anonymous Chef',
+          recipe.id,
+          recipe
+        );
+        
+        toast({
+          title: "Recipe Shared! 🌍",
+          description: "Your recipe is now in Explore.",
+        });
+      }
+    } catch (error) {
+      toast({ 
+        variant: "destructive", 
+        title: "Error", 
+        description: "Could not update. Try again." 
+      });
+    }
+  };
+
   return (
     <div className="max-content px-4 py-12">
-      {/* Navigation */}
       <Link 
         href="/"
         className="flex items-center gap-2 text-primary font-bold text-sm mb-10 hover:translate-x-[-4px] transition-transform w-fit"
@@ -112,10 +152,9 @@ function HistoryContent() {
         Back to Generator
       </Link>
 
-      {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
         <div className="space-y-2">
-          <h1 className="text-4xl font-extrabold tracking-tight text-foreground" style={{ fontFamily: "'Cal Sans', sans-serif" }}>My Recipes</h1>
+          <h1 className="text-4xl font-extrabold tracking-tight text-foreground" style={{ fontFamily: "Inter, sans-serif", fontWeight: 800 }}>My Recipes</h1>
           <p className="text-muted-foreground text-lg">All your saved recipes in one place</p>
         </div>
         {!isLoading && (
@@ -125,7 +164,6 @@ function HistoryContent() {
         )}
       </div>
 
-      {/* Filter Bar */}
       <div className="flex flex-col lg:flex-row gap-6 items-center justify-between mb-10 bg-card p-6 rounded-xl border border-border shadow-sm">
         <div className="flex items-center gap-2 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0">
           <Filter className="h-4 w-4 text-muted-foreground mr-2 shrink-0" />
@@ -156,7 +194,6 @@ function HistoryContent() {
         </div>
       </div>
 
-      {/* Content */}
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {[1, 2, 3, 4, 5, 6].map(i => (
@@ -220,13 +257,38 @@ function HistoryContent() {
                 <p className="text-[12px] text-muted-foreground font-medium">
                   Saved on {recipe.generatedAt?.toDate ? format(recipe.generatedAt.toDate(), 'dd MMM yyyy') : 'Recently'}
                 </p>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   <Button asChild size="sm" className="bg-primary hover:bg-primary/90 text-white font-bold h-9 px-5 rounded-lg flex-1">
                     <Link href={`/recipe/${recipe.id}`}>
                       View Recipe
                       <ArrowRight className="ml-2 h-3 w-3" />
                     </Link>
                   </Button>
+                  
+                  {!recipe.savedFromExplore ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleToggleShare(recipe)}
+                      className={cn(
+                        "h-9 px-3 border rounded-lg transition-colors flex items-center gap-2",
+                        recipe.isPublic 
+                          ? "border-blue-500 text-blue-500 bg-blue-500/10 hover:bg-blue-500/20" 
+                          : "border-border text-muted-foreground hover:bg-secondary"
+                      )}
+                    >
+                      <Globe className="h-4 w-4" />
+                      {recipe.isPublic ? 'Shared ✓' : 'Share'}
+                    </Button>
+                  ) : (
+                    <div className="text-[11px] text-muted-foreground px-3 py-2 border border-border rounded-lg bg-secondary/30 flex items-center gap-1.5">
+                      <span>By</span>
+                      <span className="text-primary font-bold">
+                        {recipe.originalSharedByName || "Another Chef"}
+                      </span>
+                    </div>
+                  )}
+
                   <Button 
                     variant="ghost" 
                     size="sm" 
@@ -259,7 +321,9 @@ function HistoryContent() {
 export default function HistoryPage() {
   return (
     <ProtectedRoute>
-      <HistoryContent />
+      <Suspense fallback={<div className="flex items-center justify-center min-h-[60vh]"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+        <HistoryContent />
+      </Suspense>
     </ProtectedRoute>
   );
 }

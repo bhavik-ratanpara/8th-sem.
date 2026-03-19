@@ -1,0 +1,219 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useParams, useRouter } from 'next/navigation'
+import { useUser } from '@/firebase'
+import { 
+  getPublicRecipes,
+  unshareRecipePublic,
+  saveFromExplore,
+  type SavedRecipe
+} from '@/lib/save-recipe'
+import { Button } from '@/components/ui/button'
+import { 
+  ArrowLeft, 
+  BookMarked, 
+  Trash2, 
+  Globe,
+  Loader2
+} from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
+import { cn } from '@/lib/utils'
+
+export default function ExploreRecipeDetailPage() {
+  const params = useParams()
+  const router = useRouter()
+  const { user } = useUser()
+  const { toast } = useToast()
+  
+  const [recipe, setRecipe] = useState<SavedRecipe | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSaving, setIsSaving] = useState(false)
+  const [isSaved, setIsSaved] = useState(false)
+
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      try {
+        const all = await getPublicRecipes()
+        const found = all.find(r => r.id === params.id)
+        setRecipe(found || null)
+      } catch (error) {
+        console.error('Error fetching recipe:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchRecipe()
+  }, [params.id])
+
+  const isOwner = recipe && user?.uid === recipe.sharedBy
+
+  const handleSaveToCookbook = async () => {
+    if (!user) {
+      router.push('/login')
+      return
+    }
+    if (!recipe) return
+
+    setIsSaving(true)
+    try {
+      await saveFromExplore(
+        user.uid,
+        user.displayName || 'Chef',
+        recipe
+      )
+      setIsSaved(true)
+      toast({
+        title: "Saved to Cookbook! 📚",
+        description: "Recipe added to My Recipes.",
+      })
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Could not save",
+        description: "Please try again.",
+      })
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleRemoveFromExplore = async () => {
+    if (!user || !recipe?.id) return
+
+    if (!window.confirm("Remove this recipe from Explore? It will still be in your My Recipes.")) return
+
+    try {
+      await unshareRecipePublic(user.uid, recipe.id)
+      toast({
+        title: "Removed from Explore",
+        description: "Recipe still saved in My Recipes.",
+      })
+      router.push('/explore')
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not remove. Try again.",
+      })
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    )
+  }
+
+  if (!recipe) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+        <h2 className="text-2xl font-bold mb-4">Recipe not found</h2>
+        <Button onClick={() => router.push('/explore')}>Back to Explore</Button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="max-content px-4 py-12 max-w-3xl mx-auto">
+      <button
+        onClick={() => router.push('/explore')}
+        className="flex items-center gap-2 text-primary font-bold text-sm mb-10 hover:translate-x-[-4px] transition-transform"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to Explore
+      </button>
+
+      <div className="bg-card border border-border rounded-xl p-8 mb-6">
+        <div className="flex items-center gap-1.5 mb-4">
+          <Globe className="h-4 w-4 text-primary" />
+          <span className="text-sm text-muted-foreground">
+            Shared by{' '}
+            <span className="font-semibold text-foreground">
+              {isOwner ? 'You' : recipe.sharedByName}
+            </span>
+          </span>
+        </div>
+
+        <h1 className="text-3xl font-extrabold tracking-tight text-foreground mb-4">
+          {recipe.recipeName}
+        </h1>
+
+        <div className="flex flex-wrap gap-2 mb-6">
+          <span className="text-[11px] font-bold px-3 py-1 bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-full border border-blue-100 dark:border-blue-800">
+            {recipe.cuisine}
+          </span>
+          <span className="text-[11px] font-bold px-3 py-1 bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400 rounded-full border border-green-100 dark:border-green-800">
+            {recipe.servings} Servings
+          </span>
+          <span className={cn(
+            "text-[11px] font-bold px-3 py-1 rounded-full border",
+            recipe.dietType === 'Vegetarian'
+              ? "bg-green-50 text-green-600 border-green-100 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800"
+              : "bg-rose-50 text-rose-600 border-rose-100 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800"
+          )}>
+            {recipe.dietType}
+          </span>
+        </div>
+
+        <div className="flex flex-wrap gap-3">
+          {!isOwner && (
+            <Button
+              onClick={handleSaveToCookbook}
+              disabled={isSaving || isSaved}
+              className="bg-primary text-white font-bold"
+            >
+              {isSaving ? (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              ) : (
+                <BookMarked className="h-4 w-4 mr-2" />
+              )}
+              {isSaved ? 'Saved to Cookbook ✓' : 'Save to My Cookbook'}
+            </Button>
+          )}
+
+          {isOwner && (
+            <Button
+              variant="outline"
+              onClick={handleRemoveFromExplore}
+              className="border-destructive text-destructive hover:bg-destructive/10"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Remove from Explore
+            </Button>
+          )}
+        </div>
+      </div>
+
+      <div className="bg-card border border-border rounded-xl p-8 mb-6">
+        <h2 className="text-xl font-bold text-foreground mb-4">Ingredients</h2>
+        <ul className="space-y-2">
+          {recipe.ingredients?.map((ingredient, index) => (
+            <li key={index} className="flex items-start gap-3 py-2 border-b border-border last:border-0">
+              <span className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0" />
+              <span className="text-sm text-foreground">{ingredient}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="bg-card border border-border rounded-xl p-8">
+        <h2 className="text-xl font-bold text-foreground mb-6">How to Cook</h2>
+        <ol className="space-y-6">
+          {recipe.steps?.map((step, index) => (
+            <li key={index} className="flex gap-4">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold">
+                {index + 1}
+              </div>
+              <p className="text-sm text-foreground leading-relaxed pt-1">
+                {step}
+              </p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  )
+}

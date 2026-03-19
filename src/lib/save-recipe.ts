@@ -1,4 +1,3 @@
-
 'use client';
 
 import { initializeFirebase } from '@/firebase';
@@ -11,7 +10,10 @@ import {
   getDocs,
   updateDoc,
   query,
-  orderBy
+  orderBy,
+  limit,
+  setDoc,
+  getDoc
 } from 'firebase/firestore';
 
 const { firestore: db } = initializeFirebase();
@@ -27,6 +29,14 @@ export interface SavedRecipe {
   steps: string[];
   generatedAt?: any;
   isFavourite: boolean;
+  isPublic?: boolean;
+  sharedBy?: string;
+  sharedByName?: string;
+  sharedAt?: any;
+  savedFromExplore?: boolean;
+  originalSharedBy?: string;
+  originalSharedByName?: string;
+  likes?: number;
 }
 
 // Save a recipe to Firestore
@@ -39,6 +49,7 @@ export async function saveRecipe(
     ...recipe,
     generatedAt: serverTimestamp(),
     isFavourite: false,
+    isPublic: false,
   });
   return docRef.id;
 }
@@ -51,8 +62,8 @@ export async function getSavedRecipes(
   const q = query(ref, orderBy('generatedAt', 'desc'));
   const snapshot = await getDocs(q);
   return snapshot.docs.map((doc) => ({
-    id: doc.id,
     ...doc.data(),
+    id: doc.id,
   })) as SavedRecipe[];
 }
 
@@ -73,4 +84,85 @@ export async function toggleFavourite(
 ): Promise<void> {
   const ref = doc(db, 'users', userId, 'savedRecipes', recipeId);
   await updateDoc(ref, { isFavourite: !current });
+}
+
+// Share recipe to public
+export async function shareRecipePublic(
+  userId: string,
+  userName: string,
+  recipeId: string,
+  recipe: SavedRecipe
+): Promise<void> {
+  const publicRef = doc(db, 'publicRecipes', recipeId);
+  
+  await setDoc(publicRef, {
+    recipeName: recipe.recipeName,
+    cuisine: recipe.cuisine,
+    servings: recipe.servings,
+    dietType: recipe.dietType,
+    language: recipe.language,
+    ingredients: recipe.ingredients,
+    steps: recipe.steps,
+    id: recipeId,
+    sharedBy: userId,
+    sharedByName: userName || 'Anonymous Chef',
+    sharedAt: serverTimestamp(),
+    originalRecipeId: recipeId,
+    likes: 0,
+  });
+
+  const userRecipeRef = doc(db, 'users', userId, 'savedRecipes', recipeId);
+  await updateDoc(userRecipeRef, { isPublic: true });
+}
+
+// Remove recipe from public
+export async function unshareRecipePublic(
+  userId: string,
+  recipeId: string
+): Promise<void> {
+  const publicRef = doc(db, 'publicRecipes', recipeId);
+  await deleteDoc(publicRef);
+
+  const userRecipeRef = doc(db, 'users', userId, 'savedRecipes', recipeId);
+  await updateDoc(userRecipeRef, { isPublic: false });
+}
+
+// Get all public recipes
+export async function getPublicRecipes(): Promise<SavedRecipe[]> {
+  const ref = collection(db, 'publicRecipes');
+  const q = query(
+    ref,
+    orderBy('sharedAt', 'desc'),
+    limit(50)
+  );
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => ({
+    ...doc.data(),
+    id: doc.id,
+  })) as SavedRecipe[];
+}
+
+// Save recipe from Explore to cookbook
+export async function saveFromExplore(
+  userId: string,
+  userName: string,
+  recipe: SavedRecipe
+): Promise<string> {
+  const ref = collection(db, 'users', userId, 'savedRecipes');
+  const docRef = await addDoc(ref, {
+    recipeName: recipe.recipeName,
+    cuisine: recipe.cuisine,
+    servings: recipe.servings,
+    dietType: recipe.dietType,
+    language: recipe.language,
+    ingredients: recipe.ingredients,
+    steps: recipe.steps,
+    generatedAt: serverTimestamp(),
+    isFavourite: false,
+    isPublic: false,
+    savedFromExplore: true,
+    originalSharedBy: recipe.sharedBy,
+    originalSharedByName: recipe.sharedByName,
+  });
+  return docRef.id;
 }

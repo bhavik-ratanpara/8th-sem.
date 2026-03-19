@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { Loader2, Search, LogOut, User as UserIcon, ChefHat, Moon, Sun, BookMarked, Star, X } from 'lucide-react';
+import { Loader2, Search, LogOut, User as UserIcon, ChefHat, Moon, Sun, BookMarked, Star, X, Globe } from 'lucide-react';
 import { Popover, PopoverContent } from '@/components/ui/popover';
 import { YoutubeSearchResults, type YouTubeVideo } from './youtube-search-results';
 import { useAuth, useUser } from '@/firebase';
@@ -31,9 +31,7 @@ export function Header() {
 
   useEffect(() => {
     setMounted(true);
-    const saved = localStorage.getItem("theme");
-    const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const theme = saved || (systemDark ? "dark" : "light");
+    const theme = localStorage.getItem("theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
     document.documentElement.setAttribute("data-theme", theme);
     setIsDark(theme === "dark");
 
@@ -99,6 +97,14 @@ export function Header() {
         </Link>
 
         <div className={cn("flex items-center space-x-2 md:space-x-4 flex-1 justify-end")}>
+            <nav className="hidden md:flex items-center gap-6 mr-6">
+              <Link href="/" className="text-sm font-medium text-foreground hover:text-primary transition-colors">Home</Link>
+              <Link href="/explore" className="text-sm font-medium text-foreground hover:text-primary transition-colors">Explore</Link>
+              {!isUserLoading && user && (
+                <Link href="/history" className="text-sm font-medium text-foreground hover:text-primary transition-colors">My Recipes</Link>
+              )}
+            </nav>
+
             {!isUserLoading && user && (
               <div className={cn("flex-1 max-w-sm", !isMobileSearchOpen && "hidden md:block")}>
                 <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
@@ -164,8 +170,6 @@ export function Header() {
                 <>
                   {user ? (
                     <div className="relative flex items-center gap-4" ref={dropdownRef}>
-                      <Link href="/" className="text-sm font-medium text-secondary-foreground hover:text-foreground transition-colors hidden sm:block">Home</Link>
-                      
                       <Button 
                         variant="ghost" 
                         size="icon"
@@ -208,6 +212,14 @@ export function Header() {
                               <Star className="h-4 w-4 text-amber-500" />
                               Favourites
                             </Link>
+                            <Link 
+                              href="/explore" 
+                              className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground hover:bg-secondary rounded-md transition-colors md:hidden"
+                              onClick={() => setDropdownOpen(false)}
+                            >
+                              <Globe className="h-4 w-4 text-blue-500" />
+                              Explore Feed
+                            </Link>
                           </div>
                           
                           <div className="border-t border-border p-1 bg-secondary/5">
@@ -224,6 +236,7 @@ export function Header() {
                     </div>
                   ) : (
                     <div className="flex gap-2">
+                      <Link href="/explore" className="text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center px-4 md:hidden">Explore</Link>
                       <Button asChild variant="ghost" size="sm" className="font-medium text-sm h-10 px-4">
                         <Link href="/login">Sign In</Link>
                       </Button>
