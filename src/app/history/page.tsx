@@ -7,7 +7,7 @@ import { getSavedRecipes, deleteRecipe, toggleFavourite, shareRecipePublic, unsh
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Star, Trash2, Search, BookMarked, Filter, ArrowRight, ArrowLeft, Globe, Loader2 } from 'lucide-react';
+import { Star, Trash2, Search, BookMarked, Filter, ArrowRight, ArrowLeft, Globe, Loader2, Share2 } from 'lucide-react';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
@@ -142,6 +142,47 @@ function HistoryContent() {
     }
   };
 
+  const handleShare = async (recipeId: string, isExplore: boolean) => {
+    const baseUrl = window.location.origin;
+    const shareUrl = isExplore
+      ? `${baseUrl}/explore/recipe/${recipeId}`
+      : `${baseUrl}/recipe/${recipeId}`;
+
+    const shareData = {
+      title: 'Check out this recipe on Cooking Lab!',
+      text: 'I found this amazing recipe on Cooking Lab — AI powered recipe generator!',
+      url: shareUrl,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        toast({
+          title: "Link Copied! 🔗",
+          description: "Recipe link copied to clipboard.",
+          duration: 2000,
+        });
+      }
+    } catch (error) {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        toast({
+          title: "Link Copied! 🔗",
+          description: "Recipe link copied to clipboard.",
+          duration: 2000,
+        });
+      } catch {
+        toast({
+          variant: "destructive",
+          title: "Could not share",
+          description: "Please copy the link manually.",
+        });
+      }
+    }
+  };
+
   return (
     <div className="max-content px-4 py-12">
       <Link 
@@ -223,17 +264,26 @@ function HistoryContent() {
             >
               <div className="flex justify-between items-start mb-4">
                 <h3 className="font-bold text-lg text-foreground line-clamp-2 pr-2">{recipe.recipeName}</h3>
-                <button 
-                  onClick={() => recipe.id && handleToggleFav(recipe.id, recipe.isFavourite)}
-                  className="transition-transform active:scale-125"
-                >
-                  <Star 
-                    className={cn(
-                      "h-6 w-6 transition-colors", 
-                      recipe.isFavourite ? "fill-amber-400 text-amber-400" : "text-muted-foreground/30 hover:text-amber-400"
-                    )} 
-                  />
-                </button>
+                <div className="flex gap-2 items-center">
+                  <button
+                    onClick={() => recipe.id && handleShare(recipe.id, false)}
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                    title="Share recipe link"
+                  >
+                    <Share2 className="h-5 w-5" />
+                  </button>
+                  <button 
+                    onClick={() => recipe.id && handleToggleFav(recipe.id, recipe.isFavourite)}
+                    className="transition-transform active:scale-125"
+                  >
+                    <Star 
+                      className={cn(
+                        "h-6 w-6 transition-colors", 
+                        recipe.isFavourite ? "fill-amber-400 text-amber-400" : "text-muted-foreground/30 hover:text-amber-400"
+                      )} 
+                    />
+                  </button>
+                </div>
               </div>
 
               <div className="flex flex-wrap gap-2 mb-6">
@@ -278,7 +328,7 @@ function HistoryContent() {
                       )}
                     >
                       <Globe className="h-4 w-4" />
-                      {recipe.isPublic ? 'Shared ✓' : 'Share'}
+                      {recipe.isPublic ? 'Shared ✓' : 'Share to Public'}
                     </Button>
                   ) : (
                     <div className="text-[11px] text-muted-foreground px-3 py-2 border border-border rounded-lg bg-secondary/30 flex items-center gap-1.5">

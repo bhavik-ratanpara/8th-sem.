@@ -16,7 +16,8 @@ import {
   BookMarked, 
   Trash2, 
   Globe,
-  Loader2
+  Loader2,
+  Share2
 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
@@ -116,6 +117,36 @@ export default function ExploreRecipeDetailPage() {
     }
   }
 
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/explore/recipe/${params.id}`;
+    
+    const shareData = {
+      title: 'Check out this recipe on Cooking Lab!',
+      text: 'Amazing recipe from Cooking Lab!',
+      url: shareUrl,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        toast({
+          title: "Link Copied! 🔗",
+          description: "Recipe link copied to clipboard.",
+          duration: 2000,
+        });
+      }
+    } catch {
+      await navigator.clipboard.writeText(shareUrl);
+      toast({
+        title: "Link Copied! 🔗",
+        description: "Recipe link copied to clipboard.",
+        duration: 2000,
+      });
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -195,6 +226,15 @@ export default function ExploreRecipeDetailPage() {
               {isSaved ? 'Saved to Cookbook ✓' : 'Save to My Cookbook'}
             </Button>
           )}
+
+          <Button
+            variant="outline"
+            onClick={handleShare}
+            className="border-border text-muted-foreground hover:text-primary transition-colors"
+          >
+            <Share2 className="h-4 w-4 mr-2" />
+            Share Link
+          </Button>
 
           {isOwner && (
             <Button

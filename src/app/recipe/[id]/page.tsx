@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -77,6 +76,36 @@ function RecipeDetailContent() {
       toast({ title: !recipe.isFavourite ? "Added to Favourites ⭐" : "Removed from Favourites" });
     } catch (error) {
       toast({ variant: "destructive", title: "Error", description: "Could not update favourite status." });
+    }
+  };
+
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/recipe/${id}`;
+    
+    const shareData = {
+      title: 'Check out this recipe on Cooking Lab!',
+      text: 'Amazing recipe from Cooking Lab!',
+      url: shareUrl,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        toast({
+          title: "Link Copied! 🔗",
+          description: "Recipe link copied to clipboard.",
+          duration: 2000,
+        });
+      }
+    } catch {
+      await navigator.clipboard.writeText(shareUrl);
+      toast({
+        title: "Link Copied! 🔗",
+        description: "Recipe link copied to clipboard.",
+        duration: 2000,
+      });
     }
   };
 
@@ -162,7 +191,12 @@ function RecipeDetailContent() {
           >
             <Star className={cn("h-6 w-6", recipe.isFavourite && "fill-current")} />
           </Button>
-          <Button variant="outline" size="icon" className="h-12 w-12 rounded-xl border-border text-muted-foreground">
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={handleShare}
+            className="h-12 w-12 rounded-xl border-border text-muted-foreground hover:text-primary transition-colors"
+          >
             <Share2 className="h-5 w-5" />
           </Button>
           <Button 

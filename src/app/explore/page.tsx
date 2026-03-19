@@ -19,7 +19,8 @@ import {
   Trash2,
   ArrowRight,
   ArrowLeft,
-  Loader2
+  Loader2,
+  Share2
 } from 'lucide-react'
 import Link from 'next/link'
 import { format } from 'date-fns'
@@ -160,6 +161,47 @@ export default function ExplorePage() {
     }
   }
 
+  const handleShare = async (recipeId: string, isExplore: boolean) => {
+    const baseUrl = window.location.origin;
+    const shareUrl = isExplore
+      ? `${baseUrl}/explore/recipe/${recipeId}`
+      : `${baseUrl}/recipe/${recipeId}`;
+
+    const shareData = {
+      title: 'Check out this recipe on Cooking Lab!',
+      text: 'I found this amazing recipe on Cooking Lab — AI powered recipe generator!',
+      url: shareUrl,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        toast({
+          title: "Link Copied! 🔗",
+          description: "Recipe link copied to clipboard.",
+          duration: 2000,
+        });
+      }
+    } catch (error) {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        toast({
+          title: "Link Copied! 🔗",
+          description: "Recipe link copied to clipboard.",
+          duration: 2000,
+        });
+      } catch {
+        toast({
+          variant: "destructive",
+          title: "Could not share",
+          description: "Please copy the link manually.",
+        });
+      }
+    }
+  };
+
   const isOwner = (recipe: SavedRecipe) => user?.uid === recipe.sharedBy
   const isSaved = (recipeId: string) => savedIds.includes(recipeId)
   const isSaving = (recipeId: string) => savingIds.includes(recipeId)
@@ -250,17 +292,26 @@ export default function ExplorePage() {
               key={recipe.id}
               className="group relative bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-xl hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 flex flex-col h-full"
             >
-              <div className="flex items-center gap-1.5 mb-3">
-                <Globe className="h-3 w-3 text-primary" />
-                <span className="text-[11px] text-muted-foreground">
-                  Shared by{' '}
-                  <span className={cn(
-                    "font-semibold",
-                    isOwner(recipe) ? "text-primary" : "text-foreground"
-                  )}>
-                    {isOwner(recipe) ? 'You' : recipe.sharedByName || 'Anonymous Chef'}
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex items-center gap-1.5">
+                  <Globe className="h-3 w-3 text-primary" />
+                  <span className="text-[11px] text-muted-foreground">
+                    Shared by{' '}
+                    <span className={cn(
+                      "font-semibold",
+                      isOwner(recipe) ? "text-primary" : "text-foreground"
+                    )}>
+                      {isOwner(recipe) ? 'You' : recipe.sharedByName || 'Anonymous Chef'}
+                    </span>
                   </span>
-                </span>
+                </div>
+                <button
+                  onClick={() => recipe.id && handleShare(recipe.id, true)}
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                  title="Share recipe link"
+                >
+                  <Share2 className="h-4 w-4" />
+                </button>
               </div>
 
               <h3 className="font-bold text-lg text-foreground line-clamp-2 mb-4">
