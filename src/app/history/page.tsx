@@ -7,7 +7,7 @@ import { getSavedRecipes, deleteRecipe, toggleFavourite, shareRecipePublic, unsh
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Star, Trash2, Search, BookMarked, Filter, ArrowRight, ArrowLeft, Globe } from 'lucide-react';
+import { Star, Trash2, Search, BookMarked, Filter, ArrowRight, ArrowLeft, Globe, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
@@ -246,8 +246,8 @@ function HistoryContent() {
                 <span className={cn(
                   "text-[11px] font-bold px-3 py-1 rounded-full border",
                   recipe.dietType === 'Vegetarian' 
-                    ? "bg-green-50 text-green-600 border-green-100 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800" 
-                    : "bg-rose-50 text-rose-600 border-rose-100 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800"
+                    ? "bg-green-50 text-green-700 border-green-100" 
+                    : "bg-rose-50 text-rose-700 border-rose-100"
                 )}>
                   {recipe.dietType}
                 </span>
