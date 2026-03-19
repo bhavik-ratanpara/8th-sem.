@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
@@ -7,7 +8,7 @@ import { getSavedRecipes, deleteRecipe, toggleFavourite, shareRecipePublic, unsh
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Star, Trash2, Search, BookMarked, Filter, ArrowRight, ArrowLeft, Globe, Loader2, Share2, X } from 'lucide-react';
+import { Heart, Trash2, Search, BookMarked, Filter, ArrowRight, ArrowLeft, Globe, Loader2, Share2, X } from 'lucide-react';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
@@ -94,7 +95,7 @@ function HistoryContent() {
       await toggleFavourite(user.uid, recipeId, current);
       setRecipes(prev => prev.map(r => r.id === recipeId ? { ...r, isFavourite: !current } : r));
       toast({
-        title: !current ? "Added to Favourites ⭐" : "Removed from Favourites",
+        title: !current ? "Added to Favourites ❤️" : "Removed from Favourites",
         duration: 2000,
       });
     } catch (error) {
@@ -323,117 +324,104 @@ function HistoryContent() {
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3, 4, 5, 6].map(i => (
-            <div key={i} className="bg-card border border-border rounded-xl p-6 space-y-4">
+            <div key={i} className="bg-card border border-border rounded-lg p-5 space-y-4">
               <div className="flex justify-between">
-                <Skeleton className="h-6 w-3/4" />
-                <Skeleton className="h-6 w-6 rounded-full" />
-              </div>
-              <div className="flex gap-2">
-                <Skeleton className="h-5 w-16 rounded-full" />
-                <Skeleton className="h-5 w-16 rounded-full" />
+                <Skeleton className="h-5 w-3/4" />
+                <Skeleton className="h-5 w-5 rounded-full" />
               </div>
               <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-3 w-1/3" />
               <div className="flex gap-3 pt-4">
                 <Skeleton className="h-9 w-24 rounded-md" />
-                <Skeleton className="h-9 w-20 rounded-md" />
+                <Skeleton className="h-9 w-24 rounded-md" />
               </div>
             </div>
           ))}
         </div>
       ) : filteredRecipes.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredRecipes.map((recipe) => (
             <div 
               key={recipe.id}
-              className="group relative bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-xl hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 flex flex-col h-full"
+              className="group relative bg-card border border-border rounded-lg p-5 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 flex flex-col h-full"
             >
-              <div className="flex justify-between items-start mb-4">
-                <h3 className="font-bold text-lg text-foreground line-clamp-2 pr-2">{recipe.recipeName}</h3>
-                <div className="flex gap-2 items-center">
+              <div className="flex justify-between items-start mb-1.5">
+                <h3 className="font-bold text-base text-foreground line-clamp-2 pr-2">{recipe.recipeName}</h3>
+                <div className="flex gap-2 items-center shrink-0">
                   <button 
                     onClick={() => recipe.id && handleToggleFav(recipe.id, recipe.isFavourite)}
                     className="transition-transform active:scale-125"
                   >
-                    <Star 
+                    <Heart 
                       className={cn(
-                        "h-6 w-6 transition-colors", 
-                        recipe.isFavourite ? "fill-amber-400 text-amber-400" : "text-muted-foreground/30 hover:text-amber-400"
+                        "h-5 w-5 transition-colors", 
+                        recipe.isFavourite ? "fill-red-500 text-red-500" : "text-muted-foreground/40 hover:text-red-400"
                       )} 
                     />
                   </button>
                   <button
                     onClick={() => handleShare(recipe)}
-                    className="text-muted-foreground hover:text-primary transition-colors"
+                    className="text-muted-foreground/40 hover:text-primary transition-colors"
                     title="Share recipe link"
                   >
-                    <Share2 className="h-5 w-5" />
+                    <Share2 className="h-4 w-4" />
                   </button>
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-2 mb-6">
-                <span className="text-[11px] font-bold px-3 py-1 bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-full border border-blue-100 dark:border-blue-800">
-                  {recipe.cuisine}
-                </span>
-                <span className="text-[11px] font-bold px-3 py-1 bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400 rounded-full border border-green-100 dark:border-green-800">
-                  {recipe.servings} Servings
-                </span>
-                <span className={cn(
-                  "text-[11px] font-bold px-3 py-1 rounded-full border",
-                  recipe.dietType === 'Vegetarian' 
-                    ? "bg-green-50 text-green-700 border-green-100" 
-                    : "bg-rose-50 text-rose-700 border-rose-100"
-                )}>
-                  {recipe.dietType}
-                </span>
+              <div className="mb-3">
+                <p className="text-[13px] font-medium text-muted-foreground">
+                  {recipe.cuisine} · {recipe.servings} Servings ·{' '}
+                  <span className={cn(
+                    "font-semibold",
+                    recipe.dietType === 'Vegetarian' 
+                      ? "text-green-600 dark:text-green-400" 
+                      : "text-red-600 dark:text-red-400"
+                  )}>
+                    {recipe.dietType}
+                  </span>
+                </p>
               </div>
 
-              <div className="mt-auto space-y-4">
-                <p className="text-[12px] text-muted-foreground font-medium">
+              <div className="mt-auto">
+                <p className="text-[11px] text-muted-foreground mb-3">
                   Saved on {recipe.generatedAt?.toDate ? format(recipe.generatedAt.toDate(), 'dd MMM yyyy') : 'Recently'}
                 </p>
-                <div className="flex flex-wrap items-center gap-3">
-                  <Button asChild size="sm" className="bg-primary hover:bg-primary/90 text-white font-bold h-9 px-5 rounded-lg flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button asChild size="sm" className="bg-primary hover:bg-primary/90 text-white font-bold h-9 px-4 rounded-md">
                     <Link href={`/recipe/${recipe.id}`}>
                       View Recipe
-                      <ArrowRight className="ml-2 h-3 w-3" />
+                      <ArrowRight className="ml-1.5 h-3 w-3" />
                     </Link>
                   </Button>
                   
-                  {!recipe.savedFromExplore ? (
+                  {!recipe.savedFromExplore && (
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleToggleShare(recipe)}
                       className={cn(
-                        "h-9 px-3 border rounded-lg transition-colors flex items-center gap-2",
+                        "h-9 px-3 border rounded-md transition-colors flex items-center gap-2",
                         recipe.isPublic 
                           ? "border-blue-500 text-blue-500 bg-blue-500/10 hover:bg-blue-500/20" 
                           : "border-border text-muted-foreground hover:bg-secondary"
                       )}
                     >
-                      <Globe className="h-4 w-4" />
+                      <Globe className="h-3.5 w-3.5" />
                       {recipe.isPublic ? 'Shared ✓' : 'Share to Public'}
                     </Button>
-                  ) : (
-                    <div className="text-[11px] text-muted-foreground px-3 py-2 border border-border rounded-lg bg-secondary/30 flex items-center gap-1.5">
-                      <span>By</span>
-                      <span className="text-primary font-bold">
-                        {recipe.originalSharedByName || "Another Chef"}
-                      </span>
-                    </div>
                   )}
-
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
+                </div>
+                
+                <div className="flex justify-end mt-3">
+                  <button 
                     onClick={() => recipe.id && handleDelete(recipe.id)}
-                    className="h-9 w-9 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg shrink-0"
+                    className="text-muted-foreground/40 hover:text-destructive transition-colors"
                   >
                     <Trash2 className="h-4 w-4" />
-                  </Button>
+                  </button>
                 </div>
               </div>
             </div>
