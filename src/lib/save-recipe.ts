@@ -36,6 +36,7 @@ export interface SavedRecipe {
   savedFromExplore?: boolean;
   originalSharedBy?: string;
   originalSharedByName?: string;
+  originalRecipeId?: string;
   likes?: number;
 }
 
@@ -163,6 +164,7 @@ export async function saveFromExplore(
     savedFromExplore: true,
     originalSharedBy: recipe.sharedBy,
     originalSharedByName: recipe.sharedByName,
+    originalRecipeId: recipe.id,
   });
   return docRef.id;
 }
