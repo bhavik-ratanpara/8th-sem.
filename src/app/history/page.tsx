@@ -151,10 +151,13 @@ function HistoryContent() {
   const handleShare = async (recipe: SavedRecipe) => {
     if (!recipe.id) return;
 
-    // Case 2 — Recipe already shared to Explore
-    // Share the public explore link directly
-    if (recipe.isPublic) {
-      const shareUrl = `${window.location.origin}/explore/recipe/${recipe.id}`;
+    const baseUrl = window.location.origin;
+
+    // Type 2 — Saved from Explore
+    // Recipe is already public
+    // Share the original explore link directly
+    if (recipe.savedFromExplore) {
+      const shareUrl = `${baseUrl}/explore/recipe/${recipe.originalRecipeId || recipe.id}`;
       
       const shareData = {
         title: `${recipe.recipeName} — Cooking Lab`,
@@ -169,7 +172,7 @@ function HistoryContent() {
           await navigator.clipboard.writeText(shareUrl);
           toast({
             title: "Link Copied! 🔗",
-            description: "Public recipe link copied to clipboard.",
+            description: "Recipe link copied to clipboard.",
             duration: 2000,
           });
         }
@@ -178,7 +181,7 @@ function HistoryContent() {
           await navigator.clipboard.writeText(shareUrl);
           toast({
             title: "Link Copied! 🔗",
-            description: "Public recipe link copied to clipboard.",
+            description: "Recipe link copied to clipboard.",
             duration: 2000,
           });
         } catch {
@@ -192,8 +195,50 @@ function HistoryContent() {
       return;
     }
 
-    // Case 1 — Recipe NOT shared to Explore
-    // Show modal asking to share to Explore first
+    // Type 1 — User's own recipe
+    // Check if already shared to Explore
+    if (recipe.isPublic) {
+      // Already public — share explore link directly
+      const shareUrl = `${baseUrl}/explore/recipe/${recipe.id}`;
+      
+      const shareData = {
+        title: `${recipe.recipeName} — Cooking Lab`,
+        text: `Check out this amazing recipe on Cooking Lab!`,
+        url: shareUrl,
+      };
+
+      try {
+        if (navigator.share) {
+          await navigator.share(shareData);
+        } else {
+          await navigator.clipboard.writeText(shareUrl);
+          toast({
+            title: "Link Copied! 🔗",
+            description: "Public recipe link copied.",
+            duration: 2000,
+          });
+        }
+      } catch {
+        try {
+          await navigator.clipboard.writeText(shareUrl);
+          toast({
+            title: "Link Copied! 🔗",
+            description: "Public recipe link copied.",
+            duration: 2000,
+          });
+        } catch {
+          toast({
+            variant: "destructive",
+            title: "Could not share",
+            description: "Please try again.",
+          });
+        }
+      }
+      return;
+    }
+
+    // Type 1 — Own recipe but NOT public yet
+    // Show modal to publish to Explore first
     setSharePromptRecipe(recipe);
     setShowSharePrompt(true);
   };
@@ -383,6 +428,14 @@ function HistoryContent() {
                     {recipe.dietType}
                   </span>
                 </p>
+                {recipe.savedFromExplore && (
+                  <p className="text-[11px] text-muted-foreground mt-1">
+                    By{' '}
+                    <span className="text-primary font-semibold">
+                      {recipe.originalSharedByName || 'Anonymous Chef'}
+                    </span>
+                  </p>
+                )}
               </div>
 
               <div className="mt-auto">
@@ -403,13 +456,16 @@ function HistoryContent() {
                       size="sm"
                       onClick={() => handleToggleShare(recipe)}
                       className={cn(
-                        "h-9 px-3 border rounded-md transition-colors flex items-center gap-2",
-                        recipe.isPublic 
-                          ? "border-blue-500 text-blue-500 bg-blue-500/10 hover:bg-blue-500/20" 
-                          : "border-border text-muted-foreground hover:bg-secondary"
+                        "h-9 px-3 rounded-md text-[13px] font-medium border transition-colors flex items-center gap-2 flex-shrink-0 whitespace-nowrap",
+                        recipe.isPublic
+                          ? "bg-blue-500/10 border-blue-500 text-blue-500 hover:bg-blue-500/20"
+                          : "bg-transparent border-border text-muted-foreground hover:text-foreground"
                       )}
                     >
-                      <Globe className="h-3.5 w-3.5" />
+                      <Globe className={cn(
+                        "h-4 w-4", 
+                        recipe.isPublic && "fill-current"
+                      )} />
                       {recipe.isPublic ? 'Shared ✓' : 'Share to Public'}
                     </Button>
                   )}
