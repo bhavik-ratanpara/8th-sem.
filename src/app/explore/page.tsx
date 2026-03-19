@@ -18,6 +18,7 @@ import {
   BookMarked,
   Trash2,
   ArrowRight,
+  ArrowLeft,
   Loader2
 } from 'lucide-react'
 import Link from 'next/link'
@@ -165,6 +166,13 @@ export default function ExplorePage() {
 
   return (
     <div className="max-content px-4 py-12">
+      <Link 
+        href="/"
+        className="flex items-center gap-2 text-primary font-bold text-sm mb-10 hover:translate-x-[-4px] transition-transform w-fit"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to Generator
+      </Link>
       
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
         <div className="space-y-2">
