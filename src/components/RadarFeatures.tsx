@@ -8,21 +8,21 @@ export function RadarFeatures() {
       style={{
         width: 'min(420px, 85vw)',
         height: 'min(420px, 85vw)',
+        position: 'relative',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-        borderRadius: '0',
       }}
     >
-      {/* Animation with blend mode */}
+      {/* Blob shaped container */}
       <div
         className="lottie-blend"
         style={{
-          width: '100%',
-          height: '100%',
+          width: '90%',
+          height: '90%',
           position: 'relative',
+          clipPath: 'polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%)',
+          overflow: 'hidden',
           zIndex: 1,
         }}
       >
@@ -37,30 +37,40 @@ export function RadarFeatures() {
         />
       </div>
 
-      {/* Smoke overlays */}
+      {/* Smoke fading edges — all 4 sides */}
       <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0,
-        height: '35%',
-        background: 'radial-gradient(ellipse at top, var(--smoke-color) 0%, transparent 70%)',
-        pointerEvents: 'none', zIndex: 2,
+        position: 'absolute',
+        inset: 0,
+        background: `
+          radial-gradient(ellipse 60% 40% at 50% 0%, 
+            var(--smoke-color) 0%, transparent 100%),
+          radial-gradient(ellipse 60% 40% at 50% 100%, 
+            var(--smoke-color) 0%, transparent 100%),
+          radial-gradient(ellipse 40% 60% at 0% 50%, 
+            var(--smoke-color) 0%, transparent 100%),
+          radial-gradient(ellipse 40% 60% at 100% 50%, 
+            var(--smoke-color) 0%, transparent 100%)
+        `,
+        pointerEvents: 'none',
+        zIndex: 3,
       }} />
+
+      {/* Corner smoke blobs */}
       <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0,
-        height: '35%',
-        background: 'radial-gradient(ellipse at bottom, var(--smoke-color) 0%, transparent 70%)',
-        pointerEvents: 'none', zIndex: 2,
-      }} />
-      <div style={{
-        position: 'absolute', top: 0, left: 0, bottom: 0,
-        width: '30%',
-        background: 'radial-gradient(ellipse at left, var(--smoke-color) 0%, transparent 70%)',
-        pointerEvents: 'none', zIndex: 2,
-      }} />
-      <div style={{
-        position: 'absolute', top: 0, right: 0, bottom: 0,
-        width: '30%',
-        background: 'radial-gradient(ellipse at right, var(--smoke-color) 0%, transparent 70%)',
-        pointerEvents: 'none', zIndex: 2,
+        position: 'absolute',
+        inset: 0,
+        background: `
+          radial-gradient(ellipse 35% 35% at 0% 0%, 
+            var(--smoke-color) 0%, transparent 100%),
+          radial-gradient(ellipse 35% 35% at 100% 0%, 
+            var(--smoke-color) 0%, transparent 100%),
+          radial-gradient(ellipse 35% 35% at 0% 100%, 
+            var(--smoke-color) 0%, transparent 100%),
+          radial-gradient(ellipse 35% 35% at 100% 100%, 
+            var(--smoke-color) 0%, transparent 100%)
+        `,
+        pointerEvents: 'none',
+        zIndex: 3,
       }} />
     </div>
   )

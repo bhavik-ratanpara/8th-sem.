@@ -35,7 +35,7 @@
     --radius: 0.5rem;
 
     /* Light mode smoke color */
-    --smoke-color: rgba(249, 249, 249, 0.95);
+    --smoke-color: rgba(255, 255, 255, 1);
   }
 
   [data-theme="dark"] {
@@ -68,7 +68,7 @@
     --ring: 221.2 83.2% 53.3%;
 
     /* Dark mode smoke color */
-    --smoke-color: rgba(10, 10, 10, 0.95);
+    --smoke-color: rgba(10, 10, 10, 1);
   }
 }
 
