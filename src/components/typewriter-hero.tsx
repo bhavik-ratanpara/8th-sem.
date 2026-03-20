@@ -1,10 +1,11 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useUser } from '@/firebase';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import Link from 'next/link';
+import Link from 'next/navigation';
 import { RadarFeatures } from '@/components/RadarFeatures';
 
 const words = [
@@ -181,6 +182,7 @@ export function TypewriterHero() {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            marginTop: '-80px', // Move animation upside to center with text content
           }}
         >
           <div className="w-full flex justify-center">
