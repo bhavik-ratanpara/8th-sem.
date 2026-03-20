@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -97,4 +98,8 @@
 
 .section-padding {
   @apply py-16 md:py-24;
+}
+
+.lottie-container svg {
+  background: transparent !important;
 }
