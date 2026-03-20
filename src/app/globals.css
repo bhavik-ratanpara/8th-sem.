@@ -145,7 +145,7 @@
   color: #6b7280;
 }
 
-.dark .nav-link {
+[data-theme="dark"] .nav-link {
   color: #71717a;
 }
 
@@ -162,7 +162,7 @@
   transition: transform 0.25s ease;
 }
 
-.dark .nav-link::after {
+[data-theme="dark"] .nav-link::after {
   background: #ffffff;
 }
 
@@ -170,7 +170,7 @@
   color: #111111;
 }
 
-.dark .nav-link:hover {
+[data-theme="dark"] .nav-link:hover {
   color: #ffffff;
 }
 
@@ -183,7 +183,7 @@
   font-weight: 600;
 }
 
-.dark .nav-link.active {
+[data-theme="dark"] .nav-link.active {
   color: #ffffff;
 }
 
@@ -199,6 +199,6 @@
   pointer-events: none;
 }
 
-.dark .nav-separator {
+[data-theme="dark"] .nav-separator {
   color: #3f3f46;
 }
