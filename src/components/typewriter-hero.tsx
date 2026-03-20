@@ -85,7 +85,6 @@ export function TypewriterHero() {
           maxWidth: "960px",
           margin: "0 auto",
           gap: "24px",
-          width: "100%",
         }}
       >
         {/* LEFT — Text 52% */}
@@ -93,11 +92,13 @@ export function TypewriterHero() {
           className="w-[52%]"
           style={{
             flex: "0 0 52%",
+            maxWidth: "52%",
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
             paddingLeft: '16px',
             paddingRight: '8px',
+            overflow: 'visible',
           }}
         >
           <div className="flex flex-col items-start text-left w-full">
@@ -122,7 +123,8 @@ export function TypewriterHero() {
               className="mt-2 md:mt-4 font-normal leading-[1.6] md:leading-[1.8] text-muted-foreground max-w-full md:max-w-[420px] block"
               style={{ 
                 fontFamily: "'Crustaceans Signature', cursive",
-                fontSize: 'clamp(13px, 3vw, 22px)'
+                fontSize: 'clamp(13px, 3vw, 22px)',
+                marginBottom: '0px'
               }}
             >
               Get accurate recipes, exact quantities, and step-by-step guidance — powered by AI.
@@ -133,7 +135,7 @@ export function TypewriterHero() {
                 display: 'flex',
                 flexDirection: 'row',
                 gap: '8px',
-                marginTop: '20px',
+                marginTop: '28px',
                 flexWrap: 'nowrap',
                 alignItems: 'center',
               }}
