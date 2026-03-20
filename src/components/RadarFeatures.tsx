@@ -105,8 +105,8 @@ export function RadarFeatures() {
       <div
         className="lottie-blend"
         style={{
-          width: '72%',
-          height: '72%',
+          width: '92%',
+          height: '92%',
           position: 'relative',
           zIndex: 2,
           borderRadius: '50%',
@@ -140,3 +140,4 @@ export function RadarFeatures() {
 
     </div>
   )
+}
