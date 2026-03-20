@@ -63,11 +63,11 @@ export function TypewriterHero() {
   };
 
   return (
-    <section className="w-full flex flex-row items-center justify-center pt-6 md:pt-12 pl-4 md:pl-[60px] pb-0 md:pb-0 min-h-fit md:min-h-[520px] bg-background overflow-hidden gap-2 md:gap-12">
+    <section className="w-full flex flex-row items-center justify-center pt-6 md:pt-12 px-4 pb-0 min-h-fit md:min-h-[520px] bg-background overflow-hidden gap-2 md:gap-6">
       {/* Left Side - Content */}
       <div 
-        style={{ flex: '0 0 52%' }}
-        className="flex flex-col items-start text-left pl-4 md:pl-0"
+        style={{ flex: '0 0 50%' }}
+        className="flex flex-col items-start text-left md:pl-24"
       >
         <h1 
           className="font-extrabold leading-[1.08] tracking-[-0.04em] mb-0" 
@@ -119,7 +119,7 @@ export function TypewriterHero() {
 
       {/* Right Side - Radar/Animation */}
       <div 
-        style={{ flex: '0 0 45%' }}
+        style={{ flex: '0 0 40%' }}
         className="flex items-center justify-center flex-shrink-0"
       >
         <RadarFeatures />
