@@ -36,6 +36,7 @@
 
     /* Light mode smoke color */
     --smoke-color: rgba(255, 255, 255, 1);
+    --page-bg: #ffffff;
   }
 
   [data-theme="dark"] {
@@ -69,6 +70,7 @@
 
     /* Dark mode smoke color */
     --smoke-color: rgba(10, 10, 10, 1);
+    --page-bg: #0a0a0a;
   }
 }
 
@@ -93,6 +95,24 @@
   }
 }
 
+@keyframes spinRing {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes spinRingReverse {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+
+.lottie-blend {
+  mix-blend-mode: multiply;
+}
+
+[data-theme="dark"] .lottie-blend {
+  mix-blend-mode: screen;
+}
+
 .input-saas {
   @apply bg-background border-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all rounded-md h-10 px-3 text-sm;
 }
@@ -107,12 +127,4 @@
 
 .lottie-container svg {
   background: transparent !important;
-}
-
-.lottie-blend {
-  mix-blend-mode: multiply;
-}
-
-[data-theme="dark"] .lottie-blend {
-  mix-blend-mode: screen;
 }
