@@ -73,6 +73,7 @@ export function TypewriterHero() {
         width: "100%",
         background: "transparent",
         justifyContent: "center",
+        marginBottom: '32px'
       }}
     >
       <div
@@ -84,6 +85,7 @@ export function TypewriterHero() {
           maxWidth: "960px",
           margin: "0 auto",
           gap: "24px",
+          width: "100%",
         }}
       >
         {/* LEFT — Text 52% */}
@@ -127,14 +129,13 @@ export function TypewriterHero() {
             </p>
 
             <div 
-              className="mt-4 md:mt-8"
               style={{
                 display: 'flex',
                 flexDirection: 'row',
-                flexWrap: 'wrap',
+                gap: '8px',
+                marginTop: '20px',
+                flexWrap: 'nowrap',
                 alignItems: 'center',
-                justifyContent: 'flex-start',
-                gap: '8px'
               }}
             >
               <Button 
@@ -142,7 +143,7 @@ export function TypewriterHero() {
                 asChild={!user}
                 className="h-auto whitespace-nowrap"
                 style={{
-                  padding: '8px 14px',
+                  padding: '10px 16px',
                   fontSize: '13px',
                   fontWeight: 600,
                   borderRadius: '8px'
@@ -158,7 +159,7 @@ export function TypewriterHero() {
                 variant="outline" 
                 className="h-auto whitespace-nowrap"
                 style={{
-                  padding: '8px 14px',
+                  padding: '10px 16px',
                   fontSize: '13px',
                   fontWeight: 500,
                   borderRadius: '8px'
