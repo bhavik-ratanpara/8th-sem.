@@ -1,13 +1,16 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
   typescript: {
     ignoreBuildErrors: true,
   },
   eslint: {
     ignoreDuringBuilds: true,
   },
+  allowedDevOrigins: [
+    '6000-firebase-studio-1766594294520.cluster-osvg2nzmmzhzqqjio6oojllbg4.cloudworkstations.dev',
+    '9000-firebase-studio-1766594294520.cluster-osvg2nzmmzhzqqjio6oojllbg4.cloudworkstations.dev',
+  ],
   images: {
     remotePatterns: [
       {
@@ -34,12 +37,6 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
-    ],
-  },
-  experimental: {
-    allowedDevOrigins: [
-      '6000-firebase-studio-1766594294520.cluster-osvg2nzmmzhzqqjio6oojllbg4.cloudworkstations.dev',
-      '9000-firebase-studio-1766594294520.cluster-osvg2nzmmzhzqqjio6oojllbg4.cloudworkstations.dev',
     ],
   },
 };
