@@ -89,20 +89,20 @@ export function Header() {
   };
 
   return (
-    <header className="fixed top-0 z-50 w-full bg-background border-b border-border min-h-[4rem]">
-      <div className="max-content relative flex h-16 items-center px-4">
+    <header className="fixed top-0 z-50 w-full bg-background border-b border-border h-[56px]">
+      <div className="w-full flex items-center px-6 h-full">
         {/* LEFT - Logo */}
-        <div className="flex items-center mr-auto">
+        <div className="flex items-center mr-8 shrink-0">
           <Link href="/" className={cn("flex items-center gap-2", isMobileSearchOpen && "hidden sm:flex")}>
             <ChefHat className="h-6 w-6 text-primary" />
-            <span className="font-bold text-xl tracking-tight text-foreground">
+            <span className="font-bold text-[16px] tracking-tight text-foreground">
               Cooking Lab
             </span>
           </Link>
         </div>
 
-        {/* CENTER - Nav links */}
-        <nav className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center">
+        {/* MIDDLE - Nav links */}
+        <nav className="hidden md:flex flex-1 items-center h-full">
           <Link href="/" className={cn("nav-link", pathname === "/" && "active")}>
             Home
           </Link>
@@ -121,9 +121,9 @@ export function Header() {
         </nav>
 
         {/* RIGHT - Actions */}
-        <div className="flex items-center ml-auto gap-2">
+        <div className="flex items-center ml-auto gap-[10px] shrink-0">
           {!isUserLoading && user && (
-            <div className={cn("w-full max-w-[200px] md:max-w-sm", !isMobileSearchOpen && "hidden md:block")}>
+            <div className={cn("w-[200px]", !isMobileSearchOpen && "hidden md:block")}>
               <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
                 <div className="relative w-full">
                   <form onSubmit={handleSearch} className="flex items-center gap-2">
@@ -131,7 +131,7 @@ export function Header() {
                       <Input
                         type="search"
                         placeholder="Search recipes..."
-                        className="pr-10 h-10 bg-secondary/50 border-border"
+                        className="pr-10 h-10 bg-secondary/50 border-border text-[13px] py-1.5 px-3"
                         autoFocus={isMobileSearchOpen}
                         value={query}
                         onChange={(e) => {
