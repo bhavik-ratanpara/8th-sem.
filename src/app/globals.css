@@ -132,7 +132,7 @@
 /* Nav Link Styling */
 .nav-link {
   position: relative;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
   padding: 4px 0;
   margin: 0 12px;
@@ -192,7 +192,7 @@
 }
 
 .nav-separator {
-  font-size: 13px;
+  font-size: 15px;
   color: #d1d5db;
   margin: 0 2px;
   user-select: none;

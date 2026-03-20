@@ -95,7 +95,7 @@ export function Header() {
         <div className="flex items-center mr-2 md:mr-8 shrink-0">
           <Link href="/" className={cn("flex items-center gap-2", isMobileSearchOpen && "hidden xs:flex")}>
             <ChefHat className="h-6 w-6 text-primary" />
-            <span className="font-bold text-[15px] md:text-[16px] tracking-tight text-foreground whitespace-nowrap">
+            <span className="font-bold text-[17px] md:text-[18px] tracking-tight text-foreground whitespace-nowrap">
               Cooking Lab
             </span>
           </Link>
