@@ -106,11 +106,11 @@ export function TypewriterHero() {
               className="font-extrabold leading-[1.08] tracking-[-0.04em] mb-0" 
               style={{ 
                 fontFamily: "'Cal Sans', Inter, sans-serif", 
-                fontSize: 'clamp(28px, 8vw, 56px)' 
+                fontSize: 'clamp(22px, 7vw, 56px)' 
               }}
             >
               <span className="block text-foreground">Cook Smarter,</span>
-              <span className="block min-h-[1.2em] text-primary">
+              <span className="block min-h-[1.2em] text-primary whitespace-nowrap">
                 {currentWord}
                 <span className={cn(
                   "inline-block ml-1 font-light transition-opacity duration-100", 
