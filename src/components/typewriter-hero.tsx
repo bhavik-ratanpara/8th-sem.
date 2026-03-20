@@ -63,19 +63,17 @@ export function TypewriterHero() {
   };
 
   return (
-    <section className="w-full flex flex-col md:flex-row items-center justify-center gap-2 md:gap-12 min-h-fit md:min-h-[520px] px-5 md:px-[60px] py-4 md:py-20 bg-background overflow-hidden">
-      {/* Right Side (Above on Mobile) — Radar */}
-      <div className="order-1 md:order-2 w-[min(260px,80vw)] h-[min(260px,80vw)] md:w-[420px] md:h-[420px] flex items-center justify-center flex-shrink-0 p-0 m-0">
-        <RadarFeatures />
-      </div>
-
-      {/* Left Side (Below on Mobile) - Content */}
-      <div className="order-2 md:order-1 w-full md:w-[55%] flex flex-col items-center md:items-start text-center md:text-left px-0 mt-2 md:mt-0">
+    <section className="w-full flex flex-row items-center justify-center pt-6 md:pt-12 pl-4 md:pl-[60px] min-h-fit md:min-h-[520px] bg-background overflow-hidden gap-2 md:gap-12">
+      {/* Left Side - Content */}
+      <div 
+        style={{ flex: '0 0 52%' }}
+        className="flex flex-col items-start text-left pl-4 md:pl-0"
+      >
         <h1 
           className="font-extrabold leading-[1.08] tracking-[-0.04em] mb-0" 
           style={{ 
             fontFamily: "'Cal Sans', Inter, sans-serif", 
-            fontSize: 'clamp(28px, 7vw, 56px)' 
+            fontSize: 'clamp(22px, 5vw, 56px)' 
           }}
         >
           <span className="block text-foreground">Cook Smarter,</span>
@@ -89,17 +87,20 @@ export function TypewriterHero() {
         </h1>
 
         <p 
-          className="mt-2 md:mt-4 text-[14px] md:text-[22px] font-normal leading-[1.6] md:leading-[1.8] text-muted-foreground max-w-full md:max-w-[420px]"
-          style={{ fontFamily: "'Crustaceans Signature', cursive" }}
+          className="mt-2 md:mt-4 font-normal leading-[1.6] md:leading-[1.8] text-muted-foreground max-w-full md:max-w-[420px] hidden sm:block"
+          style={{ 
+            fontFamily: "'Crustaceans Signature', cursive",
+            fontSize: 'clamp(13px, 3vw, 22px)'
+          }}
         >
           Get accurate recipes, exact quantities, and step-by-step guidance — powered by AI.
         </p>
 
-        <div className="mt-4 md:mt-8 flex flex-wrap items-center justify-center md:justify-start gap-2 md:gap-[10px]">
+        <div className="mt-4 md:mt-8 flex flex-wrap items-center justify-start gap-[6px] md:gap-[10px]">
           <Button 
             onClick={user ? handleScrollToForm : undefined}
             asChild={!user}
-            className="h-10 md:h-12 px-6 md:px-7 text-sm font-semibold rounded-lg bg-primary hover:bg-primary/90 text-white border-none shadow-sm transition-all"
+            className="h-9 md:h-12 px-[14px] md:px-7 text-[12px] md:text-sm font-semibold rounded-lg bg-primary hover:bg-primary/90 text-white border-none shadow-sm transition-all"
           >
             {user ? (
               <span>Generate a Recipe</span>
@@ -109,11 +110,19 @@ export function TypewriterHero() {
           </Button>
           <Button 
             variant="outline" 
-            className="h-10 md:h-12 px-6 md:px-7 text-sm font-medium rounded-lg border-border bg-transparent text-muted-foreground hover:text-foreground hover:border-foreground transition-all"
+            className="h-9 md:h-12 px-[14px] md:px-7 text-[12px] md:text-sm font-medium rounded-lg border-border bg-transparent text-muted-foreground hover:text-foreground hover:border-foreground transition-all"
           >
             See How It Works
           </Button>
         </div>
+      </div>
+
+      {/* Right Side - Radar/Animation */}
+      <div 
+        style={{ flex: '0 0 45%' }}
+        className="flex items-center justify-center flex-shrink-0"
+      >
+        <RadarFeatures />
       </div>
     </section>
   );
