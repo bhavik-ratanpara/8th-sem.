@@ -63,19 +63,14 @@ export function TypewriterHero() {
   };
 
   return (
-    <section className="w-full flex flex-col min-[480px]:flex-row items-center justify-center gap-2 md:gap-12 min-h-fit md:min-h-[520px] px-5 md:px-[60px] py-4 md:py-20 bg-background overflow-hidden">
-      {/* Right Side (Above on Mobile) — Radar */}
-      <div className="order-1 min-[480px]:order-2 w-[min(260px,75vw)] h-[min(260px,75vw)] min-[480px]:w-[min(200px,40vw)] min-[480px]:h-[min(200px,40vw)] md:w-[420px] md:h-[420px] flex items-center justify-center flex-shrink-0 p-0 m-0">
-        <RadarFeatures />
-      </div>
-
-      {/* Left Side (Below on Mobile) - Content */}
-      <div className="order-2 min-[480px]:order-1 w-full min-[480px]:w-[55%] flex flex-col items-center min-[480px]:items-start text-center min-[480px]:text-left px-0 mt-2 min-[480px]:mt-0">
+    <section className="w-full flex flex-row items-center justify-center gap-2 md:gap-12 min-h-fit md:min-h-[520px] px-4 md:px-[60px] py-6 md:py-12 bg-background overflow-hidden">
+      {/* Left Side - Content */}
+      <div className="w-full min-[480px]:w-[52%] flex flex-col items-start text-left px-0 mt-0">
         <h1 
           className="font-extrabold leading-[1.08] tracking-[-0.04em] mb-0" 
           style={{ 
             fontFamily: "'Cal Sans', Inter, sans-serif", 
-            fontSize: 'clamp(28px, 7vw, 56px)' 
+            fontSize: 'clamp(20px, 5vw, 56px)' 
           }}
         >
           <span className="block text-foreground">Cook Smarter,</span>
@@ -89,17 +84,17 @@ export function TypewriterHero() {
         </h1>
 
         <p 
-          className="mt-2 md:mt-4 text-[14px] md:text-[22px] font-normal leading-[1.6] md:leading-[1.8] text-muted-foreground max-w-full md:max-w-[420px]"
+          className="mt-2 md:mt-4 text-[13px] md:text-[22px] font-normal leading-[1.6] md:leading-[1.8] text-muted-foreground max-w-full md:max-w-[420px]"
           style={{ fontFamily: "'Crustaceans Signature', cursive" }}
         >
           Get accurate recipes, exact quantities, and step-by-step guidance — powered by AI.
         </p>
 
-        <div className="mt-4 md:mt-8 flex flex-wrap items-center justify-center md:justify-start gap-2 md:gap-[10px]">
+        <div className="mt-4 md:mt-8 flex flex-row flex-wrap items-center justify-start gap-2">
           <Button 
             onClick={user ? handleScrollToForm : undefined}
             asChild={!user}
-            className="h-10 md:h-12 px-6 md:px-7 text-sm font-semibold rounded-lg bg-primary hover:bg-primary/90 text-white border-none shadow-sm transition-all"
+            className="h-auto px-[14px] py-[9px] md:h-12 md:px-7 text-[12px] md:text-sm font-semibold rounded-lg bg-primary hover:bg-primary/90 text-white border-none shadow-sm transition-all"
           >
             {user ? (
               <span>Generate a Recipe</span>
@@ -109,11 +104,16 @@ export function TypewriterHero() {
           </Button>
           <Button 
             variant="outline" 
-            className="h-10 md:h-12 px-6 md:px-7 text-sm font-medium rounded-lg border-border bg-transparent text-muted-foreground hover:text-foreground hover:border-foreground transition-all"
+            className="h-auto px-[14px] py-[9px] md:h-12 md:px-7 text-[12px] md:text-sm font-medium rounded-lg border-border bg-transparent text-muted-foreground hover:text-foreground hover:border-foreground transition-all"
           >
             See How It Works
           </Button>
         </div>
+      </div>
+
+      {/* Right Side - Radar */}
+      <div className="w-[min(260px,44vw)] h-[min(260px,44vw)] md:w-[420px] md:h-[420px] flex items-center justify-center flex-shrink-0 p-0 m-0">
+        <RadarFeatures />
       </div>
     </section>
   );

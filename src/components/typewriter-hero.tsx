@@ -67,19 +67,18 @@ export function TypewriterHero() {
 
   return (
     <section
+      className="px-4 md:px-[60px] py-6 md:py-12"
       style={{
         display: "flex",
         width: "100%",
         minHeight: "520px",
-        paddingTop: "48px",
-        paddingBottom: "48px",
         background: "transparent",
         alignItems: "center",
         justifyContent: "center",
       }}
     >
       <div
-        className="flex flex-col md:flex-row"
+        className="flex flex-row"
         style={{
           alignItems: "center",
           justifyContent: "center",
@@ -87,25 +86,24 @@ export function TypewriterHero() {
           maxWidth: "960px",
           margin: "0 auto",
           gap: "24px",
-          padding: "0 32px",
         }}
       >
         {/* LEFT — Text 50% */}
         <div
-          className="w-full md:w-1/2"
+          className="w-1/2"
           style={{
-            flex: "0 0 50%",
+            flex: "0 0 52%",
             display: "flex",
             flexDirection: "column",
-            alignItems: "inherit", // Controlled by className responsiveness
+            alignItems: "flex-start",
           }}
         >
-          <div className="flex flex-col items-center md:items-start text-center md:text-left w-full">
+          <div className="flex flex-col items-start text-left w-full pl-0 md:pl-0">
             <h1 
               className="font-extrabold leading-[1.08] tracking-[-0.04em] mb-0" 
               style={{ 
                 fontFamily: "'Cal Sans', Inter, sans-serif", 
-                fontSize: 'clamp(22px, 5vw, 56px)' 
+                fontSize: 'clamp(20px, 5vw, 56px)' 
               }}
             >
               <span className="block text-foreground">Cook Smarter,</span>
@@ -128,11 +126,21 @@ export function TypewriterHero() {
               Get accurate recipes, exact quantities, and step-by-step guidance — powered by AI.
             </p>
 
-            <div className="mt-4 md:mt-8 flex flex-row flex-wrap items-center justify-center md:justify-start gap-2 md:gap-[10px]">
+            <div 
+              className="mt-4 md:mt-8"
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                gap: '8px'
+              }}
+            >
               <Button 
                 onClick={user ? handleScrollToForm : undefined}
                 asChild={!user}
-                className="h-auto px-[14px] py-[9px] md:h-12 md:px-7 text-[13px] md:text-sm font-semibold rounded-lg bg-primary hover:bg-primary/90 text-white border-none shadow-sm transition-all whitespace-nowrap"
+                className="h-auto px-[14px] py-[9px] md:h-12 md:px-7 text-[12px] md:text-sm font-semibold rounded-lg bg-primary hover:bg-primary/90 text-white border-none shadow-sm transition-all whitespace-nowrap"
               >
                 {user ? (
                   <span>Generate a Recipe</span>
@@ -142,7 +150,7 @@ export function TypewriterHero() {
               </Button>
               <Button 
                 variant="outline" 
-                className="h-auto px-[14px] py-[9px] md:h-12 md:px-7 text-[13px] md:text-sm font-medium rounded-lg border-border bg-transparent text-muted-foreground hover:text-foreground hover:border-foreground transition-all whitespace-nowrap"
+                className="h-auto px-[14px] py-[9px] md:h-12 md:px-7 text-[12px] md:text-sm font-medium rounded-lg border-border bg-transparent text-muted-foreground hover:text-foreground hover:border-foreground transition-all whitespace-nowrap"
               >
                 See How It Works
               </Button>
@@ -152,15 +160,15 @@ export function TypewriterHero() {
 
         {/* RIGHT — Animation 50% */}
         <div
-          className="w-full md:w-1/2 mt-8 md:mt-0"
+          className="w-1/2"
           style={{
-            flex: "0 0 50%",
+            flex: "0 0 48%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <div className="w-[min(280px,80vw)] md:w-full flex justify-center">
+          <div className="w-full flex justify-center">
             <RadarFeatures />
           </div>
         </div>
