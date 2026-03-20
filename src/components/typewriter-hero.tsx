@@ -70,7 +70,7 @@ export function TypewriterHero() {
       {/* Left Side - Content */}
       <div 
         style={{ flex: '0 0 50%' }}
-        className="flex flex-col items-end text-right pr-4"
+        className="flex flex-col items-start text-left md:pl-40"
       >
         <h1 
           className="font-extrabold leading-[1.08] tracking-[-0.04em] mb-0" 
@@ -99,7 +99,7 @@ export function TypewriterHero() {
           Get accurate recipes, exact quantities, and step-by-step guidance — powered by AI.
         </p>
 
-        <div className="mt-4 md:mt-8 flex flex-row flex-wrap items-center justify-end gap-2 md:gap-[10px]">
+        <div className="mt-4 md:mt-8 flex flex-row flex-wrap items-center justify-start gap-2 md:gap-[10px]">
           <Button 
             onClick={user ? handleScrollToForm : undefined}
             asChild={!user}
