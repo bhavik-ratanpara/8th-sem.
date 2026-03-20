@@ -135,7 +135,7 @@ export function TypewriterHero() {
                 display: 'flex',
                 flexDirection: 'row',
                 gap: '8px',
-                marginTop: '28px',
+                marginTop: '56px',
                 flexWrap: 'nowrap',
                 alignItems: 'center',
               }}
