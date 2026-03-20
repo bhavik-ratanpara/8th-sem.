@@ -67,13 +67,11 @@ export function TypewriterHero() {
 
   return (
     <section
-      className="px-4 md:px-[60px] py-6 md:py-12"
+      className="flex flex-row items-center py-4 md:py-12 px-0 md:pl-[60px] min-h-0 md:min-h-[540px]"
       style={{
         display: "flex",
         width: "100%",
-        minHeight: "520px",
         background: "transparent",
-        alignItems: "center",
         justifyContent: "center",
       }}
     >
@@ -88,17 +86,19 @@ export function TypewriterHero() {
           gap: "24px",
         }}
       >
-        {/* LEFT — Text 50% */}
+        {/* LEFT — Text 52% */}
         <div
-          className="w-1/2"
+          className="w-[52%]"
           style={{
             flex: "0 0 52%",
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
+            paddingLeft: '16px',
+            paddingRight: '8px',
           }}
         >
-          <div className="flex flex-col items-start text-left w-full pl-0 md:pl-0">
+          <div className="flex flex-col items-start text-left w-full">
             <h1 
               className="font-extrabold leading-[1.08] tracking-[-0.04em] mb-0" 
               style={{ 
@@ -140,7 +140,13 @@ export function TypewriterHero() {
               <Button 
                 onClick={user ? handleScrollToForm : undefined}
                 asChild={!user}
-                className="h-auto px-[14px] py-[9px] md:h-12 md:px-7 text-[12px] md:text-sm font-semibold rounded-lg bg-primary hover:bg-primary/90 text-white border-none shadow-sm transition-all whitespace-nowrap"
+                className="h-auto whitespace-nowrap"
+                style={{
+                  padding: '8px 14px',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  borderRadius: '8px'
+                }}
               >
                 {user ? (
                   <span>Generate a Recipe</span>
@@ -150,7 +156,13 @@ export function TypewriterHero() {
               </Button>
               <Button 
                 variant="outline" 
-                className="h-auto px-[14px] py-[9px] md:h-12 md:px-7 text-[12px] md:text-sm font-medium rounded-lg border-border bg-transparent text-muted-foreground hover:text-foreground hover:border-foreground transition-all whitespace-nowrap"
+                className="h-auto whitespace-nowrap"
+                style={{
+                  padding: '8px 14px',
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  borderRadius: '8px'
+                }}
               >
                 See How It Works
               </Button>
@@ -158,9 +170,9 @@ export function TypewriterHero() {
           </div>
         </div>
 
-        {/* RIGHT — Animation 50% */}
+        {/* RIGHT — Animation 48% */}
         <div
-          className="w-1/2"
+          className="w-[48%]"
           style={{
             flex: "0 0 48%",
             display: "flex",
