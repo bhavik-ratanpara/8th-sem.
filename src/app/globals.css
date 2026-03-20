@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -34,6 +33,9 @@
     --ring: 221.2 83.2% 53.3%;
     
     --radius: 0.5rem;
+
+    /* Light mode smoke color */
+    --smoke-color: rgba(249, 249, 249, 0.95);
   }
 
   [data-theme="dark"] {
@@ -64,6 +66,9 @@
     --border: 240 5% 16%;
     --input: 0 0% 16%;
     --ring: 221.2 83.2% 53.3%;
+
+    /* Dark mode smoke color */
+    --smoke-color: rgba(10, 10, 10, 0.95);
   }
 }
 
@@ -102,4 +107,12 @@
 
 .lottie-container svg {
   background: transparent !important;
+}
+
+.lottie-blend {
+  mix-blend-mode: multiply;
+}
+
+[data-theme="dark"] .lottie-blend {
+  mix-blend-mode: screen;
 }
