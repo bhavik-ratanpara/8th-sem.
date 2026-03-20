@@ -64,7 +64,7 @@ export default function Home() {
       {/* Typewriter Hero Section */}
       <TypewriterHero />
 
-      <main className="max-content px-4 py-16 space-y-24">
+      <main className="max-content px-4 pt-6 pb-16 space-y-20">
         {isUserLoading ? (
           <div className="space-y-12">
             <Skeleton className="h-48 w-full rounded-lg" />
