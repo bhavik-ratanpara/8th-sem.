@@ -87,7 +87,7 @@ export function TypewriterHero() {
         </h1>
 
         <p 
-          className="mt-2 md:mt-4 font-normal leading-[1.6] md:leading-[1.8] text-muted-foreground max-w-full md:max-w-[420px] hidden sm:block"
+          className="mt-2 md:mt-4 font-normal leading-[1.6] md:leading-[1.8] text-muted-foreground max-w-full md:max-w-[420px] block"
           style={{ 
             fontFamily: "'Crustaceans Signature', cursive",
             fontSize: 'clamp(13px, 3vw, 22px)'
@@ -96,11 +96,11 @@ export function TypewriterHero() {
           Get accurate recipes, exact quantities, and step-by-step guidance — powered by AI.
         </p>
 
-        <div className="mt-4 md:mt-8 flex flex-wrap items-center justify-start gap-[6px] md:gap-[10px]">
+        <div className="mt-4 md:mt-8 flex flex-row flex-wrap items-center justify-start gap-2 md:gap-[10px]">
           <Button 
             onClick={user ? handleScrollToForm : undefined}
             asChild={!user}
-            className="h-9 md:h-12 px-[14px] md:px-7 text-[12px] md:text-sm font-semibold rounded-lg bg-primary hover:bg-primary/90 text-white border-none shadow-sm transition-all"
+            className="h-auto px-[14px] py-[9px] md:h-12 md:px-7 text-[13px] md:text-sm font-semibold rounded-lg bg-primary hover:bg-primary/90 text-white border-none shadow-sm transition-all whitespace-nowrap"
           >
             {user ? (
               <span>Generate a Recipe</span>
@@ -110,7 +110,7 @@ export function TypewriterHero() {
           </Button>
           <Button 
             variant="outline" 
-            className="h-9 md:h-12 px-[14px] md:px-7 text-[12px] md:text-sm font-medium rounded-lg border-border bg-transparent text-muted-foreground hover:text-foreground hover:border-foreground transition-all"
+            className="h-auto px-[14px] py-[9px] md:h-12 md:px-7 text-[13px] md:text-sm font-medium rounded-lg border-border bg-transparent text-muted-foreground hover:text-foreground hover:border-foreground transition-all whitespace-nowrap"
           >
             See How It Works
           </Button>
