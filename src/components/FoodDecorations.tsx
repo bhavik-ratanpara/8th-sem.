@@ -164,24 +164,19 @@ export function FoodDecorations() {
       </svg>
 
       {/* LEFT SIDE FOOD — Increased size and adjusted positions */}
-      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '15px', '20px')}>
+      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '5px', '20px')}>
         <img src="/pizza.png" alt="pizza" style={imgStyle('230px')} />
       </div>
-      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '240px', '85px')}>
-        <img src="/garlicbread.png" alt="garlic bread" style={imgStyle('190px')} />
+      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '240px', '40px')}>
+        <img src="/sub.png" alt="sub" style={imgStyle('190px')} />
       </div>
-      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '520px', '15px')}>
-        <img src="/sub.png" alt="sub" style={imgStyle('180px')} />
-      </div>
+      
 
       {/* RIGHT SIDE FOOD — Increased size and adjusted positions */}
-      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '15px', '20px')}>
+      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '5px', '20px')}>
         <img src="/burger.png" alt="burger" style={imgStyle('235px')} />
       </div>
-      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '240px', '85px')}>
-        <img src="/chilli.png" alt="chilli" style={imgStyle('145px')} />
-      </div>
-      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '520px', '15px')}>
+      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '350px', '15px')}>
         <img src="/sushi.png" alt="sushi" style={imgStyle('210px')} />
       </div>
     </div>
