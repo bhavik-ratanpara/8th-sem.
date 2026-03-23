@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
@@ -14,6 +13,7 @@ import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { useSearchParams } from 'next/navigation';
+import { FoodDecorations } from '@/components/FoodDecorations';
 
 function HistoryContent() {
   const { user } = useUser();
@@ -317,354 +317,357 @@ function HistoryContent() {
   };
 
   return (
-    <div className="max-content px-4 py-12">
-      <Link 
-        href="/"
-        className="flex items-center gap-2 text-primary font-bold text-sm mb-10 hover:translate-x-[-4px] transition-transform w-fit"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back to Generator
-      </Link>
+    <div className="relative min-h-screen overflow-hidden">
+      <FoodDecorations />
+      <div className="max-content px-4 py-12 relative z-10">
+        <Link 
+          href="/"
+          className="flex items-center gap-2 text-primary font-bold text-sm mb-10 hover:translate-x-[-4px] transition-transform w-fit"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Generator
+        </Link>
 
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-        <div className="space-y-2">
-          <h1 className="text-4xl font-extrabold tracking-tight text-foreground" style={{ fontFamily: "Inter, sans-serif", fontWeight: 800 }}>My Recipes</h1>
-          <p className="text-muted-foreground text-lg">All your saved recipes in one place</p>
-        </div>
-        {!isLoading && (
-          <div className="text-sm font-semibold bg-secondary/50 px-4 py-2 rounded-full border border-border text-secondary-foreground">
-            {recipes.length} recipes saved
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div className="space-y-2">
+            <h1 className="text-4xl font-extrabold tracking-tight text-foreground" style={{ fontFamily: "Inter, sans-serif", fontWeight: 800 }}>My Recipes</h1>
+            <p className="text-muted-foreground text-lg">All your saved recipes in one place</p>
           </div>
-        )}
-      </div>
-
-      <div className="flex flex-col lg:flex-row gap-6 items-center justify-between mb-10 bg-card p-6 rounded-xl border border-border shadow-sm">
-        <div className="flex items-center gap-2 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0">
-          <Filter className="h-4 w-4 text-muted-foreground mr-2 shrink-0" />
-          {(['All', 'Vegetarian', 'Non-Vegetarian'] as const).map((filter) => (
-            <Button
-              key={filter}
-              variant={dietFilter === filter ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setDietFilter(filter)}
-              className={cn(
-                "rounded-full px-5 h-9 text-xs font-semibold whitespace-nowrap",
-                dietFilter === filter ? "bg-primary text-white shadow-md" : "text-muted-foreground"
-              )}
-            >
-              {filter}
-            </Button>
-          ))}
-        </div>
-
-        <div className="relative w-full lg:w-[320px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search your recipes..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 h-10 rounded-lg border-border focus:ring-primary/20 bg-background"
-          />
-        </div>
-      </div>
-
-      {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3, 4, 5, 6].map(i => (
-            <div key={i} className="bg-card border border-border rounded-lg p-5 space-y-4">
-              <div className="flex justify-between">
-                <Skeleton className="h-5 w-3/4" />
-                <Skeleton className="h-5 w-5 rounded-full" />
-              </div>
-              <Skeleton className="h-4 w-1/2" />
-              <Skeleton className="h-3 w-1/3" />
-              <div className="flex gap-3 pt-4">
-                <Skeleton className="h-9 w-24 rounded-md" />
-                <Skeleton className="h-9 w-24 rounded-md" />
-              </div>
+          {!isLoading && (
+            <div className="text-sm font-semibold bg-secondary/50 px-4 py-2 rounded-full border border-border text-secondary-foreground">
+              {recipes.length} recipes saved
             </div>
-          ))}
+          )}
         </div>
-      ) : filteredRecipes.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredRecipes.map((recipe) => (
-            <div 
-              key={recipe.id}
-              className="group relative bg-card border border-border rounded-lg p-5 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 flex flex-col h-full"
-            >
-              <div className="flex justify-between items-start mb-1.5">
-                <h3 className="font-bold text-base text-foreground line-clamp-2 pr-2">{recipe.recipeName}</h3>
-                <div className="flex gap-2 items-center shrink-0">
-                  <button 
-                    onClick={() => recipe.id && handleToggleFav(recipe.id, recipe.isFavourite)}
-                    className="transition-transform active:scale-125"
-                  >
-                    <Heart 
-                      className={cn(
-                        "h-5 w-5 transition-colors", 
-                        recipe.isFavourite ? "fill-red-500 text-red-500" : "text-muted-foreground/40 hover:text-red-400"
-                      )} 
-                    />
-                  </button>
-                  <button
-                    onClick={() => handleShare(recipe)}
-                    className="text-muted-foreground/40 hover:text-primary transition-colors"
-                    title="Share recipe link"
-                  >
-                    <Share2 className="h-4 w-4" />
-                  </button>
+
+        <div className="flex flex-col lg:flex-row gap-6 items-center justify-between mb-10 bg-card p-6 rounded-xl border border-border shadow-sm">
+          <div className="flex items-center gap-2 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0">
+            <Filter className="h-4 w-4 text-muted-foreground mr-2 shrink-0" />
+            {(['All', 'Vegetarian', 'Non-Vegetarian'] as const).map((filter) => (
+              <Button
+                key={filter}
+                variant={dietFilter === filter ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setDietFilter(filter)}
+                className={cn(
+                  "rounded-full px-5 h-9 text-xs font-semibold whitespace-nowrap",
+                  dietFilter === filter ? "bg-primary text-white shadow-md" : "text-muted-foreground"
+                )}
+              >
+                {filter}
+              </Button>
+            ))}
+          </div>
+
+          <div className="relative w-full lg:w-[320px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search your recipes..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 h-10 rounded-lg border-border focus:ring-primary/20 bg-background"
+            />
+          </div>
+        </div>
+
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map(i => (
+              <div key={i} className="bg-card border border-border rounded-lg p-5 space-y-4">
+                <div className="flex justify-between">
+                  <Skeleton className="h-5 w-3/4" />
+                  <Skeleton className="h-5 w-5 rounded-full" />
+                </div>
+                <Skeleton className="h-4 w-1/2" />
+                <Skeleton className="h-3 w-1/3" />
+                <div className="flex gap-3 pt-4">
+                  <Skeleton className="h-9 w-24 rounded-md" />
+                  <Skeleton className="h-9 w-24 rounded-md" />
                 </div>
               </div>
+            ))}
+          </div>
+        ) : filteredRecipes.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredRecipes.map((recipe) => (
+              <div 
+                key={recipe.id}
+                className="group relative bg-card border border-border rounded-lg p-5 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 flex flex-col h-full"
+              >
+                <div className="flex justify-between items-start mb-1.5">
+                  <h3 className="font-bold text-base text-foreground line-clamp-2 pr-2">{recipe.recipeName}</h3>
+                  <div className="flex gap-2 items-center shrink-0">
+                    <button 
+                      onClick={() => recipe.id && handleToggleFav(recipe.id, recipe.isFavourite)}
+                      className="transition-transform active:scale-125"
+                    >
+                      <Heart 
+                        className={cn(
+                          "h-5 w-5 transition-colors", 
+                          recipe.isFavourite ? "fill-red-500 text-red-500" : "text-muted-foreground/40 hover:text-red-400"
+                        )} 
+                      />
+                    </button>
+                    <button
+                      onClick={() => handleShare(recipe)}
+                      className="text-muted-foreground/40 hover:text-primary transition-colors"
+                      title="Share recipe link"
+                    >
+                      <Share2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
 
-              <div className="mb-3">
-                <p className="text-[13px] font-medium text-muted-foreground">
-                  {recipe.cuisine} · {recipe.servings} Servings ·{' '}
-                  <span className={cn(
-                    "font-semibold",
-                    recipe.dietType === 'Vegetarian' 
-                      ? "text-green-600 dark:text-green-400" 
-                      : "text-red-600 dark:text-red-400"
-                  )}>
-                    {recipe.dietType}
-                  </span>
-                </p>
-                {recipe.savedFromExplore && (
-                  <p className="text-[11px] text-muted-foreground mt-1">
-                    By{' '}
-                    <span className="text-primary font-semibold">
-                      {recipe.originalSharedByName || 'Anonymous Chef'}
+                <div className="mb-3">
+                  <p className="text-[13px] font-medium text-muted-foreground">
+                    {recipe.cuisine} · {recipe.servings} Servings ·{' '}
+                    <span className={cn(
+                      "font-semibold",
+                      recipe.dietType === 'Vegetarian' 
+                        ? "text-green-600 dark:text-green-400" 
+                        : "text-red-600 dark:text-red-400"
+                    )}>
+                      {recipe.dietType}
                     </span>
                   </p>
-                )}
-              </div>
-
-              <div className="mt-auto">
-                <p className="text-[11px] text-muted-foreground mb-3">
-                  Saved on {recipe.generatedAt?.toDate ? format(recipe.generatedAt.toDate(), 'dd MMM yyyy') : 'Recently'}
-                </p>
-                <div className="flex flex-wrap items-center gap-2">
-                  <Button asChild size="sm" className="bg-primary hover:bg-primary/90 text-white font-bold h-9 px-4 rounded-md">
-                    <Link href={`/recipe/${recipe.id}`}>
-                      View Recipe
-                      <ArrowRight className="ml-1.5 h-3 w-3" />
-                    </Link>
-                  </Button>
-                  
-                  {!recipe.savedFromExplore && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleToggleShare(recipe)}
-                      className={cn(
-                        "h-9 px-3 rounded-md text-[13px] font-medium border transition-colors flex items-center gap-2 flex-shrink-0 whitespace-nowrap",
-                        recipe.isPublic
-                          ? "bg-blue-500/10 border-blue-500 text-blue-500 hover:bg-blue-500/20"
-                          : "bg-transparent border-border text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      <Globe className={cn(
-                        "h-4 w-4", 
-                        recipe.isPublic && "fill-current"
-                      )} />
-                      {recipe.isPublic ? 'Shared ✓' : 'Share to Public'}
-                    </Button>
+                  {recipe.savedFromExplore && (
+                    <p className="text-[11px] text-muted-foreground mt-1">
+                      By{' '}
+                      <span className="text-primary font-semibold">
+                        {recipe.originalSharedByName || 'Anonymous Chef'}
+                      </span>
+                    </p>
                   )}
                 </div>
-                
-                <div className="flex justify-end mt-3">
-                  <button 
-                    onClick={() => recipe.id && handleDelete(recipe.id)}
-                    className="text-muted-foreground/40 hover:text-destructive transition-colors"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
+
+                <div className="mt-auto">
+                  <p className="text-[11px] text-muted-foreground mb-3">
+                    Saved on {recipe.generatedAt?.toDate ? format(recipe.generatedAt.toDate(), 'dd MMM yyyy') : 'Recently'}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Button asChild size="sm" className="bg-primary hover:bg-primary/90 text-white font-bold h-9 px-4 rounded-md">
+                      <Link href={`/recipe/${recipe.id}`}>
+                        View Recipe
+                        <ArrowRight className="ml-1.5 h-3 w-3" />
+                      </Link>
+                    </Button>
+                    
+                    {!recipe.savedFromExplore && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleToggleShare(recipe)}
+                        className={cn(
+                          "h-9 px-3 rounded-md text-[13px] font-medium border transition-colors flex items-center gap-2 flex-shrink-0 whitespace-nowrap",
+                          recipe.isPublic
+                            ? "bg-blue-500/10 border-blue-500 text-blue-500 hover:bg-blue-500/20"
+                            : "bg-transparent border-border text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        <Globe className={cn(
+                          "h-4 w-4", 
+                          recipe.isPublic && "fill-current"
+                        )} />
+                        {recipe.isPublic ? 'Shared ✓' : 'Share to Public'}
+                      </Button>
+                    )}
+                  </div>
+                  
+                  <div className="flex justify-end mt-3">
+                    <button 
+                      onClick={() => recipe.id && handleDelete(recipe.id)}
+                      className="text-muted-foreground/40 hover:text-destructive transition-colors"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center py-24 text-center bg-secondary/10 rounded-2xl border-2 border-dashed border-border">
-          <div className="bg-secondary/20 p-6 rounded-full mb-6">
-            <BookMarked className="h-12 w-12 text-muted-foreground/40" />
+            ))}
           </div>
-          <h2 className="text-2xl font-bold text-foreground mb-3">No recipes saved yet</h2>
-          <p className="text-muted-foreground mb-8 max-w-sm">Generate a professional recipe and save it to your collection to see it here.</p>
-          <Button asChild className="bg-primary text-white font-bold h-12 px-8 rounded-xl shadow-lg hover:shadow-primary/20 transition-all">
-            <Link href="/">Generate Your First Recipe</Link>
-          </Button>
-        </div>
-      )}
+        ) : (
+          <div className="flex flex-col items-center justify-center py-24 text-center bg-secondary/10 rounded-2xl border-2 border-dashed border-border">
+            <div className="bg-secondary/20 p-6 rounded-full mb-6">
+              <BookMarked className="h-12 w-12 text-muted-foreground/40" />
+            </div>
+            <h2 className="text-2xl font-bold text-foreground mb-3">No recipes saved yet</h2>
+            <p className="text-muted-foreground mb-8 max-w-sm">Generate a professional recipe and save it to your collection to see it here.</p>
+            <Button asChild className="bg-primary text-white font-bold h-12 px-8 rounded-xl shadow-lg hover:shadow-primary/20 transition-all">
+              <Link href="/">Generate Your First Recipe</Link>
+            </Button>
+          </div>
+        )}
 
-      {/* Share Prompt Modal */}
-      {showSharePrompt && sharePromptRecipe && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            background: "rgba(0,0,0,0.6)",
-            zIndex: 50,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "20px",
-          }}
-          onClick={() => {
-            setShowSharePrompt(false);
-            setSharePromptRecipe(null);
-          }}
-        >
+        {/* Share Prompt Modal */}
+        {showSharePrompt && sharePromptRecipe && (
           <div
-            onClick={(e) => e.stopPropagation()}
             style={{
-              background: "var(--card)",
-              border: "1px solid var(--border)",
-              borderRadius: "16px",
-              padding: "32px",
-              maxWidth: "420px",
+              position: "fixed",
+              top: 0,
+              left: 0,
               width: "100%",
-              position: "relative",
-            }}
-          >
-            {/* Close Icon */}
-            <button
-              onClick={() => {
-                setShowSharePrompt(false);
-                setSharePromptRecipe(null);
-              }}
-              style={{
-                position: "absolute",
-                top: "16px",
-                right: "16px",
-                color: "var(--muted-foreground)",
-                cursor: "pointer",
-              }}
-            >
-              <X style={{ width: "20px", height: "20px" }} />
-            </button>
-
-            {/* Icon */}
-            <div style={{
-              width: "52px",
-              height: "52px",
-              borderRadius: "12px",
-              background: "rgba(37,99,235,0.1)",
+              height: "100%",
+              background: "rgba(0,0,0,0.6)",
+              zIndex: 100,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginBottom: "20px",
-            }}>
-              <Share2 
-                style={{ 
-                  width: "24px", 
-                  height: "24px", 
-                  color: "#2563eb" 
-                }} 
-              />
-            </div>
-
-            {/* Title */}
-            <h3 style={{
-              fontSize: "18px",
-              fontWeight: 700,
-              color: "var(--foreground)",
-              marginBottom: "8px",
-            }}>
-              Share this recipe?
-            </h3>
-
-            {/* Description */}
-            <p style={{
-              fontSize: "14px",
-              color: "var(--muted-foreground)",
-              lineHeight: 1.6,
-              marginBottom: "24px",
-            }}>
-              <strong style={{ color: "var(--foreground)" }}>
-                {sharePromptRecipe.recipeName}
-              </strong>
-              {" "}is currently private. To share it 
-              with others, it needs to be published 
-              to Explore first — then anyone with 
-              the link can view it.
-            </p>
-
-            {/* Buttons */}
-            <div style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "10px",
-            }}>
-              {/* Primary — Share to Explore and share link */}
-              <button
-                onClick={handleShareToExploreAndShare}
-                disabled={isSharing}
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  background: "#2563eb",
-                  color: "#ffffff",
-                  border: "none",
-                  borderRadius: "10px",
-                  fontSize: "14px",
-                  fontWeight: 600,
-                  cursor: isSharing ? "not-allowed" : "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "8px",
-                  opacity: isSharing ? 0.7 : 1,
-                  transition: "opacity 0.2s",
-                }}
-              >
-                {isSharing ? (
-                  <>
-                    <Loader2 
-                      style={{ 
-                        width: "16px", 
-                        height: "16px",
-                      }} 
-                      className="animate-spin"
-                    />
-                    Publishing to Explore...
-                  </>
-                ) : (
-                  <>
-                    <Globe 
-                      style={{ width: "16px", height: "16px" }} 
-                    />
-                    Publish to Explore & Share Link
-                  </>
-                )}
-              </button>
-
-              {/* Secondary — Cancel */}
+              padding: "20px",
+            }}
+            onClick={() => {
+              setShowSharePrompt(false);
+              setSharePromptRecipe(null);
+            }}
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: "var(--card)",
+                border: "1px solid var(--border)",
+                borderRadius: "16px",
+                padding: "32px",
+                maxWidth: "420px",
+                width: "100%",
+                position: "relative",
+              }}
+            >
+              {/* Close Icon */}
               <button
                 onClick={() => {
                   setShowSharePrompt(false);
                   setSharePromptRecipe(null);
                 }}
                 style={{
-                  width: "100%",
-                  padding: "12px",
-                  background: "transparent",
+                  position: "absolute",
+                  top: "16px",
+                  right: "16px",
                   color: "var(--muted-foreground)",
-                  border: "1px solid var(--border)",
-                  borderRadius: "10px",
-                  fontSize: "14px",
-                  fontWeight: 500,
                   cursor: "pointer",
                 }}
               >
-                Cancel
+                <X style={{ width: "20px", height: "20px" }} />
               </button>
+
+              {/* Icon */}
+              <div style={{
+                width: "52px",
+                height: "52px",
+                borderRadius: "12px",
+                background: "rgba(37,99,235,0.1)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginBottom: "20px",
+              }}>
+                <Share2 
+                  style={{ 
+                    width: "24px", 
+                    height: "24px", 
+                    color: "#2563eb" 
+                  }} 
+                />
+              </div>
+
+              {/* Title */}
+              <h3 style={{
+                fontSize: "18px",
+                fontWeight: 700,
+                color: "var(--foreground)",
+                marginBottom: "8px",
+              }}>
+                Share this recipe?
+              </h3>
+
+              {/* Description */}
+              <p style={{
+                fontSize: "14px",
+                color: "var(--muted-foreground)",
+                lineHeight: 1.6,
+                marginBottom: "24px",
+              }}>
+                <strong style={{ color: "var(--foreground)" }}>
+                  {sharePromptRecipe.recipeName}
+                </strong>
+                {" "}is currently private. To share it 
+                with others, it needs to be published 
+                to Explore first — then anyone with 
+                the link can view it.
+              </p>
+
+              {/* Buttons */}
+              <div style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+              }}>
+                {/* Primary — Share to Explore and share link */}
+                <button
+                  onClick={handleShareToExploreAndShare}
+                  disabled={isSharing}
+                  style={{
+                    width: "100%",
+                    padding: "12px",
+                    background: "#2563eb",
+                    color: "#ffffff",
+                    border: "none",
+                    borderRadius: "10px",
+                    fontSize: "14px",
+                    fontWeight: 600,
+                    cursor: isSharing ? "not-allowed" : "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px",
+                    opacity: isSharing ? 0.7 : 1,
+                    transition: "opacity 0.2s",
+                  }}
+                >
+                  {isSharing ? (
+                    <>
+                      <Loader2 
+                        style={{ 
+                          width: "16px", 
+                          height: "16px",
+                        }} 
+                        className="animate-spin"
+                      />
+                      Publishing to Explore...
+                    </>
+                  ) : (
+                    <>
+                      <Globe 
+                        style={{ width: "16px", height: "16px" }} 
+                      />
+                      Publish to Explore & Share Link
+                    </>
+                  )}
+                </button>
+
+                {/* Secondary — Cancel */}
+                <button
+                  onClick={() => {
+                    setShowSharePrompt(false);
+                    setSharePromptRecipe(null);
+                  }}
+                  style={{
+                    width: "100%",
+                    padding: "12px",
+                    background: "transparent",
+                    color: "var(--muted-foreground)",
+                    border: "1px solid var(--border)",
+                    borderRadius: "10px",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    cursor: "pointer",
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

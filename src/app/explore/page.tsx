@@ -26,6 +26,7 @@ import Link from 'next/link'
 import { format } from 'date-fns'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
+import { FoodDecorations } from '@/components/FoodDecorations'
 
 export default function ExplorePage() {
   const { user } = useUser()
@@ -213,208 +214,211 @@ export default function ExplorePage() {
   }
 
   return (
-    <div className="max-content px-4 py-12">
-      <Link 
-        href="/"
-        className="flex items-center gap-2 text-primary font-bold text-sm mb-10 hover:translate-x-[-4px] transition-transform w-fit"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back to Generator
-      </Link>
-      
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-        <div className="space-y-2">
-          <h1 className="text-4xl font-extrabold tracking-tight text-foreground" style={{ fontFamily: "Inter, sans-serif", fontWeight: 800 }}>
-            Explore Recipes
-          </h1>
-          <p className="text-muted-foreground text-lg">
-            Discover recipes shared by the community
-          </p>
-        </div>
-        {!isLoading && (
-          <div className="text-sm font-semibold bg-secondary/50 px-4 py-2 rounded-full border border-border text-secondary-foreground">
-            {recipes.length} recipes shared
+    <div className="relative min-h-screen overflow-hidden">
+      <FoodDecorations />
+      <div className="max-content px-4 py-12 relative z-10">
+        <Link 
+          href="/"
+          className="flex items-center gap-2 text-primary font-bold text-sm mb-10 hover:translate-x-[-4px] transition-transform w-fit"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Generator
+        </Link>
+        
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div className="space-y-2">
+            <h1 className="text-4xl font-extrabold tracking-tight text-foreground" style={{ fontFamily: "Inter, sans-serif", fontWeight: 800 }}>
+              Explore Recipes
+            </h1>
+            <p className="text-muted-foreground text-lg">
+              Discover recipes shared by the community
+            </p>
           </div>
-        )}
-      </div>
-
-      <div className="flex flex-col lg:flex-row gap-6 items-center justify-between mb-10 bg-card p-6 rounded-xl border border-border shadow-sm">
-        <div className="flex items-center gap-2 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0 flex-wrap">
-          <Filter className="h-4 w-4 text-muted-foreground mr-2 shrink-0" />
-          
-          {(['All', 'Vegetarian', 'Non-Vegetarian'] as const).map((filter) => (
-            <Button
-              key={filter}
-              variant={dietFilter === filter && !showMyShared ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => {
-                setDietFilter(filter)
-                setShowMyShared(false)
-              }}
-              className={cn(
-                "rounded-full px-5 h-9 text-xs font-semibold whitespace-nowrap",
-                dietFilter === filter && !showMyShared ? "bg-primary text-white shadow-md" : "text-muted-foreground"
-              )}
-            >
-              {filter}
-            </Button>
-          ))}
-
-          {user && (
-            <Button
-              variant={showMyShared ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setShowMyShared(!showMyShared)}
-              className={cn(
-                "rounded-full px-5 h-9 text-xs font-semibold whitespace-nowrap",
-                showMyShared ? "bg-primary text-white shadow-md" : "text-muted-foreground"
-              )}
-            >
-              <Globe className="h-3 w-3 mr-1.5" />
-              Shared by Me
-            </Button>
+          {!isLoading && (
+            <div className="text-sm font-semibold bg-secondary/50 px-4 py-2 rounded-full border border-border text-secondary-foreground">
+              {recipes.length} recipes shared
+            </div>
           )}
         </div>
 
-        <div className="relative w-full lg:w-[320px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search community recipes..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 h-10 rounded-lg border-border focus:ring-primary/20 bg-background"
-          />
-        </div>
-      </div>
+        <div className="flex flex-col lg:flex-row gap-6 items-center justify-between mb-10 bg-card p-6 rounded-xl border border-border shadow-sm">
+          <div className="flex items-center gap-2 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0 flex-wrap">
+            <Filter className="h-4 w-4 text-muted-foreground mr-2 shrink-0" />
+            
+            {(['All', 'Vegetarian', 'Non-Vegetarian'] as const).map((filter) => (
+              <Button
+                key={filter}
+                variant={dietFilter === filter && !showMyShared ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => {
+                  setDietFilter(filter)
+                  setShowMyShared(false)
+                }}
+                className={cn(
+                  "rounded-full px-5 h-9 text-xs font-semibold whitespace-nowrap",
+                  dietFilter === filter && !showMyShared ? "bg-primary text-white shadow-md" : "text-muted-foreground"
+                )}
+              >
+                {filter}
+              </Button>
+            ))}
 
-      {isLoading ? (
-        <div className="flex items-center justify-center min-h-[40vh]">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            {user && (
+              <Button
+                variant={showMyShared ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setShowMyShared(!showMyShared)}
+                className={cn(
+                  "rounded-full px-5 h-9 text-xs font-semibold whitespace-nowrap",
+                  showMyShared ? "bg-primary text-white shadow-md" : "text-muted-foreground"
+                )}
+              >
+                <Globe className="h-3 w-3 mr-1.5" />
+                Shared by Me
+              </Button>
+            )}
+          </div>
+
+          <div className="relative w-full lg:w-[320px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search community recipes..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 h-10 rounded-lg border-border focus:ring-primary/20 bg-background"
+            />
+          </div>
         </div>
-      ) : filteredRecipes.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredRecipes.map((recipe) => (
-            <div
-              key={recipe.id}
-              className="group relative bg-card border border-border rounded-lg p-5 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 flex flex-col h-full"
-            >
-              <div className="flex justify-between items-start mb-3">
-                <div className="flex items-center gap-1.5">
-                  <Globe className="h-3 w-3 text-primary" />
-                  <span className="text-[11px] text-muted-foreground">
-                    Shared by{' '}
+
+        {isLoading ? (
+          <div className="flex items-center justify-center min-h-[40vh]">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : filteredRecipes.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredRecipes.map((recipe) => (
+              <div
+                key={recipe.id}
+                className="group relative bg-card border border-border rounded-lg p-5 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 flex flex-col h-full"
+              >
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex items-center gap-1.5">
+                    <Globe className="h-3 w-3 text-primary" />
+                    <span className="text-[11px] text-muted-foreground">
+                      Shared by{' '}
+                      <span className={cn(
+                        "font-semibold",
+                        isOwner(recipe) ? "text-primary" : "text-foreground"
+                      )}>
+                        {isOwner(recipe) ? 'You' : recipe.sharedByName || 'Anonymous Chef'}
+                      </span>
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => recipe.id && handleShare(recipe.id, true)}
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                    title="Share recipe link"
+                  >
+                    <Share2 className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <h3 className="font-bold text-base text-foreground line-clamp-2 mb-2 pr-2">
+                  {recipe.recipeName}
+                </h3>
+
+                <div className="mb-4">
+                  <p className="text-[13px] font-medium text-muted-foreground">
+                    {recipe.cuisine} · {recipe.servings} Servings ·{' '}
                     <span className={cn(
                       "font-semibold",
-                      isOwner(recipe) ? "text-primary" : "text-foreground"
+                      recipe.dietType === 'Vegetarian' 
+                        ? "text-green-600 dark:text-green-400" 
+                        : "text-red-600 dark:text-red-400"
                     )}>
-                      {isOwner(recipe) ? 'You' : recipe.sharedByName || 'Anonymous Chef'}
+                      {recipe.dietType}
                     </span>
-                  </span>
+                  </p>
                 </div>
-                <button
-                  onClick={() => recipe.id && handleShare(recipe.id, true)}
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                  title="Share recipe link"
-                >
-                  <Share2 className="h-4 w-4" />
-                </button>
-              </div>
 
-              <h3 className="font-bold text-base text-foreground line-clamp-2 mb-2 pr-2">
-                {recipe.recipeName}
-              </h3>
+                <div className="mt-auto space-y-4">
+                  <p className="text-[11px] text-muted-foreground font-medium">
+                    Shared on{' '}
+                    {recipe.sharedAt?.toDate ? format(recipe.sharedAt.toDate(), 'dd MMM yyyy') : 'Recently'}
+                  </p>
 
-              <div className="mb-4">
-                <p className="text-[13px] font-medium text-muted-foreground">
-                  {recipe.cuisine} · {recipe.servings} Servings ·{' '}
-                  <span className={cn(
-                    "font-semibold",
-                    recipe.dietType === 'Vegetarian' 
-                      ? "text-green-600 dark:text-green-400" 
-                      : "text-red-600 dark:text-red-400"
-                  )}>
-                    {recipe.dietType}
-                  </span>
-                </p>
-              </div>
-
-              <div className="mt-auto space-y-4">
-                <p className="text-[11px] text-muted-foreground font-medium">
-                  Shared on{' '}
-                  {recipe.sharedAt?.toDate ? format(recipe.sharedAt.toDate(), 'dd MMM yyyy') : 'Recently'}
-                </p>
-
-                <div className="flex flex-wrap items-center gap-2 mt-4">
-                  <Button asChild size="sm" className="bg-primary hover:bg-primary/90 text-white font-bold h-9 px-4 rounded-md flex-1 flex-shrink-0 whitespace-nowrap">
-                    <Link href={`/explore/recipe/${recipe.id}`}>
-                      View Recipe
-                      <ArrowRight className="ml-1.5 h-3 w-3" />
-                    </Link>
-                  </Button>
-
-                  {!isOwner(recipe) && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => !isAlreadySaved(recipe.id!) && handleSaveToCookbook(recipe)}
-                      disabled={isSaving(recipe.id!) || isAlreadySaved(recipe.id!)}
-                      className={cn(
-                        "h-9 px-3 rounded-md text-[13px] font-medium border transition-colors flex items-center gap-2 flex-shrink-0 whitespace-nowrap",
-                        isAlreadySaved(recipe.id!)
-                          ? "border-green-500 text-green-500 bg-green-500/10 cursor-not-allowed"
-                          : "border-border text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      {isSaving(recipe.id!) ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : isAlreadySaved(recipe.id!) ? (
-                        <>
-                          <BookMarked className="h-4 w-4 mr-1" />
-                          Saved ✓
-                        </>
-                      ) : (
-                        <>
-                          <BookMarked className="h-4 w-4 mr-1" />
-                          Save
-                        </>
-                      )}
+                  <div className="flex flex-wrap items-center gap-2 mt-4">
+                    <Button asChild size="sm" className="bg-primary hover:bg-primary/90 text-white font-bold h-9 px-4 rounded-md flex-1 flex-shrink-0 whitespace-nowrap">
+                      <Link href={`/explore/recipe/${recipe.id}`}>
+                        View Recipe
+                        <ArrowRight className="ml-1.5 h-3 w-3" />
+                      </Link>
                     </Button>
-                  )}
 
-                  {isOwner(recipe) && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleRemoveFromExplore(recipe)}
-                      className="h-9 px-3 border-destructive text-destructive hover:bg-destructive/10 rounded-md flex-shrink-0 whitespace-nowrap"
-                    >
-                      <Trash2 className="h-4 w-4 mr-1" />
-                      Remove
-                    </Button>
-                  )}
+                    {!isOwner(recipe) && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => !isAlreadySaved(recipe.id!) && handleSaveToCookbook(recipe)}
+                        disabled={isSaving(recipe.id!) || isAlreadySaved(recipe.id!)}
+                        className={cn(
+                          "h-9 px-3 rounded-md text-[13px] font-medium border transition-colors flex items-center gap-2 flex-shrink-0 whitespace-nowrap",
+                          isAlreadySaved(recipe.id!)
+                            ? "border-green-500 text-green-500 bg-green-500/10 cursor-not-allowed"
+                            : "border-border text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        {isSaving(recipe.id!) ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : isAlreadySaved(recipe.id!) ? (
+                          <>
+                            <BookMarked className="h-4 w-4 mr-1" />
+                            Saved ✓
+                          </>
+                        ) : (
+                          <>
+                            <BookMarked className="h-4 w-4 mr-1" />
+                            Save
+                          </>
+                        )}
+                      </Button>
+                    )}
+
+                    {isOwner(recipe) && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleRemoveFromExplore(recipe)}
+                        className="h-9 px-3 border-destructive text-destructive hover:bg-destructive/10 rounded-md flex-shrink-0 whitespace-nowrap"
+                      >
+                        <Trash2 className="h-4 w-4 mr-1" />
+                        Remove
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center py-24 text-center bg-secondary/10 rounded-2xl border-2 border-dashed border-border">
-          <div className="bg-secondary/20 p-6 rounded-full mb-6">
-            <Globe className="h-12 w-12 text-muted-foreground/40" />
+            ))}
           </div>
-          <h2 className="text-2xl font-bold text-foreground mb-3">
-            {showMyShared ? "You haven't shared any recipes yet" : "No recipes shared yet"}
-          </h2>
-          <p className="text-muted-foreground mb-8 max-w-sm">
-            {showMyShared ? "Go to My Recipes and share your recipes with the community!" : "Be the first to share a recipe with the community!"}
-          </p>
-          <Button asChild className="bg-primary text-white font-bold h-12 px-8 rounded-xl">
-            <Link href={showMyShared ? "/history" : "/"}>
-              {showMyShared ? "Go to My Recipes" : "Generate a Recipe"}
-            </Link>
-          </Button>
-        </div>
-      )}
+        ) : (
+          <div className="flex flex-col items-center justify-center py-24 text-center bg-secondary/10 rounded-2xl border-2 border-dashed border-border">
+            <div className="bg-secondary/20 p-6 rounded-full mb-6">
+              <Globe className="h-12 w-12 text-muted-foreground/40" />
+            </div>
+            <h2 className="text-2xl font-bold text-foreground mb-3">
+              {showMyShared ? "You haven't shared any recipes yet" : "No recipes shared yet"}
+            </h2>
+            <p className="text-muted-foreground mb-8 max-w-sm">
+              {showMyShared ? "Go to My Recipes and share your recipes with the community!" : "Be the first to share a recipe with the community!"}
+            </p>
+            <Button asChild className="bg-primary text-white font-bold h-12 px-8 rounded-xl">
+              <Link href={showMyShared ? "/history" : "/"}>
+                {showMyShared ? "Go to My Recipes" : "Generate a Recipe"}
+              </Link>
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
