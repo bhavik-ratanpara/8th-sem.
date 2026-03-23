@@ -150,7 +150,7 @@ export function FoodDecorations() {
         <div className="food-left-wrapper" style={wrapperStyle(true, '5px', '20px')}>
           <img src="/pizza.png" alt="pizza" style={imgStyle('320px')} />
         </div>
-        <div className="food-left-wrapper" style={wrapperStyle(true, '240px', '5px')}>
+        <div className="food-left-wrapper" style={wrapperStyle(true, '240px', '-12px')}>
           <img src="/sub.png" alt="sub" style={imgStyle('260px')} />
         </div>
         
@@ -158,7 +158,7 @@ export function FoodDecorations() {
         <div className="food-right-wrapper" style={wrapperStyle(false, '0px', '20px')}>
           <img src="/burger.png" alt="burger" style={imgStyle('220px')} />
         </div>
-        <div className="food-right-wrapper" style={wrapperStyle(false, '280px', '5px')}>
+        <div className="food-right-wrapper" style={wrapperStyle(false, '280px', '-35px')}>
           <img src="/sushi.png" alt="sushi" style={imgStyle('200px')} />
         </div>
       </div>
