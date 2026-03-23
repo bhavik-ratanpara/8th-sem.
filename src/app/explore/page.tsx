@@ -39,6 +39,7 @@ export default function ExplorePage() {
   const [showMyShared, setShowMyShared] = useState(false)
   const [savingIds, setSavingIds] = useState<string[]>([])
   const [savedIds, setSavedIds] = useState<string[]>([])
+  const [userSavedIds, setUserSavedIds] = useState<string[]>([])
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -54,6 +55,24 @@ export default function ExplorePage() {
     }
     fetchRecipes()
   }, [])
+
+  // Fetch user's saved recipes to mark already saved items
+  useEffect(() => {
+    const fetchUserSaved = async () => {
+      if (!user) return
+      try {
+        const saved = await getSavedRecipes(user.uid)
+        const ids = saved
+          .filter(r => r.savedFromExplore)
+          .map(r => r.originalRecipeId)
+          .filter(Boolean) as string[]
+        setUserSavedIds(ids)
+      } catch (error) {
+        console.error('Error fetching user saved recipes:', error)
+      }
+    }
+    fetchUserSaved()
+  }, [user])
 
   useEffect(() => {
     let result = recipes
@@ -111,7 +130,7 @@ export default function ExplorePage() {
     if (!recipe.id) return
     
     // Check if already saved in current session
-    if (isSaved(recipe.id)) {
+    if (isAlreadySaved(recipe.id)) {
       toast({
         title: "Already Saved",
         description: "This recipe is already in your cookbook.",
@@ -122,22 +141,6 @@ export default function ExplorePage() {
     setSavingIds(prev => [...prev, recipe.id!])
     
     try {
-      // Check in Firestore if already saved previously
-      const existingRecipes = await getSavedRecipes(user.uid)
-      const alreadySaved = existingRecipes.some(r => 
-        r.originalSharedBy === recipe.sharedBy &&
-        r.recipeName === recipe.recipeName
-      )
-
-      if (alreadySaved) {
-        toast({
-          title: "Already in Cookbook",
-          description: "You already have this recipe saved.",
-        })
-        setSavedIds(prev => [...prev, recipe.id!])
-        return
-      }
-
       await saveFromExplore(
         user.uid,
         user.displayName || 'Chef',
@@ -203,8 +206,11 @@ export default function ExplorePage() {
   };
 
   const isOwner = (recipe: SavedRecipe) => user?.uid === recipe.sharedBy
-  const isSaved = (recipeId: string) => savedIds.includes(recipeId)
   const isSaving = (recipeId: string) => savingIds.includes(recipeId)
+  
+  const isAlreadySaved = (recipeId: string) => {
+    return userSavedIds.includes(recipeId) || savedIds.includes(recipeId)
+  }
 
   return (
     <div className="max-content px-4 py-12">
@@ -350,23 +356,25 @@ export default function ExplorePage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleSaveToCookbook(recipe)}
-                      disabled={isSaving(recipe.id!) || isSaved(recipe.id!)}
+                      onClick={() => !isAlreadySaved(recipe.id!) && handleSaveToCookbook(recipe)}
+                      disabled={isSaving(recipe.id!) || isAlreadySaved(recipe.id!)}
                       className={cn(
                         "h-9 px-3 rounded-md text-[13px] font-medium border transition-colors flex items-center gap-2 flex-shrink-0 whitespace-nowrap",
-                        isSaved(recipe.id!) && "border-green-500 text-green-500 bg-green-500/10"
+                        isAlreadySaved(recipe.id!)
+                          ? "border-green-500 text-green-500 bg-green-500/10 cursor-not-allowed"
+                          : "border-border text-muted-foreground hover:text-foreground"
                       )}
                     >
                       {isSaving(recipe.id!) ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : isSaved(recipe.id!) ? (
+                      ) : isAlreadySaved(recipe.id!) ? (
                         <>
-                          <BookMarked className="h-4 w-4" />
+                          <BookMarked className="h-4 w-4 mr-1" />
                           Saved ✓
                         </>
                       ) : (
                         <>
-                          <BookMarked className="h-4 w-4" />
+                          <BookMarked className="h-4 w-4 mr-1" />
                           Save
                         </>
                       )}
