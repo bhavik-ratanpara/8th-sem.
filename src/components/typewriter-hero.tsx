@@ -71,9 +71,11 @@ export function TypewriterHero() {
       style={{
         display: "flex",
         width: "100%",
+        maxWidth: "100vw",
         background: "transparent",
         justifyContent: "center",
-        marginBottom: '32px'
+        marginBottom: '32px',
+        overflow: 'hidden'
       }}
     >
       <div
