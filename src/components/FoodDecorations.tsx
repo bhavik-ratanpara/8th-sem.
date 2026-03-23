@@ -74,7 +74,7 @@ export function FoodDecorations() {
         overflow: 'hidden',
       }}
     >
-      {/* LEFT SVG LINE */}
+      {/* LEFT SVG LINE — Shallower curves */}
       <svg
         className="hidden lg:block"
         style={{
@@ -92,7 +92,7 @@ export function FoodDecorations() {
       >
         <path
           className="food-line"
-          d="M 30 0 C 30 60, 160 90, 165 160 C 170 230, 25 280, 20 360 C 15 440, 162 490, 165 570 C 168 650, 22 700, 18 780 C 14 860, 158 910, 160 990 C 162 1070, 20 1110, 20 1200 C 20 1280, 30 1300, 30 1400"
+          d="M 30 0 C 30 100, 140 150, 140 300 C 140 450, 30 500, 30 650 C 30 800, 140 850, 140 1000 C 140 1150, 30 1200, 30 1400"
           stroke="currentColor"
           strokeWidth="1.5"
           strokeOpacity="0.2"
@@ -105,7 +105,7 @@ export function FoodDecorations() {
         />
         <path
           className="food-line"
-          d="M 50 0 C 50 60, 178 90, 182 160 C 186 230, 42 280, 37 360 C 32 440, 178 490, 180 570 C 182 650, 38 700, 34 780 C 30 860, 172 910, 174 990 C 176 1070, 36 1110, 36 1200 C 36 1280, 50 1300, 50 1400"
+          d="M 50 0 C 50 100, 160 150, 160 300 C 160 450, 50 500, 50 650 C 50 800, 160 850, 160 1000 C 160 1150, 50 1200, 50 1400"
           stroke="currentColor"
           strokeWidth="0.7"
           strokeOpacity="0.08"
@@ -118,7 +118,7 @@ export function FoodDecorations() {
         />
       </svg>
 
-      {/* RIGHT SVG LINE */}
+      {/* RIGHT SVG LINE — Shallower curves */}
       <svg
         className="hidden lg:block"
         style={{
@@ -136,7 +136,7 @@ export function FoodDecorations() {
       >
         <path
           className="food-line"
-          d="M 180 0 C 180 60, 50 90, 45 160 C 40 230, 185 280, 190 360 C 195 440, 48 490, 45 570 C 42 650, 188 700, 192 780 C 196 860, 52 910, 50 990 C 48 1070, 190 1110, 190 1200 C 190 1280, 180 1300, 180 1400"
+          d="M 180 0 C 180 100, 70 150, 70 300 C 70 450, 180 500, 180 650 C 180 800, 70 850, 70 1000 C 70 1150, 180 1200, 180 1400"
           stroke="currentColor"
           strokeWidth="1.5"
           strokeOpacity="0.2"
@@ -149,7 +149,7 @@ export function FoodDecorations() {
         />
         <path
           className="food-line"
-          d="M 160 0 C 160 60, 32 90, 28 160 C 24 230, 168 280, 172 360 C 176 440, 30 490, 28 570 C 26 650, 170 700, 174 780 C 178 860, 34 910, 32 990 C 30 1070, 172 1110, 172 1200 C 172 1280, 160 1300, 160 1400"
+          d="M 160 0 C 160 100, 50 150, 50 300 C 50 450, 160 500, 160 650 C 160 800, 50 850, 50 1000 C 50 1150, 160 1200, 160 1400"
           stroke="currentColor"
           strokeWidth="0.7"
           strokeOpacity="0.08"
@@ -162,34 +162,34 @@ export function FoodDecorations() {
         />
       </svg>
 
-      {/* LEFT SIDE FOOD */}
-      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '20px', '90px')}>
+      {/* LEFT SIDE FOOD — Aligned to new shallow curves */}
+      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '20px', '20px')}>
         <img src="/pizza.png" alt="" style={imgStyle('220px')} />
       </div>
-      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '480px', '85px')}>
+      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '260px', '85px')}>
         <img src="/sandwich.png" alt="" style={imgStyle('190px')} />
       </div>
-      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '680px', '55px')}>
+      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '580px', '15px')}>
         <img src="/sub.png" alt="" style={imgStyle('160px')} />
       </div>
-      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '920px', '75px')}>
+      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '950px', '75px')}>
         <img src="/garlicbread.png" alt="" style={imgStyle('175px')} />
       </div>
 
-      {/* RIGHT SIDE FOOD */}
+      {/* RIGHT SIDE FOOD — Aligned to new shallow curves */}
       <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '20px', '20px')}>
         <img src="/burger.png" alt="" style={imgStyle('225px')} />
       </div>
-      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '320px', '55px')}>
+      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '260px', '85px')}>
         <img src="/chilli.png" alt="" style={imgStyle('135px')} />
       </div>
-      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '480px', '20px')}>
+      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '580px', '15px')}>
         <img src="/sushi.png" alt="" style={imgStyle('190px')} />
       </div>
-      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '790px', '45px')}>
+      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '950px', '45px')}>
         <img src="/mousse.png" alt="" style={imgStyle('150px')} />
       </div>
-      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '920px', '20px')}>
+      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '1150px', '20px')}>
         <img src="/sundae.png" alt="" style={imgStyle('180px')} />
       </div>
     </div>
