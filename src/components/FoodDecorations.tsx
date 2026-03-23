@@ -62,7 +62,7 @@ export function FoodDecorations() {
     const maxVal = parseInt(maxWidth);
     const minVal = maxVal * 0.6; // Scale down to 60% minimum before hiding
     return {
-      width: `clamp(${minVal}px, 12vw, ${maxWidth})`,
+      width: `clamp(${minVal}px, 18vw, ${maxWidth})`,
       height: 'auto',
       display: 'block',
       filter: 'drop-shadow(0 15px 30px rgba(0,0,0,0.25))',
@@ -145,19 +145,19 @@ export function FoodDecorations() {
 
       {/* LEFT SIDE FOOD — Uses xl:block to hide when screen space is tight */}
       <div className="food-left-wrapper hidden xl:block" style={wrapperStyle(true, '5px', '20px')}>
-        <img src="/pizza.png" alt="pizza" style={imgStyle('230px')} />
+        <img src="/pizza.png" alt="pizza" style={imgStyle('320px')} />
       </div>
       <div className="food-left-wrapper hidden xl:block" style={wrapperStyle(true, '240px', '40px')}>
-        <img src="/sub.png" alt="sub" style={imgStyle('190px')} />
+        <img src="/sub.png" alt="sub" style={imgStyle('260px')} />
       </div>
       
 
       {/* RIGHT SIDE FOOD — Uses xl:block to hide when screen space is tight */}
       <div className="food-right-wrapper hidden xl:block" style={wrapperStyle(false, '5px', '20px')}>
-        <img src="/burger.png" alt="burger" style={imgStyle('235px')} />
+        <img src="/burger.png" alt="burger" style={imgStyle('330px')} />
       </div>
       <div className="food-right-wrapper hidden xl:block" style={wrapperStyle(false, '350px', '15px')}>
-        <img src="/sushi.png" alt="sushi" style={imgStyle('210px')} />
+        <img src="/sushi.png" alt="sushi" style={imgStyle('290px')} />
       </div>
     </div>
   )
