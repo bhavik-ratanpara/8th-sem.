@@ -56,13 +56,19 @@ export function FoodDecorations() {
     zIndex: 0,
   })
 
-  const imgStyle = (width: string): React.CSSProperties => ({
-    width,
-    height: 'auto',
-    display: 'block',
-    filter: 'drop-shadow(0 15px 30px rgba(0,0,0,0.25))',
-    objectFit: 'contain',
-  })
+  // Dynamic sizing: items scale down automatically as the screen gets smaller
+  // and are hidden via Tailwind classes when space is insufficient.
+  const imgStyle = (maxWidth: string): React.CSSProperties => {
+    const maxVal = parseInt(maxWidth);
+    const minVal = maxVal * 0.6; // Scale down to 60% minimum before hiding
+    return {
+      width: `clamp(${minVal}px, 12vw, ${maxWidth})`,
+      height: 'auto',
+      display: 'block',
+      filter: 'drop-shadow(0 15px 30px rgba(0,0,0,0.25))',
+      objectFit: 'contain',
+    };
+  }
 
   return (
     <div
@@ -77,7 +83,7 @@ export function FoodDecorations() {
     >
       {/* LEFT SVG LINE — Smooth Curves */}
       <svg
-        className="hidden lg:block"
+        className="hidden xl:block"
         style={{
           position: 'absolute',
           left: 0,
@@ -104,24 +110,11 @@ export function FoodDecorations() {
             transition: 'stroke-dashoffset 2.4s ease-in-out',
           }}
         />
-        <path
-          className="food-line"
-          d="M 50 0 C 50 100, 160 150, 160 300 C 160 450, 50 500, 50 650"
-          stroke="currentColor"
-          strokeWidth="0.7"
-          strokeOpacity="0.08"
-          fill="none"
-          style={{
-            strokeDasharray: 4500,
-            strokeDashoffset: 4500,
-            transition: 'stroke-dashoffset 3s ease-in-out 0.2s',
-          }}
-        />
       </svg>
 
       {/* RIGHT SVG LINE — Smooth Curves */}
       <svg
-        className="hidden lg:block"
+        className="hidden xl:block"
         style={{
           position: 'absolute',
           right: 0,
@@ -148,35 +141,22 @@ export function FoodDecorations() {
             transition: 'stroke-dashoffset 2.4s ease-in-out 0.1s',
           }}
         />
-        <path
-          className="food-line"
-          d="M 160 0 C 160 100, 50 150, 50 300 C 50 450, 160 500, 160 650"
-          stroke="currentColor"
-          strokeWidth="0.7"
-          strokeOpacity="0.08"
-          fill="none"
-          style={{
-            strokeDasharray: 4500,
-            strokeDashoffset: 4500,
-            transition: 'stroke-dashoffset 3s ease-in-out 0.3s',
-          }}
-        />
       </svg>
 
-      {/* LEFT SIDE FOOD — Increased size and adjusted positions */}
-      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '5px', '20px')}>
+      {/* LEFT SIDE FOOD — Uses xl:block to hide when screen space is tight */}
+      <div className="food-left-wrapper hidden xl:block" style={wrapperStyle(true, '5px', '20px')}>
         <img src="/pizza.png" alt="pizza" style={imgStyle('230px')} />
       </div>
-      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '240px', '40px')}>
+      <div className="food-left-wrapper hidden xl:block" style={wrapperStyle(true, '240px', '40px')}>
         <img src="/sub.png" alt="sub" style={imgStyle('190px')} />
       </div>
       
 
-      {/* RIGHT SIDE FOOD — Increased size and adjusted positions */}
-      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '5px', '20px')}>
+      {/* RIGHT SIDE FOOD — Uses xl:block to hide when screen space is tight */}
+      <div className="food-right-wrapper hidden xl:block" style={wrapperStyle(false, '5px', '20px')}>
         <img src="/burger.png" alt="burger" style={imgStyle('235px')} />
       </div>
-      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '350px', '15px')}>
+      <div className="food-right-wrapper hidden xl:block" style={wrapperStyle(false, '350px', '15px')}>
         <img src="/sushi.png" alt="sushi" style={imgStyle('210px')} />
       </div>
     </div>
