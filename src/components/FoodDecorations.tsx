@@ -1,4 +1,3 @@
-
 'use client'
 
 import { useEffect, useRef } from 'react'
@@ -158,7 +157,7 @@ export function FoodDecorations() {
         <div className="food-right-wrapper" style={wrapperStyle(false, '0px', '20px')}>
           <img src="/burger.png" alt="burger" style={imgStyle('220px')} />
         </div>
-        <div className="food-right-wrapper" style={wrapperStyle(false, '280px', '-35px')}>
+        <div className="food-right-wrapper" style={wrapperStyle(false, '280px', '-20px')}>
           <img src="/sushi.png" alt="sushi" style={imgStyle('200px')} />
         </div>
       </div>
