@@ -28,72 +28,17 @@ export function RadarFeatures() {
         width: 'min(420px, 44vw)',
         height: 'min(420px, 44vw)',
         position: 'relative',
-        overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
       }}
     >
-
-      {/* ── SINGLE OUTER ROTATING RING ── */}
-      <div style={{ overflow: 'hidden', maxWidth: '100%', width: '100%', height: '100%', position: 'absolute' }}>
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            borderRadius: '50%',
-            animation: 'spinRing 8s linear infinite',
-          }}
-        >
-          {/* Dashed decorative ring */}
-          <svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 420 420"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ position: 'absolute', inset: 0 }}
-          >
-            {/* Outer dashed circle - thickness decreased to 0.8 */}
-            <circle
-              cx="210"
-              cy="210"
-              r="200"
-              stroke="#2563eb"
-              strokeWidth="0.8"
-              strokeDasharray="8 6"
-              strokeLinecap="round"
-              opacity="0.4"
-            />
-            {/* Inner thin circle */}
-            <circle
-              cx="210"
-              cy="210"
-              r="185"
-              stroke="#2563eb"
-              strokeWidth="0.4"
-              opacity="0.15"
-            />
-            {/* Dot markers on ring */}
-            <circle cx="210" cy="10" r="4" fill="#2563eb" opacity="0.8"/>
-            <circle cx="410" cy="210" r="4" fill="#2563eb" opacity="0.8"/>
-            <circle cx="210" cy="410" r="4" fill="#2563eb" opacity="0.8"/>
-            <circle cx="10" cy="210" r="4" fill="#2563eb" opacity="0.8"/>
-            {/* Small dots between */}
-            <circle cx="353" cy="67" r="2.5" fill="#60a5fa" opacity="0.5"/>
-            <circle cx="353" cy="353" r="2.5" fill="#60a5fa" opacity="0.5"/>
-            <circle cx="67" cy="353" r="2.5" fill="#60a5fa" opacity="0.5"/>
-            <circle cx="67" cy="67" r="2.5" fill="#60a5fa" opacity="0.5"/>
-          </svg>
-        </div>
-      </div>
-
       {/* ── CHEF ANIMATION IN CENTER ── */}
       <div
         className="lottie-blend"
         style={{
-          width: '90%',
-          height: '90%',
+          width: '100%',
+          height: '100%',
           position: 'relative',
           zIndex: 2,
           borderRadius: '50%',
@@ -112,21 +57,6 @@ export function RadarFeatures() {
           />
         )}
       </div>
-
-      {/* ── EDGE FADES ── */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: `
-          radial-gradient(circle, 
-            transparent 45%, 
-            var(--page-bg) 72%)
-        `,
-        pointerEvents: 'none',
-        zIndex: 3,
-        borderRadius: '50%',
-      }} />
-
     </div>
   )
 }
