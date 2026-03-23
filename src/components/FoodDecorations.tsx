@@ -149,18 +149,6 @@ export function FoodDecorations() {
         }}
       />
       <img
-        src="/lemon.png"
-        alt=""
-        className="food-item from-left food-float-img hidden lg:block"
-        style={{
-          position: 'absolute',
-          bottom: '10%',
-          left: '3%',
-          width: '80px',
-          height: 'auto',
-        }}
-      />
-      <img
         src="/sub.png"
         alt=""
         className="food-item from-left food-float-img hidden lg:block"
