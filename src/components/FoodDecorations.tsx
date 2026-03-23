@@ -56,11 +56,9 @@ export function FoodDecorations() {
     zIndex: 0,
   })
 
-  // Dynamic sizing: items scale down automatically as the screen gets smaller
-  // and are hidden via Tailwind classes when space is insufficient.
   const imgStyle = (maxWidth: string): React.CSSProperties => {
     const maxVal = parseInt(maxWidth);
-    const minVal = maxVal * 0.6; // Scale down to 60% minimum before hiding
+    const minVal = maxVal * 0.6;
     return {
       width: `clamp(${minVal}px, 18vw, ${maxWidth})`,
       height: 'auto',
@@ -81,7 +79,6 @@ export function FoodDecorations() {
         overflow: 'hidden',
       }}
     >
-      {/* LEFT SVG LINE — Smooth Curves */}
       <svg
         className="hidden xl:block"
         style={{
@@ -112,7 +109,6 @@ export function FoodDecorations() {
         />
       </svg>
 
-      {/* RIGHT SVG LINE — Smooth Curves */}
       <svg
         className="hidden xl:block"
         style={{
@@ -143,7 +139,6 @@ export function FoodDecorations() {
         />
       </svg>
 
-      {/* LEFT SIDE FOOD — Visible on xl screens and above */}
       <div className="food-left-wrapper hidden xl:block" style={wrapperStyle(true, '5px', '20px')}>
         <img src="/pizza.png" alt="pizza" style={imgStyle('320px')} />
       </div>
@@ -151,8 +146,6 @@ export function FoodDecorations() {
         <img src="/sub.png" alt="sub" style={imgStyle('260px')} />
       </div>
       
-
-      {/* RIGHT SIDE FOOD — Visible on xl screens and above */}
       <div className="food-right-wrapper hidden xl:block" style={wrapperStyle(false, '0px', '20px')}>
         <img src="/burger.png" alt="burger" style={imgStyle('310px')} />
       </div>
