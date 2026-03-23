@@ -57,7 +57,8 @@ export function FoodDecorations() {
 
   const imgStyle = (maxWidth: string): React.CSSProperties => {
     return {
-      width: `clamp(60px, 14vw, ${maxWidth})`,
+      // Significantly reduced size and scaling factor to fit blank spaces better
+      width: `clamp(40px, 8vw, ${maxWidth})`,
       height: 'auto',
       display: 'block',
       filter: 'drop-shadow(0 15px 30px rgba(0,0,0,0.25))',
@@ -145,20 +146,20 @@ export function FoodDecorations() {
           />
         </svg>
 
-        {/* Left Side Items */}
+        {/* Left Side Items - Sizes reduced by ~50% */}
         <div className="food-left-wrapper" style={wrapperStyle(true, '5px', '20px')}>
-          <img src="/pizza.png" alt="pizza" style={imgStyle('320px')} />
+          <img src="/pizza.png" alt="pizza" style={imgStyle('160px')} />
         </div>
         <div className="food-left-wrapper" style={wrapperStyle(true, '240px', '-12px')}>
-          <img src="/sub.png" alt="sub" style={imgStyle('260px')} />
+          <img src="/sub.png" alt="sub" style={imgStyle('130px')} />
         </div>
         
-        {/* Right Side Items */}
+        {/* Right Side Items - Sizes reduced by ~50% */}
         <div className="food-right-wrapper" style={wrapperStyle(false, '0px', '20px')}>
-          <img src="/burger.png" alt="burger" style={imgStyle('220px')} />
+          <img src="/burger.png" alt="burger" style={imgStyle('110px')} />
         </div>
         <div className="food-right-wrapper" style={wrapperStyle(false, '280px', '-20px')}>
-          <img src="/sushi.png" alt="sushi" style={imgStyle('200px')} />
+          <img src="/sushi.png" alt="sushi" style={imgStyle('100px')} />
         </div>
       </div>
     </div>
