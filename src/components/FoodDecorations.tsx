@@ -166,13 +166,13 @@ export function FoodDecorations() {
       <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '20px', '90px')}>
         <img src="/pizza.png" alt="" style={imgStyle('220px')} />
       </div>
-      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '555px', '85px')}>
+      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '480px', '85px')}>
         <img src="/sandwich.png" alt="" style={imgStyle('190px')} />
       </div>
-      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '750px', '55px')}>
+      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '680px', '55px')}>
         <img src="/sub.png" alt="" style={imgStyle('160px')} />
       </div>
-      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '1000px', '75px')}>
+      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '920px', '75px')}>
         <img src="/garlicbread.png" alt="" style={imgStyle('175px')} />
       </div>
 
@@ -183,13 +183,13 @@ export function FoodDecorations() {
       <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '320px', '55px')}>
         <img src="/chilli.png" alt="" style={imgStyle('135px')} />
       </div>
-      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '555px', '20px')}>
+      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '480px', '20px')}>
         <img src="/sushi.png" alt="" style={imgStyle('190px')} />
       </div>
       <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '790px', '45px')}>
         <img src="/mousse.png" alt="" style={imgStyle('150px')} />
       </div>
-      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '1000px', '20px')}>
+      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '920px', '20px')}>
         <img src="/sundae.png" alt="" style={imgStyle('180px')} />
       </div>
     </div>
