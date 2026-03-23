@@ -154,10 +154,10 @@ export function FoodDecorations() {
 
       {/* RIGHT SIDE FOOD — Visible on xl screens and above */}
       <div className="food-right-wrapper hidden xl:block" style={wrapperStyle(false, '0px', '20px')}>
-        <img src="/burger.png" alt="burger" style={imgStyle('330px')} />
+        <img src="/burger.png" alt="burger" style={imgStyle('310px')} />
       </div>
       <div className="food-right-wrapper hidden xl:block" style={wrapperStyle(false, '280px', '15px')}>
-        <img src="/sushi.png" alt="sushi" style={imgStyle('290px')} />
+        <img src="/sushi.png" alt="sushi" style={imgStyle('270px')} />
       </div>
     </div>
   )
