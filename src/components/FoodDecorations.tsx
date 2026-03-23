@@ -60,7 +60,7 @@ export function FoodDecorations() {
     width,
     height: 'auto',
     display: 'block',
-    filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.2))',
+    filter: 'drop-shadow(0 15px 30px rgba(0,0,0,0.25))',
     objectFit: 'contain',
   })
 
@@ -163,26 +163,26 @@ export function FoodDecorations() {
         />
       </svg>
 
-      {/* LEFT SIDE FOOD — 3 Items (Aligned with marks) */}
-      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '60px', '20px')}>
-        <img src="/pizza.png" alt="pizza" style={imgStyle('160px')} />
+      {/* LEFT SIDE FOOD — Increased size and adjusted positions */}
+      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '15px', '20px')}>
+        <img src="/pizza.png" alt="pizza" style={imgStyle('230px')} />
       </div>
-      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '250px', '85px')}>
-        <img src="/garlicbread.png" alt="garlic bread" style={imgStyle('140px')} />
+      <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '240px', '85px')}>
+        <img src="/garlicbread.png" alt="garlic bread" style={imgStyle('190px')} />
       </div>
       <div className="food-left-wrapper hidden lg:block" style={wrapperStyle(true, '520px', '15px')}>
-        <img src="/sub.png" alt="sub" style={imgStyle('130px')} />
+        <img src="/sub.png" alt="sub" style={imgStyle('180px')} />
       </div>
 
-      {/* RIGHT SIDE FOOD — 3 Items (Aligned with marks) */}
-      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '60px', '20px')}>
-        <img src="/burger.png" alt="burger" style={imgStyle('165px')} />
+      {/* RIGHT SIDE FOOD — Increased size and adjusted positions */}
+      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '15px', '20px')}>
+        <img src="/burger.png" alt="burger" style={imgStyle('235px')} />
       </div>
-      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '250px', '85px')}>
-        <img src="/chilli.png" alt="chilli" style={imgStyle('110px')} />
+      <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '240px', '85px')}>
+        <img src="/chilli.png" alt="chilli" style={imgStyle('145px')} />
       </div>
       <div className="food-right-wrapper hidden lg:block" style={wrapperStyle(false, '520px', '15px')}>
-        <img src="/sushi.png" alt="sushi" style={imgStyle('155px')} />
+        <img src="/sushi.png" alt="sushi" style={imgStyle('210px')} />
       </div>
     </div>
   )
