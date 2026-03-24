@@ -15,7 +15,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { 
   Search, 
-  Filter, 
   Globe, 
   BookMarked,
   Trash2,
@@ -51,6 +50,7 @@ export default function ExplorePage() {
   const [selectedLanguage, setSelectedLanguage] = useState<string>('All')
   const [availableLanguages, setAvailableLanguages] = useState<string[]>([])
   const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false)
+  const [bottomSheetOpen, setBottomSheetOpen] = useState(false)
 
   const fetchRecipes = async () => {
     try {
@@ -340,211 +340,176 @@ export default function ExplorePage() {
           )}
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-6 items-center justify-between mb-10 bg-card p-6 rounded-xl border border-border shadow-sm relative overflow-visible">
-          <div className="flex items-center gap-2 w-full lg:w-auto flex-wrap overflow-visible relative">
-            <Filter className="h-4 w-4 text-muted-foreground shrink-0" />
-            
+        <div className="flex flex-col gap-6 mb-10 bg-card p-4 md:p-6 rounded-xl border border-border shadow-sm relative overflow-visible">
+          {/* DESKTOP FILTER BAR */}
+          <div className="hidden md:flex items-center gap-1.5 overflow-visible relative">
             {(['All', 'Vegetarian', 'Non-Vegetarian'] as const).map((filter) => (
-              <Button
+              <button
                 key={filter}
-                variant={dietFilter === filter && !showMyShared ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => {
-                  setDietFilter(filter)
-                  setShowMyShared(false)
-                }}
+                onClick={() => setDietFilter(filter)}
                 className={cn(
-                  "rounded-full px-5 h-9 text-xs font-semibold whitespace-nowrap",
-                  dietFilter === filter && !showMyShared ? "bg-primary text-white shadow-md" : "text-muted-foreground"
+                  "text-[12px] px-2.5 py-1 rounded-[6px] border font-medium whitespace-nowrap transition-all duration-200",
+                  dietFilter === filter
+                    ? "border-primary text-primary bg-primary/10"
+                    : "border-border text-muted-foreground hover:text-foreground"
                 )}
               >
-                {filter}
-              </Button>
+                {filter === 'All' ? 'All' : filter === 'Vegetarian' ? 'Veg' : 'Non-Veg'}
+              </button>
             ))}
 
+            <div className="w-[1px] h-4 bg-border mx-1 flex-shrink-0" />
+
             {user && (
-              <Button
-                variant={showMyShared ? 'default' : 'outline'}
-                size="sm"
+              <button
                 onClick={() => setShowMyShared(!showMyShared)}
                 className={cn(
-                  "rounded-full px-5 h-9 text-xs font-semibold whitespace-nowrap",
-                  showMyShared ? "bg-primary text-white shadow-md" : "text-muted-foreground"
+                  "text-[12px] px-2.5 py-1 rounded-[6px] border font-medium whitespace-nowrap transition-all duration-200 flex items-center gap-1.5",
+                  showMyShared
+                    ? "border-primary text-primary bg-primary/10"
+                    : "border-border text-muted-foreground hover:text-foreground"
                 )}
               >
-                <Globe className="h-3 w-3 mr-1.5" />
+                <Globe className="h-3 w-3" />
                 Shared by Me
-              </Button>
+              </button>
             )}
 
-            <div className="h-6 w-px bg-border hidden md:block" />
-
-            <Button
-              variant={sortBy === 'mostLiked' ? 'default' : 'outline'}
-              size="sm"
+            <button
               onClick={() => setSortBy(sortBy === 'latest' ? 'mostLiked' : 'latest')}
               className={cn(
-                "rounded-full px-5 h-9 text-xs font-semibold whitespace-nowrap",
-                sortBy === 'mostLiked' ? "bg-primary text-white shadow-md" : "text-muted-foreground"
+                "text-[12px] px-2.5 py-1 rounded-[6px] border font-medium whitespace-nowrap transition-all duration-200 flex items-center gap-1.5",
+                sortBy === 'mostLiked'
+                  ? "border-primary text-primary bg-primary/10"
+                  : "border-border text-muted-foreground hover:text-foreground"
               )}
             >
-              <Heart className={cn("h-3 w-3 mr-1.5", sortBy === 'mostLiked' && "fill-current")} />
+              <Heart className={cn("h-3 w-3", sortBy === 'mostLiked' && "fill-current")} />
               Most Liked
-            </Button>
+            </button>
 
-            {/* Language dropdown wrapper */}
+            {/* Language dropdown */}
             <div className="relative">
               <button
-                onClick={() => 
-                  setLanguageDropdownOpen(!languageDropdownOpen)
-                }
+                onClick={() => setLanguageDropdownOpen(!languageDropdownOpen)}
                 className={cn(
-                  "flex items-center gap-2",
-                  "px-3 py-1.5 rounded-md",
-                  "text-sm font-medium border",
-                  "transition-all duration-200",
+                  "text-[12px] px-2.5 py-1 rounded-[6px] border font-medium whitespace-nowrap transition-all duration-200 flex items-center gap-1.5",
                   selectedLanguage !== 'All'
                     ? "border-primary text-primary bg-primary/10"
                     : "border-border text-muted-foreground hover:text-foreground"
                 )}
               >
-                <Globe className="h-4 w-4" />
-                {selectedLanguage === 'All' 
-                  ? 'Language' 
-                  : selectedLanguage
-                }
-                {selectedLanguage !== 'All' && (
-                  <span
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      setSelectedLanguage('All')
-                    }}
-                    className="
-                      ml-1 text-xs hover:text-destructive
-                      transition-colors
-                    "
-                  >
-                    ×
-                  </span>
-                )}
-                <ChevronDown 
-                  className="h-3 w-3"
-                  style={{
-                    transform: languageDropdownOpen 
-                      ? 'rotate(180deg)' 
-                      : 'rotate(0deg)',
-                    transition: 'transform 0.2s ease'
-                  }}
-                />
+                <Globe className="h-3.5 w-3.5" />
+                {selectedLanguage === 'All' ? 'Language' : selectedLanguage}
+                <ChevronDown className={cn("h-3 w-3 transition-transform", languageDropdownOpen && "rotate-180")} />
               </button>
 
-              {/* Dropdown menu */}
               {languageDropdownOpen && (
                 <>
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setLanguageDropdownOpen(false)}
-                  />
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '100%',
-                      left: 0,
-                      marginTop: '6px',
-                      backgroundColor: 'hsl(var(--background))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '8px',
-                      zIndex: 50,
-                      minWidth: '160px',
-                      boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
-                      overflow: 'hidden',
-                    }}
-                  >
+                  <div className="fixed inset-0 z-40" onClick={() => setLanguageDropdownOpen(false)} />
+                  <div className="absolute top-full left-0 mt-1.5 bg-card border border-border rounded-lg shadow-xl z-50 min-w-[160px] overflow-hidden animate-in fade-in zoom-in-95 duration-100">
                     <button
-                      onClick={() => {
-                        setSelectedLanguage('All')
-                        setLanguageDropdownOpen(false)
-                      }}
-                      style={{
-                        width: '100%',
-                        textAlign: 'left',
-                        padding: '10px 14px',
-                        fontSize: '13px',
-                        color: selectedLanguage === 'All'
-                          ? 'hsl(var(--primary))'
-                          : 'hsl(var(--foreground))',
-                        fontWeight: selectedLanguage === 'All'
-                          ? 600 : 400,
-                        backgroundColor: selectedLanguage === 'All'
-                          ? 'hsl(var(--primary) / 0.05)'
-                          : 'transparent',
-                        border: 'none',
-                        cursor: 'pointer',
-                        borderRadius: '0',
-                      }}
-                      className="hover:bg-secondary/50 transition-colors"
+                      onClick={() => { setSelectedLanguage('All'); setLanguageDropdownOpen(false); }}
+                      className={cn(
+                        "w-full text-left px-3 py-2 text-[13px] transition-colors",
+                        selectedLanguage === 'All' ? "bg-primary/5 text-primary font-semibold" : "text-foreground hover:bg-secondary/50"
+                      )}
                     >
                       All Languages
                     </button>
-
-                    <div style={{
-                      height: '1px',
-                      background: 'hsl(var(--border))',
-                      margin: '0',
-                    }}/>
-
-                    {availableLanguages.length === 0 ? (
-                      <div style={{
-                        padding: '10px 14px',
-                        fontSize: '13px',
-                        color: 'hsl(var(--muted-foreground))',
-                      }}>
-                        No languages found
-                      </div>
-                    ) : (
-                      availableLanguages.map((lang) => (
-                        <button
-                          key={lang}
-                          onClick={() => {
-                            setSelectedLanguage(lang)
-                            setLanguageDropdownOpen(false)
-                          }}
-                          style={{
-                            width: '100%',
-                            textAlign: 'left',
-                            padding: '10px 14px',
-                            fontSize: '13px',
-                            color: selectedLanguage === lang
-                              ? 'hsl(var(--primary))'
-                              : 'hsl(var(--foreground))',
-                            fontWeight: selectedLanguage === lang
-                              ? 600 : 400,
-                            backgroundColor: selectedLanguage === lang
-                              ? 'hsl(var(--primary) / 0.05)'
-                              : 'transparent',
-                            border: 'none',
-                            cursor: 'pointer',
-                            display: 'block',
-                          }}
-                          className="hover:bg-secondary/50 transition-colors"
-                        >
-                          {lang}
-                        </button>
-                      ))
-                    )}
+                    <div className="h-px bg-border" />
+                    {availableLanguages.map((lang) => (
+                      <button
+                        key={lang}
+                        onClick={() => { setSelectedLanguage(lang); setLanguageDropdownOpen(false); }}
+                        className={cn(
+                          "w-full text-left px-3 py-2 text-[13px] transition-colors",
+                          selectedLanguage === lang ? "bg-primary/5 text-primary font-semibold" : "text-foreground hover:bg-secondary/50"
+                        )}
+                      >
+                        {lang}
+                      </button>
+                    ))}
                   </div>
                 </>
               )}
             </div>
+
+            <div className="relative flex-1 max-w-[280px] ml-auto">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+              <Input
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-8 h-8 text-[12px] bg-background border-border"
+              />
+            </div>
           </div>
 
-          <div className="relative w-full lg:w-[320px]">
+          {/* MOBILE FILTER BAR */}
+          <div className="flex md:hidden items-center gap-2 overflow-x-auto pb-1">
+            <button
+              onClick={() => {
+                setDietFilter('All');
+                setSortBy('latest');
+                setSelectedLanguage('All');
+                setShowMyShared(false);
+              }}
+              className={cn(
+                "text-xs px-3 py-1.5 rounded-md border whitespace-nowrap flex-shrink-0 transition-colors duration-150",
+                dietFilter === 'All' && sortBy === 'latest' && selectedLanguage === 'All' && !showMyShared
+                  ? "border-primary text-primary bg-primary/10"
+                  : "border-border text-muted-foreground"
+              )}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setDietFilter('Vegetarian')}
+              className={cn(
+                "text-xs px-3 py-1.5 rounded-md border whitespace-nowrap flex-shrink-0 transition-colors duration-150",
+                dietFilter === 'Vegetarian' ? "border-primary text-primary bg-primary/10" : "border-border text-muted-foreground"
+              )}
+            >
+              Veg
+            </button>
+            <button
+              onClick={() => setDietFilter('Non-Vegetarian')}
+              className={cn(
+                "text-xs px-3 py-1.5 rounded-md border whitespace-nowrap flex-shrink-0 transition-colors duration-150",
+                dietFilter === 'Non-Vegetarian' ? "border-primary text-primary bg-primary/10" : "border-border text-muted-foreground"
+              )}
+            >
+              Non-Veg
+            </button>
+            <button
+              onClick={() => setBottomSheetOpen(true)}
+              className={cn(
+                "text-xs px-3 py-1.5 rounded-md border whitespace-nowrap flex-shrink-0 transition-colors duration-150 flex items-center gap-1.5 ml-auto",
+                sortBy !== 'latest' || selectedLanguage !== 'All' || showMyShared
+                  ? "border-primary text-primary bg-primary/10"
+                  : "border-border text-muted-foreground"
+              )}
+            >
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
+              </svg>
+              Filters
+              {(sortBy !== 'latest' || selectedLanguage !== 'All' || showMyShared) && (
+                <span className="bg-primary text-primary-foreground rounded-full text-[9px] font-bold px-1.5 py-0.5 ml-0.5">
+                  {[sortBy !== 'latest', selectedLanguage !== 'All', showMyShared].filter(Boolean).length}
+                </span>
+              )}
+            </button>
+          </div>
+
+          <div className="md:hidden relative w-full mt-2">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search community recipes..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-10 rounded-lg border-border focus:ring-primary/20 bg-background"
+              className="pl-10 h-10 rounded-lg border-border bg-background"
             />
           </div>
         </div>
@@ -709,6 +674,64 @@ export default function ExplorePage() {
           </div>
         )}
       </div>
+
+      {/* ── MOBILE BOTTOM SHEET ── */}
+      {bottomSheetOpen && (
+        <>
+          <div
+            onClick={() => setBottomSheetOpen(false)}
+            style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 40 }}
+          />
+          <div
+            style={{
+              position: 'fixed', bottom: 0, left: 0, right: 0,
+              background: 'hsl(var(--background))',
+              borderRadius: '16px 16px 0 0',
+              borderTop: '0.5px solid hsl(var(--border))',
+              zIndex: 50, padding: '0 0 32px 0'
+            }}
+          >
+            <div style={{ width: '32px', height: '3px', background: 'hsl(var(--muted))', borderRadius: '999px', margin: '12px auto 0' }}/>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px 12px', borderBottom: '0.5px solid hsl(var(--border))' }}>
+              <span style={{ fontSize: '14px', fontWeight: 600, color: 'hsl(var(--foreground))' }}>Filters</span>
+              <button onClick={() => setBottomSheetOpen(false)} style={{ fontSize: '18px', color: 'hsl(var(--muted-foreground))', background: 'none', border: 'none', cursor: 'pointer', padding: '0 4px' }}>×</button>
+            </div>
+            <div style={{ padding: '16px 20px' }}>
+              <div style={{ marginBottom: '20px' }}>
+                <p style={{ fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', color: 'hsl(var(--muted-foreground))', marginBottom: '10px' }}>Sort by</p>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button onClick={() => setSortBy('latest')} style={{ fontSize: '13px', padding: '7px 14px', borderRadius: '8px', border: '0.5px solid', borderColor: sortBy === 'latest' ? 'hsl(var(--primary))' : 'hsl(var(--border))', color: sortBy === 'latest' ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))', background: sortBy === 'latest' ? 'hsl(var(--primary) / 0.1)' : 'transparent', cursor: 'pointer' }}>Latest</button>
+                  <button onClick={() => setSortBy('mostLiked')} style={{ fontSize: '13px', padding: '7px 14px', borderRadius: '8px', border: '0.5px solid', borderColor: sortBy === 'mostLiked' ? 'hsl(var(--primary))' : 'hsl(var(--border))', color: sortBy === 'mostLiked' ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))', background: sortBy === 'mostLiked' ? 'hsl(var(--primary) / 0.1)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>♥ Most Liked</button>
+                </div>
+              </div>
+              {user && (
+                <div style={{ marginBottom: '20px' }}>
+                  <p style={{ fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', color: 'hsl(var(--muted-foreground))', marginBottom: '10px' }}>My Content</p>
+                  <button onClick={() => setShowMyShared(!showMyShared)} style={{ fontSize: '13px', padding: '7px 14px', borderRadius: '8px', border: '0.5px solid', borderColor: showMyShared ? 'hsl(var(--primary))' : 'hsl(var(--border))', color: showMyShared ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))', background: showMyShared ? 'hsl(var(--primary) / 0.1)' : 'transparent', cursor: 'pointer' }}>Shared by Me</button>
+                </div>
+              )}
+              <div style={{ marginBottom: '24px' }}>
+                <p style={{ fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', color: 'hsl(var(--muted-foreground))', marginBottom: '10px' }}>Language</p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  <button onClick={() => setSelectedLanguage('All')} style={{ fontSize: '13px', padding: '7px 14px', borderRadius: '8px', border: '0.5px solid', borderColor: selectedLanguage === 'All' ? 'hsl(var(--primary))' : 'hsl(var(--border))', color: selectedLanguage === 'All' ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))', background: selectedLanguage === 'All' ? 'hsl(var(--primary) / 0.1)' : 'transparent', cursor: 'pointer' }}>All</button>
+                  {availableLanguages.map(lang => (
+                    <button key={lang} onClick={() => setSelectedLanguage(lang)} style={{ fontSize: '13px', padding: '7px 14px', borderRadius: '8px', border: '0.5px solid', borderColor: selectedLanguage === lang ? 'hsl(var(--primary))' : 'hsl(var(--border))', color: selectedLanguage === lang ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))', background: selectedLanguage === lang ? 'hsl(var(--primary) / 0.1)' : 'transparent', cursor: 'pointer' }}>{lang}</button>
+                  ))}
+                </div>
+              </div>
+              <button onClick={() => setBottomSheetOpen(false)} style={{ width: '100%', padding: '12px', borderRadius: '10px', background: 'hsl(var(--primary))', color: 'hsl(var(--primary-foreground))', fontSize: '14px', fontWeight: 600, border: 'none', cursor: 'pointer' }}>Apply Filters</button>
+              {(dietFilter !== 'All' || sortBy !== 'latest' || selectedLanguage !== 'All' || showMyShared) && (
+                <button
+                  onClick={() => { setDietFilter('All'); setSortBy('latest'); setSelectedLanguage('All'); setShowMyShared(false); setBottomSheetOpen(false); }}
+                  style={{ width: '100%', padding: '10px', marginTop: '8px', borderRadius: '10px', background: 'transparent', color: 'hsl(var(--muted-foreground))', fontSize: '13px', fontWeight: 500, border: '0.5px solid hsl(var(--border))', cursor: 'pointer' }}
+                >
+                  Reset All Filters
+                </button>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
