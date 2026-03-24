@@ -31,6 +31,10 @@ function HistoryContent() {
   const [sharePromptRecipe, setSharePromptRecipe] = useState<SavedRecipe | null>(null);
   const [isSharing, setIsSharing] = useState(false);
 
+  // Pagination states
+  const RECIPES_PER_PAGE = 12
+  const [currentPage, setCurrentPage] = useState(1)
+
   useEffect(() => {
     const fetchRecipes = async () => {
       if (!user) return;
@@ -73,6 +77,17 @@ function HistoryContent() {
 
     setFilteredRecipes(result);
   }, [recipes, dietFilter, searchQuery, searchParams]);
+
+  // Reset page on filter change
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [dietFilter, searchQuery, searchParams]);
+
+  const totalPages = Math.ceil(filteredRecipes.length / RECIPES_PER_PAGE)
+  const paginatedRecipes = filteredRecipes.slice(
+    (currentPage - 1) * RECIPES_PER_PAGE,
+    currentPage * RECIPES_PER_PAGE
+  )
 
   const handleDelete = async (recipeId: string) => {
     if (!user || !window.confirm("Are you sure you want to delete this recipe?")) return;
@@ -388,103 +403,228 @@ function HistoryContent() {
             ))}
           </div>
         ) : filteredRecipes.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredRecipes.map((recipe) => (
-              <div 
-                key={recipe.id}
-                className="group relative bg-card border border-border rounded-lg p-5 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 flex flex-col h-full"
-              >
-                <div className="flex justify-between items-start mb-1.5">
-                  <h3 className="font-bold text-base text-foreground line-clamp-2 pr-2">{recipe.recipeName}</h3>
-                  <div className="flex gap-2 items-center shrink-0">
-                    <button 
-                      onClick={() => recipe.id && handleToggleFav(recipe.id, recipe.isFavourite)}
-                      className="transition-transform active:scale-125"
-                    >
-                      <Star 
-                        className={cn(
-                          "h-5 w-5 transition-colors", 
-                          recipe.isFavourite ? "fill-yellow-500 text-yellow-500" : "text-muted-foreground/40 hover:text-yellow-400"
-                        )} 
-                      />
-                    </button>
-                    <button
-                      onClick={() => handleShare(recipe)}
-                      className="text-muted-foreground/40 hover:text-primary transition-colors"
-                      title="Share recipe link"
-                    >
-                      <Share2 className="h-4 w-4" />
-                    </button>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {paginatedRecipes.map((recipe) => (
+                <div 
+                  key={recipe.id}
+                  className="group relative bg-card border border-border rounded-lg p-5 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 flex flex-col h-full"
+                >
+                  <div className="flex justify-between items-start mb-1.5">
+                    <h3 className="font-bold text-base text-foreground line-clamp-2 pr-2">{recipe.recipeName}</h3>
+                    <div className="flex gap-2 items-center shrink-0">
+                      <button 
+                        onClick={() => recipe.id && handleToggleFav(recipe.id, recipe.isFavourite)}
+                        className="transition-transform active:scale-125"
+                      >
+                        <Star 
+                          className={cn(
+                            "h-5 w-5 transition-colors", 
+                            recipe.isFavourite ? "fill-yellow-500 text-yellow-500" : "text-muted-foreground/40 hover:text-yellow-400"
+                          )} 
+                        />
+                      </button>
+                      <button
+                        onClick={() => handleShare(recipe)}
+                        className="text-muted-foreground/40 hover:text-primary transition-colors"
+                        title="Share recipe link"
+                      >
+                        <Share2 className="h-4 w-4" />
+                      </button>
+                    </div>
                   </div>
-                </div>
 
-                <div className="mb-3">
-                  <p className="text-[13px] font-medium text-muted-foreground">
-                    {recipe.cuisine} · {recipe.servings} Servings ·{' '}
-                    <span className={cn(
-                      "font-semibold",
-                      recipe.dietType === 'Vegetarian' 
-                        ? "text-green-600 dark:text-green-400" 
-                        : "text-red-600 dark:text-red-400"
-                    )}>
-                      {recipe.dietType}
-                    </span>
-                  </p>
-                  {recipe.savedFromExplore && (
-                    <p className="text-[11px] text-muted-foreground mt-1">
-                      By{' '}
-                      <span className="text-primary font-semibold">
-                        {recipe.originalSharedByName || 'Anonymous Chef'}
+                  <div className="mb-3">
+                    <p className="text-[13px] font-medium text-muted-foreground">
+                      {recipe.cuisine} · {recipe.servings} Servings ·{' '}
+                      <span className={cn(
+                        "font-semibold",
+                        recipe.dietType === 'Vegetarian' 
+                          ? "text-green-600 dark:text-green-400" 
+                          : "text-red-600 dark:text-red-400"
+                      )}>
+                        {recipe.dietType}
                       </span>
                     </p>
-                  )}
-                </div>
-
-                <div className="mt-auto">
-                  <p className="text-[11px] text-muted-foreground mb-3">
-                    Saved on {recipe.generatedAt?.toDate ? format(recipe.generatedAt.toDate(), 'dd MMM yyyy') : 'Recently'}
-                  </p>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Button asChild size="sm" className="bg-primary hover:bg-primary/90 text-white font-bold h-9 px-4 rounded-md">
-                      <Link href={`/recipe/${recipe.id}`}>
-                        View Recipe
-                        <ArrowRight className="ml-1.5 h-3 w-3" />
-                      </Link>
-                    </Button>
-                    
-                    {!recipe.savedFromExplore && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleToggleShare(recipe)}
-                        className={cn(
-                          "h-9 px-3 rounded-md text-[13px] font-medium border transition-colors flex items-center gap-2 flex-shrink-0 whitespace-nowrap",
-                          recipe.isPublic
-                            ? "bg-blue-500/10 border-blue-500 text-blue-500 hover:bg-blue-500/20"
-                            : "bg-transparent border-border text-muted-foreground hover:text-foreground"
-                        )}
-                      >
-                        <Globe className={cn(
-                          "h-4 w-4", 
-                          recipe.isPublic && "fill-current"
-                        )} />
-                        {recipe.isPublic ? 'Shared ✓' : 'Share to Public'}
-                      </Button>
+                    {recipe.savedFromExplore && (
+                      <p className="text-[11px] text-muted-foreground mt-1">
+                        By{' '}
+                        <span className="text-primary font-semibold">
+                          {recipe.originalSharedByName || 'Anonymous Chef'}
+                        </span>
+                      </p>
                     )}
                   </div>
-                  
-                  <div className="flex justify-end mt-3">
-                    <button 
-                      onClick={() => recipe.id && handleDelete(recipe.id)}
-                      className="text-muted-foreground/40 hover:text-destructive transition-colors"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
+
+                  <div className="mt-auto">
+                    <p className="text-[11px] text-muted-foreground mb-3">
+                      Saved on {recipe.generatedAt?.toDate ? format(recipe.generatedAt.toDate(), 'dd MMM yyyy') : 'Recently'}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Button asChild size="sm" className="bg-primary hover:bg-primary/90 text-white font-bold h-9 px-4 rounded-md">
+                        <Link href={`/recipe/${recipe.id}`}>
+                          View Recipe
+                          <ArrowRight className="ml-1.5 h-3 w-3" />
+                        </Link>
+                      </Button>
+                      
+                      {!recipe.savedFromExplore && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleToggleShare(recipe)}
+                          className={cn(
+                            "h-9 px-3 rounded-md text-[13px] font-medium border transition-colors flex items-center gap-2 flex-shrink-0 whitespace-nowrap",
+                            recipe.isPublic
+                              ? "bg-blue-500/10 border-blue-500 text-blue-500 hover:bg-blue-500/20"
+                              : "bg-transparent border-border text-muted-foreground hover:text-foreground"
+                          )}
+                        >
+                          <Globe className={cn(
+                            "h-4 w-4", 
+                            recipe.isPublic && "fill-current"
+                          )} />
+                          {recipe.isPublic ? 'Shared ✓' : 'Share to Public'}
+                        </Button>
+                      )}
+                    </div>
+                    
+                    <div className="flex justify-end mt-3">
+                      <button 
+                        onClick={() => recipe.id && handleDelete(recipe.id)}
+                        className="text-muted-foreground/40 hover:text-destructive transition-colors"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '4px',
+                marginTop: '32px',
+                marginBottom: '32px',
+                flexWrap: 'wrap',
+              }}>
+                {/* Previous button */}
+                <button
+                  onClick={() => {
+                    setCurrentPage(p => Math.max(1, p - 1))
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }}
+                  disabled={currentPage === 1}
+                  style={{
+                    padding: '7px 12px',
+                    borderRadius: '6px',
+                    border: '0.5px solid hsl(var(--border))',
+                    background: 'transparent',
+                    color: currentPage === 1 ? 'hsl(var(--muted-foreground))' : 'hsl(var(--foreground))',
+                    fontSize: '13px',
+                    cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                    opacity: currentPage === 1 ? 0.4 : 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M15 18l-6-6 6-6"/>
+                  </svg>
+                  Prev
+                </button>
+
+                {/* Page numbers */}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => {
+                  const isFirst = page === 1
+                  const isLast = page === totalPages
+                  const isCurrent = page === currentPage
+                  const isNearCurrent = Math.abs(page - currentPage) <= 1
+
+                  if (!isFirst && !isLast && !isNearCurrent) {
+                    if (page === currentPage - 2 || page === currentPage + 2) {
+                      return (
+                        <span key={page} style={{ padding: '7px 4px', fontSize: '13px', color: 'hsl(var(--muted-foreground))' }}>
+                          ...
+                        </span>
+                      )
+                    }
+                    return null
+                  }
+
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => {
+                        setCurrentPage(page)
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                      }}
+                      style={{
+                        width: '34px',
+                        height: '34px',
+                        borderRadius: '6px',
+                        border: '0.5px solid',
+                        borderColor: isCurrent ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                        background: isCurrent ? 'hsl(var(--primary))' : 'transparent',
+                        color: isCurrent ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))',
+                        fontSize: '13px',
+                        fontWeight: isCurrent ? 600 : 400,
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      {page}
+                    </button>
+                  )
+                })}
+
+                {/* Next button */}
+                <button
+                  onClick={() => {
+                    setCurrentPage(p => Math.min(totalPages, p + 1))
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }}
+                  disabled={currentPage === totalPages}
+                  style={{
+                    padding: '7px 12px',
+                    borderRadius: '6px',
+                    border: '0.5px solid hsl(var(--border))',
+                    background: 'transparent',
+                    color: currentPage === totalPages ? 'hsl(var(--muted-foreground))' : 'hsl(var(--foreground))',
+                    fontSize: '13px',
+                    cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+                    opacity: currentPage === totalPages ? 0.4 : 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                  }}
+                >
+                  Next
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M9 18l6-6-6-6"/>
+                  </svg>
+                </button>
               </div>
-            ))}
-          </div>
+            )}
+
+            {/* Page info */}
+            {filteredRecipes.length > 0 && (
+              <p style={{
+                textAlign: 'center',
+                fontSize: '12px',
+                color: 'hsl(var(--muted-foreground))',
+                marginTop: '-16px',
+                marginBottom: '32px',
+              }}>
+                Page {currentPage} of {totalPages} · {filteredRecipes.length} total recipes
+              </p>
+            )}
+          </>
         ) : (
           <div className="flex flex-col items-center justify-center py-24 text-center bg-secondary/10 rounded-2xl border-2 border-dashed border-border">
             <div className="bg-secondary/20 p-6 rounded-full mb-6">

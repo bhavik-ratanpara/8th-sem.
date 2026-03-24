@@ -52,6 +52,11 @@ export default function ExplorePage() {
   const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false)
   const [bottomSheetOpen, setBottomSheetOpen] = useState(false)
 
+  // Pagination states
+  const CARDS_PER_PAGE = 12
+  const [visibleCount, setVisibleCount] = useState(CARDS_PER_PAGE)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
+
   const fetchRecipes = async () => {
     try {
       const data = await getPublicRecipes()
@@ -125,6 +130,11 @@ export default function ExplorePage() {
     setFilteredRecipes(result)
   }, [recipes, dietFilter, searchQuery, showMyShared, user, selectedLanguage])
 
+  // Reset pagination on filter change
+  useEffect(() => {
+    setVisibleCount(CARDS_PER_PAGE)
+  }, [dietFilter, sortBy, selectedLanguage, showMyShared, searchQuery])
+
   const handleRemoveFromExplore = async (recipe: SavedRecipe) => {
     if (!user || !recipe.id) return
 
@@ -190,6 +200,7 @@ export default function ExplorePage() {
         description: "Please try again.",
       })
     } finally {
+      setIsSaving(false);
       setSavingIds(prev => prev.filter(id => id !== recipe.id))
     }
   }
@@ -519,142 +530,223 @@ export default function ExplorePage() {
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         ) : sortedRecipes.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {sortedRecipes.map((recipe) => (
-              <div
-                key={recipe.id}
-                className="group relative bg-card border border-border rounded-lg p-5 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 flex flex-col h-full"
-              >
-                <div className="flex justify-between items-start mb-3">
-                  <div className="flex items-center gap-1.5">
-                    <Globe className="h-3 w-3 text-primary" />
-                    <span className="text-[11px] text-muted-foreground">
-                      Shared by{' '}
-                      <span className={cn(
-                        "font-semibold",
-                        isOwner(recipe) ? "text-primary" : "text-foreground"
-                      )}>
-                        {isOwner(recipe) ? 'You' : recipe.sharedByName || 'Anonymous Chef'}
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {sortedRecipes.slice(0, visibleCount).map((recipe) => (
+                <div
+                  key={recipe.id}
+                  className="group relative bg-card border border-border rounded-lg p-5 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 flex flex-col h-full"
+                >
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="flex items-center gap-1.5">
+                      <Globe className="h-3 w-3 text-primary" />
+                      <span className="text-[11px] text-muted-foreground">
+                        Shared by{' '}
+                        <span className={cn(
+                          "font-semibold",
+                          isOwner(recipe) ? "text-primary" : "text-foreground"
+                        )}>
+                          {isOwner(recipe) ? 'You' : recipe.sharedByName || 'Anonymous Chef'}
+                        </span>
                       </span>
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => recipe.id && handleShare(recipe.id, true)}
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                    title="Share recipe link"
-                  >
-                    <Share2 className="h-4 w-4" />
-                  </button>
-                </div>
-
-                <h3 className="font-bold text-base text-foreground line-clamp-2 mb-2 pr-2">
-                  {recipe.recipeName}
-                </h3>
-
-                <div className="mb-4">
-                  <p className="text-[13px] font-medium text-muted-foreground">
-                    {recipe.cuisine} · {recipe.servings} Servings ·{' '}
-                    <span className={cn(
-                      "font-semibold",
-                      recipe.dietType === 'Vegetarian' 
-                        ? "text-green-600 dark:text-green-400" 
-                        : "text-red-600 dark:text-red-400"
-                    )}>
-                      {recipe.dietType}
-                    </span>
-                  </p>
-                </div>
-
-                <div className="mt-auto space-y-4">
-                  <p className="text-[11px] text-muted-foreground font-medium">
-                    Shared on{' '}
-                    {recipe.sharedAt?.toDate ? format(recipe.sharedAt.toDate(), 'dd MMM yyyy') : 'Recently'}
-                  </p>
-
-                  <div className="flex flex-wrap items-center gap-2 mt-4">
-                    <Button asChild size="sm" className="bg-primary hover:bg-primary/90 text-white font-bold h-9 px-4 rounded-md flex-1 flex-shrink-0 whitespace-nowrap">
-                      <Link href={`/explore/recipe/${recipe.id}`}>
-                        View Recipe
-                        <ArrowRight className="ml-1.5 h-3 w-3" />
-                      </Link>
-                    </Button>
-
-                    {!isOwner(recipe) && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => !isAlreadySaved(recipe.id!) && handleSaveToCookbook(recipe)}
-                        disabled={isSaving(recipe.id!) || isAlreadySaved(recipe.id!)}
-                        className={cn(
-                          "h-9 px-3 rounded-md text-[13px] font-medium border transition-colors flex items-center gap-2 flex-shrink-0 whitespace-nowrap",
-                          isAlreadySaved(recipe.id!)
-                            ? "border-green-500 text-green-500 bg-green-500/10 cursor-not-allowed"
-                            : "border-border text-muted-foreground hover:text-foreground"
-                        )}
-                      >
-                        {isSaving(recipe.id!) ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : isAlreadySaved(recipe.id!) ? (
-                          <>
-                            <BookMarked className="h-4 w-4 mr-1" />
-                            Saved ✓
-                          </>
-                        ) : (
-                          <>
-                            <BookMarked className="h-4 w-4 mr-1" />
-                            Save
-                          </>
-                        )}
-                      </Button>
-                    )}
-
-                    {isOwner(recipe) && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleRemoveFromExplore(recipe)}
-                        className="h-9 px-3 border-destructive text-destructive hover:bg-destructive/10 rounded-md flex-shrink-0 whitespace-nowrap"
-                      >
-                        <Trash2 className="h-4 w-4 mr-1" />
-                        Remove
-                      </Button>
-                    )}
-
+                    </div>
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleLike(recipe)
-                      }}
-                      disabled={likingId === recipe.id}
-                      className={cn(
-                        "flex items-center gap-1.5 h-9 px-3 py-1.5",
-                        "rounded-md text-[13px] font-medium transition-all duration-200 border",
-                        isRecipeLikedByUser(recipe, user?.uid || '')
-                          ? "text-red-500 bg-red-500/10 border-red-500/20"
-                          : "text-muted-foreground border-border hover:text-red-500 hover:bg-red-500/5 hover:border-red-500/20"
-                      )}
+                      onClick={() => recipe.id && handleShare(recipe.id, true)}
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                      title="Share recipe link"
                     >
-                      {likingId === recipe.id ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Heart
-                          className="h-4 w-4"
-                          fill={
-                            isRecipeLikedByUser(recipe, user?.uid || '')
-                              ? 'currentColor'
-                              : 'none'
-                          }
-                        />
-                      )}
-                      <span className="tabular-nums">
-                        {recipe.likes || 0}
-                      </span>
+                      <Share2 className="h-4 w-4" />
                     </button>
                   </div>
+
+                  <h3 className="font-bold text-base text-foreground line-clamp-2 mb-2 pr-2">
+                    {recipe.recipeName}
+                  </h3>
+
+                  <div className="mb-4">
+                    <p className="text-[13px] font-medium text-muted-foreground">
+                      {recipe.cuisine} · {recipe.servings} Servings ·{' '}
+                      <span className={cn(
+                        "font-semibold",
+                        recipe.dietType === 'Vegetarian' 
+                          ? "text-green-600 dark:text-green-400" 
+                          : "text-red-600 dark:text-red-400"
+                      )}>
+                        {recipe.dietType}
+                      </span>
+                    </p>
+                  </div>
+
+                  <div className="mt-auto space-y-4">
+                    <p className="text-[11px] text-muted-foreground font-medium">
+                      Shared on{' '}
+                      {recipe.sharedAt?.toDate ? format(recipe.sharedAt.toDate(), 'dd MMM yyyy') : 'Recently'}
+                    </p>
+
+                    <div className="flex flex-wrap items-center gap-2 mt-4">
+                      <Button asChild size="sm" className="bg-primary hover:bg-primary/90 text-white font-bold h-9 px-4 rounded-md flex-1 flex-shrink-0 whitespace-nowrap">
+                        <Link href={`/explore/recipe/${recipe.id}`}>
+                          View Recipe
+                          <ArrowRight className="ml-1.5 h-3 w-3" />
+                        </Link>
+                      </Button>
+
+                      {!isOwner(recipe) && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => !isAlreadySaved(recipe.id!) && handleSaveToCookbook(recipe)}
+                          disabled={isSaving(recipe.id!) || isAlreadySaved(recipe.id!)}
+                          className={cn(
+                            "h-9 px-3 rounded-md text-[13px] font-medium border transition-colors flex items-center gap-2 flex-shrink-0 whitespace-nowrap",
+                            isAlreadySaved(recipe.id!)
+                              ? "border-green-500 text-green-500 bg-green-500/10 cursor-not-allowed"
+                              : "border-border text-muted-foreground hover:text-foreground"
+                          )}
+                        >
+                          {isSaving(recipe.id!) ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : isAlreadySaved(recipe.id!) ? (
+                            <>
+                              <BookMarked className="h-4 w-4 mr-1" />
+                              Saved ✓
+                            </>
+                          ) : (
+                            <>
+                              <BookMarked className="h-4 w-4 mr-1" />
+                              Save
+                            </>
+                          )}
+                        </Button>
+                      )}
+
+                      {isOwner(recipe) && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleRemoveFromExplore(recipe)}
+                          className="h-9 px-3 border-destructive text-destructive hover:bg-destructive/10 rounded-md flex-shrink-0 whitespace-nowrap"
+                        >
+                          <Trash2 className="h-4 w-4 mr-1" />
+                          Remove
+                        </Button>
+                      )}
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleLike(recipe)
+                        }}
+                        disabled={likingId === recipe.id}
+                        className={cn(
+                          "flex items-center gap-1.5 h-9 px-3 py-1.5",
+                          "rounded-md text-[13px] font-medium transition-all duration-200 border",
+                          isRecipeLikedByUser(recipe, user?.uid || '')
+                            ? "text-red-500 bg-red-500/10 border-red-500/20"
+                            : "text-muted-foreground border-border hover:text-red-500 hover:bg-red-500/5 hover:border-red-500/20"
+                        )}
+                      >
+                        {likingId === recipe.id ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Heart
+                            className="h-4 w-4"
+                            fill={
+                              isRecipeLikedByUser(recipe, user?.uid || '')
+                                ? 'currentColor'
+                                : 'none'
+                            }
+                          />
+                        )}
+                        <span className="tabular-nums">
+                          {recipe.likes || 0}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
+              ))}
+            </div>
+
+            {/* Load More */}
+            {visibleCount < filteredRecipes.length && (
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '32px',
+                marginBottom: '16px',
+              }}>
+                <button
+                  onClick={async () => {
+                    setIsLoadingMore(true)
+                    await new Promise(resolve => setTimeout(resolve, 600))
+                    setVisibleCount(prev => prev + CARDS_PER_PAGE)
+                    setIsLoadingMore(false)
+                  }}
+                  disabled={isLoadingMore}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '10px 28px',
+                    borderRadius: '8px',
+                    border: '0.5px solid hsl(var(--border))',
+                    background: 'transparent',
+                    color: 'hsl(var(--foreground))',
+                    fontSize: '13px',
+                    fontWeight: 500,
+                    cursor: isLoadingMore ? 'not-allowed' : 'pointer',
+                    opacity: isLoadingMore ? 0.7 : 1,
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  {isLoadingMore ? (
+                    <>
+                      <svg 
+                        width="14" height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        style={{
+                          animation: 'spin 1s linear infinite'
+                        }}
+                      >
+                        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                      </svg>
+                      Loading...
+                    </>
+                  ) : (
+                    <>
+                      Load More
+                      <span style={{
+                        fontSize: '11px',
+                        color: 'hsl(var(--muted-foreground))',
+                        background: 'hsl(var(--muted))',
+                        padding: '1px 6px',
+                        borderRadius: '999px',
+                      }}>
+                        {Math.min(CARDS_PER_PAGE, filteredRecipes.length - visibleCount)} more
+                      </span>
+                    </>
+                  )}
+                </button>
               </div>
-            ))}
-          </div>
+            )}
+
+            {/* Showing count info */}
+            {filteredRecipes.length > 0 && (
+              <p style={{
+                textAlign: 'center',
+                fontSize: '12px',
+                color: 'hsl(var(--muted-foreground))',
+                marginTop: '8px',
+                marginBottom: '32px',
+              }}>
+                Showing {Math.min(visibleCount, filteredRecipes.length)} of {filteredRecipes.length} recipes
+              </p>
+            )}
+          </>
         ) : (
           <div className="flex flex-col items-center justify-center py-24 text-center bg-secondary/10 rounded-2xl border-2 border-dashed border-border">
             <div className="bg-secondary/20 p-6 rounded-full mb-6">
@@ -692,7 +784,7 @@ export default function ExplorePage() {
             }}
           >
             <div style={{ width: '32px', height: '3px', background: 'hsl(var(--muted))', borderRadius: '999px', margin: '12px auto 0' }}/>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px 12px', borderBottom: '0.5px solid hsl(var(--border))' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justify-content: 'space-between', padding: '16px 20px 12px', borderBottom: '0.5px solid hsl(var(--border))' }}>
               <span style={{ fontSize: '14px', fontWeight: 600, color: 'hsl(var(--foreground))' }}>Filters</span>
               <button onClick={() => setBottomSheetOpen(false)} style={{ fontSize: '18px', color: 'hsl(var(--muted-foreground))', background: 'none', border: 'none', cursor: 'pointer', padding: '0 4px' }}>×</button>
             </div>
