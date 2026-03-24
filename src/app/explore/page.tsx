@@ -23,7 +23,8 @@ import {
   ArrowLeft,
   Loader2,
   Share2,
-  Heart
+  Heart,
+  ChevronDown
 } from 'lucide-react'
 import Link from 'next/link'
 import { format } from 'date-fns'
@@ -47,6 +48,10 @@ export default function ExplorePage() {
   const [likingId, setLikingId] = useState<string | null>(null)
   const [sortBy, setSortBy] = useState<'latest' | 'mostLiked'>('latest')
 
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('All')
+  const [availableLanguages, setAvailableLanguages] = useState<string[]>([])
+  const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false)
+
   const fetchRecipes = async () => {
     try {
       const data = await getPublicRecipes()
@@ -62,6 +67,20 @@ export default function ExplorePage() {
   useEffect(() => {
     fetchRecipes()
   }, [])
+
+  useEffect(() => {
+    if (recipes.length === 0) return
+    
+    const languages = Array.from(
+      new Set(
+        recipes
+          .map(r => r.language)
+          .filter(Boolean)
+      )
+    ).sort() as string[]
+    
+    setAvailableLanguages(languages)
+  }, [recipes])
 
   // Fetch user's saved recipes to mark already saved items
   useEffect(() => {
@@ -92,6 +111,10 @@ export default function ExplorePage() {
       result = result.filter(r => r.dietType === dietFilter)
     }
 
+    if (selectedLanguage !== 'All') {
+      result = result.filter(r => r.language === selectedLanguage)
+    }
+
     if (searchQuery.trim()) {
       result = result.filter(r =>
         r.recipeName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -100,7 +123,7 @@ export default function ExplorePage() {
     }
 
     setFilteredRecipes(result)
-  }, [recipes, dietFilter, searchQuery, showMyShared, user])
+  }, [recipes, dietFilter, searchQuery, showMyShared, user, selectedLanguage])
 
   const handleRemoveFromExplore = async (recipe: SavedRecipe) => {
     if (!user || !recipe.id) return
@@ -368,6 +391,123 @@ export default function ExplorePage() {
               <Heart className={cn("h-3 w-3 mr-1.5", sortBy === 'mostLiked' && "fill-current")} />
               Most Liked
             </Button>
+
+            {/* Language dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => 
+                  setLanguageDropdownOpen(!languageDropdownOpen)
+                }
+                className={cn(
+                  "flex items-center gap-2",
+                  "px-3 py-1.5 rounded-md",
+                  "text-sm font-medium border",
+                  "transition-all duration-200",
+                  selectedLanguage !== 'All'
+                    ? "border-primary text-primary bg-primary/10"
+                    : "border-border text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <Globe className="h-4 w-4" />
+                {selectedLanguage === 'All' 
+                  ? 'Language' 
+                  : selectedLanguage
+                }
+                {selectedLanguage !== 'All' && (
+                  <span
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setSelectedLanguage('All')
+                    }}
+                    className="
+                      ml-1 text-xs hover:text-destructive
+                      transition-colors
+                    "
+                  >
+                    ×
+                  </span>
+                )}
+                <ChevronDown 
+                  className="h-3 w-3"
+                  style={{
+                    transform: languageDropdownOpen 
+                      ? 'rotate(180deg)' 
+                      : 'rotate(0deg)',
+                    transition: 'transform 0.2s ease'
+                  }}
+                />
+              </button>
+
+              {/* Dropdown menu */}
+              {languageDropdownOpen && (
+                <>
+                  {/* Backdrop to close on outside click */}
+                  <div
+                    className="fixed inset-0 z-10"
+                    onClick={() => setLanguageDropdownOpen(false)}
+                  />
+
+                  {/* Dropdown list */}
+                  <div className="
+                    absolute top-full left-0 mt-1
+                    bg-background border border-border
+                    rounded-lg shadow-md
+                    z-20 min-w-[140px]
+                    overflow-hidden
+                  ">
+                    {/* All option */}
+                    <button
+                      onClick={() => {
+                        setSelectedLanguage('All')
+                        setLanguageDropdownOpen(false)
+                      }}
+                      className={cn(
+                        "w-full text-left px-3 py-2",
+                        "text-sm transition-colors duration-150",
+                        "hover:bg-accent",
+                        selectedLanguage === 'All'
+                          ? "text-primary font-medium"
+                          : "text-muted-foreground"
+                      )}
+                    >
+                      All Languages
+                    </button>
+
+                    {/* Divider */}
+                    <div className="border-t border-border"/>
+
+                    {/* Dynamic language options */}
+                    {availableLanguages.map((lang) => (
+                      <button
+                        key={lang}
+                        onClick={() => {
+                          setSelectedLanguage(lang)
+                          setLanguageDropdownOpen(false)
+                        }}
+                        className={cn(
+                          "w-full text-left px-3 py-2",
+                          "text-sm transition-colors duration-150",
+                          "hover:bg-accent",
+                          selectedLanguage === lang
+                            ? "text-primary font-medium"
+                            : "text-muted-foreground"
+                        )}
+                      >
+                        {lang}
+                      </button>
+                    ))}
+
+                    {/* Empty state */}
+                    {availableLanguages.length === 0 && (
+                      <div className="px-3 py-2 text-sm 
+                        text-muted-foreground">
+                        No languages found
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
 
           <div className="relative w-full lg:w-[320px]">
