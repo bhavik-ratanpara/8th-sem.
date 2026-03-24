@@ -46,7 +46,7 @@ export default function RootLayout({
             <footer className="border-t border-border bg-background py-16 mt-auto">
               <div className="max-w-6xl mx-auto px-6">
                 
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-16">
                   
                   {/* Brand */}
                   <div className="space-y-4 md:col-span-1">
@@ -63,43 +63,65 @@ export default function RootLayout({
                       Get accurate recipes with exact
                       quantities and step by step guidance.
                     </p>
+                    {/* Social links — show on mobile inside brand */}
+                    <div className="flex gap-3 md:hidden">
+                      <a
+                        href="https://github.com/bhavik-ratanpara"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-muted-foreground border border-border rounded-md px-3 py-1.5 hover:text-foreground hover:border-foreground/40 transition-colors duration-200"
+                      >
+                        GitHub
+                      </a>
+                      <a
+                        href="https://www.linkedin.com/in/bhavik-ratanpara-500011377/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-muted-foreground border border-border rounded-md px-3 py-1.5 hover:text-foreground hover:border-foreground/40 transition-colors duration-200"
+                      >
+                        LinkedIn
+                      </a>
+                    </div>
                   </div>
 
-                  {/* Navigate */}
-                  <div>
-                    <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-6">
-                      Navigate
-                    </h4>
-                    <ul className="space-y-3 text-sm">
-                      <li>
-                        <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">
-                          Home
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/explore" className="text-muted-foreground hover:text-foreground transition-colors">
-                          Explore
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/history" className="text-muted-foreground hover:text-foreground transition-colors">
-                          My Recipes
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/about" className="text-muted-foreground hover:text-foreground transition-colors">
-                          About
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
+                  {/* Navigate and Account — 2 column mobile */}
+                  <div className="grid grid-cols-2 md:contents gap-8">
+                    {/* Navigate */}
+                    <div>
+                      <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-6">
+                        Navigate
+                      </h4>
+                      <ul className="space-y-3 text-sm">
+                        <li>
+                          <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">
+                            Home
+                          </Link>
+                        </li>
+                        <li>
+                          <Link href="/explore" className="text-muted-foreground hover:text-foreground transition-colors">
+                            Explore
+                          </Link>
+                        </li>
+                        <li>
+                          <Link href="/history" className="text-muted-foreground hover:text-foreground transition-colors">
+                            My Recipes
+                          </Link>
+                        </li>
+                        <li>
+                          <Link href="/about" className="text-muted-foreground hover:text-foreground transition-colors">
+                            About
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
 
-                  {/* Account — dynamic based on auth */}
-                  <div>
-                    <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-6">
-                      Account
-                    </h4>
-                    <FooterAccountLinks />
+                    {/* Account — dynamic based on auth */}
+                    <div>
+                      <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-6">
+                        Account
+                      </h4>
+                      <FooterAccountLinks />
+                    </div>
                   </div>
 
                   {/* Legal */}
@@ -107,7 +129,7 @@ export default function RootLayout({
                     <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-6">
                       Legal
                     </h4>
-                    <ul className="space-y-3 text-sm">
+                    <ul className="flex flex-row gap-4 md:flex-col md:space-y-3 text-sm">
                       <li>
                         <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">
                           Privacy Policy
@@ -124,12 +146,15 @@ export default function RootLayout({
                 </div>
 
                 {/* Bottom bar */}
-                <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4 text-center md:text-left">
                   <div className="text-xs text-muted-foreground">
                     © {new Date().getFullYear()} Cooking Lab.
                     Built by Bhavik Ratanpara.
                   </div>
-                  <div className="flex gap-6">
+                  <div className="text-xs text-muted-foreground">
+                    8th Semester Project · Computer Engineering
+                  </div>
+                  <div className="hidden md:flex gap-6">
                     <a
                       href="https://github.com/bhavik-ratanpara"
                       target="_blank"
