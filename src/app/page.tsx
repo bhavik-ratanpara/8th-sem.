@@ -14,6 +14,9 @@ import { Button } from '@/components/ui/button';
 import { TypewriterHero } from '@/components/typewriter-hero';
 import Link from 'next/link';
 
+const RECIPE_STORAGE_KEY = 'cooking_lab_last_recipe';
+const FORM_STORAGE_KEY = 'cooking_lab_last_form';
+
 export default function Home() {
   const [recipe, setRecipe] = useState<CreateRecipeOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,11 +24,33 @@ export default function Home() {
   const [isClient, setIsClient] = useState(false);
   const [selectedDish, setSelectedDish] = useState<string | null>(null);
   const [originalRecipeInput, setOriginalRecipeInput] = useState<CreateRecipeInput | null>(null);
+  const [restoredFromStorage, setRestoredFromStorage] = useState(false);
 
   const { user, isUserLoading } = useUser();
 
   useEffect(() => {
     setIsClient(true);
+
+    // Restore from localStorage
+    try {
+      const savedRecipe = localStorage.getItem(RECIPE_STORAGE_KEY);
+      const savedForm = localStorage.getItem(FORM_STORAGE_KEY);
+
+      if (savedRecipe && savedForm) {
+        const parsedRecipe = JSON.parse(savedRecipe);
+        const parsedForm = JSON.parse(savedForm);
+        setRecipe(parsedRecipe);
+        setOriginalRecipeInput(parsedForm);
+        setRestoredFromStorage(true);
+        
+        // Restore dish name to form via selectedDish state
+        if (parsedForm.dishName) {
+          setSelectedDish(parsedForm.dishName);
+        }
+      }
+    } catch (e) {
+      console.error('Failed to restore recipe:', e);
+    }
   }, []);
 
   const handleGenerateRecipe = async (input: CreateRecipeInput) => {
@@ -34,6 +59,7 @@ export default function Home() {
     setIsLoading(true);
     setError(null);
     setRecipe(null);
+    setRestoredFromStorage(false);
     
     if (!input.modifications) {
       setOriginalRecipeInput(input);
@@ -42,6 +68,16 @@ export default function Home() {
     try {
       const newRecipe = await createRecipeAction(input);
       setRecipe(newRecipe);
+
+      // Save to localStorage
+      try {
+        localStorage.setItem(RECIPE_STORAGE_KEY, JSON.stringify(newRecipe));
+        // Save the form context (original input or modified input)
+        localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(input.modifications ? { ...originalRecipeInput, modifications: input.modifications } : input));
+      } catch (e) {
+        console.error('Failed to save recipe to storage:', e);
+      }
+
       setTimeout(() => {
         document.getElementById('recipe-section')?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
@@ -55,6 +91,18 @@ export default function Home() {
   const handleSuggestionSelect = (dishName: string) => {
     setSelectedDish(dishName);
     document.getElementById('recipe-form')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleClearRestored = () => {
+    setRecipe(null);
+    setRestoredFromStorage(false);
+    localStorage.removeItem(RECIPE_STORAGE_KEY);
+    localStorage.removeItem(FORM_STORAGE_KEY);
+  };
+
+  const handleGenerateNew = () => {
+    handleClearRestored();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   if (!isClient) return null;
@@ -92,6 +140,84 @@ export default function Home() {
             )}
 
             <div id="recipe-section" className="scroll-mt-24">
+              {/* RESTORED BANNER */}
+              {recipe && restoredFromStorage && (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '10px 16px',
+                  borderRadius: '8px',
+                  border: '0.5px solid hsl(var(--border))',
+                  background: 'hsl(var(--muted))',
+                  marginBottom: '16px',
+                  flexWrap: 'wrap',
+                  gap: '8px',
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}>
+                    <svg 
+                      width="14" height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      style={{
+                        color: 'hsl(var(--muted-foreground))',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M12 8v4M12 16h.01"/>
+                    </svg>
+                    <span style={{
+                      fontSize: '12px',
+                      color: 'hsl(var(--muted-foreground))',
+                    }}>
+                      Your last generated recipe
+                    </span>
+                  </div>
+
+                  <div style={{
+                    display: 'flex',
+                    gap: '8px',
+                  }}>
+                    <button
+                      onClick={handleGenerateNew}
+                      style={{
+                        fontSize: '12px',
+                        padding: '5px 12px',
+                        borderRadius: '6px',
+                        border: '0.5px solid hsl(var(--border))',
+                        background: 'hsl(var(--background))',
+                        color: 'hsl(var(--foreground))',
+                        cursor: 'pointer',
+                        fontWeight: 500,
+                      }}
+                    >
+                      Generate New
+                    </button>
+                    <button
+                      onClick={handleClearRestored}
+                      style={{
+                        fontSize: '12px',
+                        padding: '5px 12px',
+                        borderRadius: '6px',
+                        border: '0.5px solid hsl(var(--border))',
+                        background: 'transparent',
+                        color: 'hsl(var(--muted-foreground))',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Clear ×
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <RecipeDisplay
                 recipe={recipe}
                 setRecipe={setRecipe}
