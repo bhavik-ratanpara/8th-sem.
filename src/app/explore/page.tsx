@@ -319,7 +319,7 @@ export default function ExplorePage() {
 
         <div className="flex flex-col lg:flex-row gap-6 items-center justify-between mb-10 bg-card p-6 rounded-xl border border-border shadow-sm">
           <div className="flex items-center gap-2 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0 flex-wrap">
-            <Filter className="h-4 w-4 text-muted-foreground mr-2 shrink-0" />
+            <Filter className="h-4 w-4 text-muted-foreground shrink-0" />
             
             {(['All', 'Vegetarian', 'Non-Vegetarian'] as const).map((filter) => (
               <Button
@@ -354,7 +354,7 @@ export default function ExplorePage() {
               </Button>
             )}
 
-            <div className="h-6 w-px bg-border mx-2 hidden md:block" />
+            <div className="h-6 w-px bg-border hidden md:block" />
 
             <Button
               variant={sortBy === 'mostLiked' ? 'default' : 'outline'}
