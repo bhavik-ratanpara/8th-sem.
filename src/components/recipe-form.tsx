@@ -57,7 +57,14 @@ export function RecipeForm({ onSubmit, isLoading, selectedDishName }: RecipeForm
   };
 
   return (
-    <div className="bg-card border border-border p-8 rounded-lg shadow-sm">
+    <div className="relative bg-card border border-border p-8 rounded-lg shadow-sm mt-16">
+      {/* Peeking Chef Image */}
+      <img 
+        src="/chefsee.png" 
+        alt="Chef looking into form" 
+        className="absolute -top-[78px] left-6 w-[120px] h-auto pointer-events-none z-20" 
+      />
+      
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-10">
           <div className="space-y-2">
