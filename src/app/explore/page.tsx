@@ -356,18 +356,18 @@ export default function ExplorePage() {
 
             <div className="h-6 w-px bg-border mx-2 hidden md:block" />
 
-            <button
+            <Button
+              variant={sortBy === 'mostLiked' ? 'default' : 'outline'}
+              size="sm"
               onClick={() => setSortBy(sortBy === 'latest' ? 'mostLiked' : 'latest')}
               className={cn(
-                "flex items-center gap-2 px-4 h-9 rounded-full text-xs font-semibold border transition-all duration-200 whitespace-nowrap",
-                sortBy === 'mostLiked'
-                  ? "border-red-500 text-red-500 bg-red-500/10 shadow-sm"
-                  : "border-border text-muted-foreground hover:border-muted-foreground/50"
+                "rounded-full px-5 h-9 text-xs font-semibold whitespace-nowrap",
+                sortBy === 'mostLiked' ? "bg-primary text-white shadow-md" : "text-muted-foreground"
               )}
             >
-              <Heart className={cn("h-3.5 w-3.5", sortBy === 'mostLiked' && "fill-current")} />
+              <Heart className={cn("h-3 w-3 mr-1.5", sortBy === 'mostLiked' && "fill-current")} />
               Most Liked
-            </button>
+            </Button>
           </div>
 
           <div className="relative w-full lg:w-[320px]">
