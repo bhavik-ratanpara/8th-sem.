@@ -32,8 +32,8 @@ function HistoryContent() {
   const [isSharing, setIsSharing] = useState(false);
 
   // Pagination states
-  const RECIPES_PER_PAGE = 12
-  const [currentPage, setCurrentPage] = useState(1)
+  const RECIPES_PER_PAGE = 12;
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -80,14 +80,14 @@ function HistoryContent() {
 
   // Reset page on filter change
   useEffect(() => {
-    setCurrentPage(1)
+    setCurrentPage(1);
   }, [dietFilter, searchQuery, searchParams]);
 
-  const totalPages = Math.ceil(filteredRecipes.length / RECIPES_PER_PAGE)
+  const totalPages = Math.ceil(filteredRecipes.length / RECIPES_PER_PAGE);
   const paginatedRecipes = filteredRecipes.slice(
     (currentPage - 1) * RECIPES_PER_PAGE,
     currentPage * RECIPES_PER_PAGE
-  )
+  );
 
   const handleDelete = async (recipeId: string) => {
     if (!user || !window.confirm("Are you sure you want to delete this recipe?")) return;
@@ -125,7 +125,6 @@ function HistoryContent() {
       if (recipe.isPublic) {
         if (!window.confirm("Remove this recipe from Explore? It will still be in your My Recipes.")) return;
         
-        // Optimistic UI
         setRecipes(prev => prev.map(r => 
           r.id === recipe.id ? { ...r, isPublic: false } : r
         ));
@@ -137,7 +136,6 @@ function HistoryContent() {
           description: "Recipe still saved in My Recipes.",
         });
       } else {
-        // Optimistic UI
         setRecipes(prev => prev.map(r => 
           r.id === recipe.id ? { ...r, isPublic: true } : r
         ));
@@ -168,9 +166,6 @@ function HistoryContent() {
 
     const baseUrl = window.location.origin;
 
-    // Type 2 — Saved from Explore
-    // Recipe is already public
-    // Share the original explore link directly
     if (recipe.savedFromExplore) {
       const shareUrl = `${baseUrl}/explore/recipe/${recipe.originalRecipeId || recipe.id}`;
       
@@ -210,10 +205,7 @@ function HistoryContent() {
       return;
     }
 
-    // Type 1 — User's own recipe
-    // Check if already shared to Explore
     if (recipe.isPublic) {
-      // Already public — share explore link directly
       const shareUrl = `${baseUrl}/explore/recipe/${recipe.id}`;
       
       const shareData = {
@@ -252,8 +244,6 @@ function HistoryContent() {
       return;
     }
 
-    // Type 1 — Own recipe but NOT public yet
-    // Show modal to publish to Explore first
     setSharePromptRecipe(recipe);
     setShowSharePrompt(true);
   };
@@ -264,7 +254,6 @@ function HistoryContent() {
     setIsSharing(true);
     
     try {
-      // Step 1 — Share to Explore first
       await shareRecipePublic(
         user.uid,
         user.displayName || 'Anonymous Chef',
@@ -272,17 +261,14 @@ function HistoryContent() {
         sharePromptRecipe
       );
       
-      // Step 2 — Update local state
       setRecipes(prev => prev.map(r =>
         r.id === sharePromptRecipe.id
           ? { ...r, isPublic: true }
           : r
       ));
       
-      // Step 3 — Close modal
       setShowSharePrompt(false);
       
-      // Step 4 — Share the public explore link
       const shareUrl = `${window.location.origin}/explore/recipe/${sharePromptRecipe.id}`;
       
       const shareData = {
@@ -385,18 +371,6 @@ function HistoryContent() {
                 {filter}
               </button>
             ))}
-            
-            <div className="w-[1px] h-4 bg-border mx-1 flex-shrink-0" />
-            
-            <Link href={searchParams.get('filter') === 'favourite' ? '/history' : '/history?filter=favourite'}>
-              <button
-                style={filterButtonStyle(searchParams.get('filter') === 'favourite')}
-                className="flex items-center gap-1.5"
-              >
-                <Star className={cn("h-3 w-3", searchParams.get('filter') === 'favourite' && "fill-current")} />
-                Favourites Only
-              </button>
-            </Link>
           </div>
 
           <div className="relative w-full lg:w-[320px]">
@@ -537,11 +511,10 @@ function HistoryContent() {
                 marginBottom: '32px',
                 flexWrap: 'wrap',
               }}>
-                {/* Previous button */}
                 <button
                   onClick={() => {
-                    setCurrentPage(p => Math.max(1, p - 1))
-                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                    setCurrentPage(p => Math.max(1, p - 1));
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                   disabled={currentPage === 1}
                   style={{
@@ -564,12 +537,11 @@ function HistoryContent() {
                   Prev
                 </button>
 
-                {/* Page numbers */}
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => {
-                  const isFirst = page === 1
-                  const isLast = page === totalPages
-                  const isCurrent = page === currentPage
-                  const isNearCurrent = Math.abs(page - currentPage) <= 1
+                  const isFirst = page === 1;
+                  const isLast = page === totalPages;
+                  const isCurrent = page === currentPage;
+                  const isNearCurrent = Math.abs(page - currentPage) <= 1;
 
                   if (!isFirst && !isLast && !isNearCurrent) {
                     if (page === currentPage - 2 || page === currentPage + 2) {
@@ -577,17 +549,17 @@ function HistoryContent() {
                         <span key={page} style={{ padding: '7px 4px', fontSize: '13px', color: 'hsl(var(--muted-foreground))' }}>
                           ...
                         </span>
-                      )
+                      );
                     }
-                    return null
+                    return null;
                   }
 
                   return (
                     <button
                       key={page}
                       onClick={() => {
-                        setCurrentPage(page)
-                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                        setCurrentPage(page);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
                       }}
                       style={{
                         width: '34px',
@@ -605,14 +577,13 @@ function HistoryContent() {
                     >
                       {page}
                     </button>
-                  )
+                  );
                 })}
 
-                {/* Next button */}
                 <button
                   onClick={() => {
-                    setCurrentPage(p => Math.min(totalPages, p + 1))
-                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                    setCurrentPage(p => Math.min(totalPages, p + 1));
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                   disabled={currentPage === totalPages}
                   style={{
@@ -752,7 +723,6 @@ function HistoryContent() {
                 flexDirection: "column",
                 gap: "10px",
               }}>
-                {/* Primary — Share to Explore and share link */}
                 <button
                   onClick={handleShareToExploreAndShare}
                   disabled={isSharing}
@@ -795,7 +765,6 @@ function HistoryContent() {
                   )}
                 </button>
 
-                {/* Secondary — Cancel */}
                 <button
                   onClick={() => {
                     setShowSharePrompt(false);
