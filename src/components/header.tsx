@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { Loader2, Search, LogOut, User as UserIcon, ChefHat, Moon, Sun, BookMarked, Star, X, Globe, Info } from 'lucide-react';
@@ -10,11 +10,11 @@ import { useAuth, useUser } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { cn } from '@/lib/utils';
 
-export function Header() {
+function HeaderContent() {
   const [query, setQuery] = useState('');
   const [videos, setVideos] = useState<YouTubeVideo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -25,11 +25,16 @@ export function Header() {
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   
   const [isDark, setIsDark] = useState<boolean>(false);
 
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
+
+  const filter = searchParams.get('filter');
+  const isHistoryActive = pathname === "/history" && filter !== "favourite";
+  const isFavouritesActive = pathname === "/history" && filter === "favourite";
 
   useEffect(() => {
     setMounted(true);
@@ -114,11 +119,11 @@ export function Header() {
           {!isUserLoading && user && (
             <>
               <span className="nav-separator">/</span>
-              <Link href="/history" className={cn("nav-link text-[15px]", pathname.startsWith("/history") && "active")}>
+              <Link href="/history" className={cn("nav-link text-[15px]", isHistoryActive && "active")}>
                 My Recipes
               </Link>
               <span className="nav-separator">/</span>
-              <Link href="/favourites" className={cn("nav-link text-[15px]", pathname === "/favourites" && "active")}>
+              <Link href="/history?filter=favourite" className={cn("nav-link text-[15px]", isFavouritesActive && "active")}>
                 Favourites
               </Link>
             </>
@@ -292,5 +297,26 @@ export function Header() {
         </div>
       </div>
     </header>
+  );
+}
+
+export function Header() {
+  return (
+    <Suspense fallback={
+      <header className="fixed top-0 left-0 right-0 z-50 w-full h-[52px] bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+        <div className="flex items-center w-full h-full px-6 relative">
+          <div className="flex-shrink-0 mr-auto">
+            <div className="flex items-center gap-2">
+              <ChefHat className="h-6 w-6 text-primary" />
+              <span className="font-bold text-[18px] tracking-tight text-foreground whitespace-nowrap">
+                Cooking Lab
+              </span>
+            </div>
+          </div>
+        </div>
+      </header>
+    }>
+      <HeaderContent />
+    </Suspense>
   );
 }
