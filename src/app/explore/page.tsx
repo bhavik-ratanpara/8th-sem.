@@ -322,6 +322,14 @@ export default function ExplorePage() {
     return timeB - timeA
   })
 
+  // Count active filters for mobile badge
+  const activeFilterCount = [
+    sortBy !== 'latest',
+    selectedLanguage !== 'All',
+    showMyShared,
+    dietFilter !== 'All'
+  ].filter(Boolean).length
+
   return (
     <div className="relative min-h-screen overflow-hidden">
       <FoodDecorations />
@@ -467,6 +475,7 @@ export default function ExplorePage() {
               }}
               className={cn(
                 "text-xs px-3 py-1.5 rounded-md border whitespace-nowrap flex-shrink-0 transition-colors duration-150",
+                "hidden min-[400px]:block",
                 dietFilter === 'All' && sortBy === 'latest' && selectedLanguage === 'All' && !showMyShared
                   ? "border-primary text-primary bg-primary/10"
                   : "border-border text-muted-foreground"
@@ -478,6 +487,7 @@ export default function ExplorePage() {
               onClick={() => setDietFilter('Vegetarian')}
               className={cn(
                 "text-xs px-3 py-1.5 rounded-md border whitespace-nowrap flex-shrink-0 transition-colors duration-150",
+                "hidden min-[400px]:block",
                 dietFilter === 'Vegetarian' ? "border-primary text-primary bg-primary/10" : "border-border text-muted-foreground"
               )}
             >
@@ -487,6 +497,7 @@ export default function ExplorePage() {
               onClick={() => setDietFilter('Non-Vegetarian')}
               className={cn(
                 "text-xs px-3 py-1.5 rounded-md border whitespace-nowrap flex-shrink-0 transition-colors duration-150",
+                "hidden min-[400px]:block",
                 dietFilter === 'Non-Vegetarian' ? "border-primary text-primary bg-primary/10" : "border-border text-muted-foreground"
               )}
             >
@@ -495,8 +506,9 @@ export default function ExplorePage() {
             <button
               onClick={() => setBottomSheetOpen(true)}
               className={cn(
-                "text-xs px-3 py-1.5 rounded-md border whitespace-nowrap flex-shrink-0 transition-colors duration-150 flex items-center gap-1.5 ml-auto",
-                sortBy !== 'latest' || selectedLanguage !== 'All' || showMyShared
+                "text-xs px-3 py-1.5 rounded-md border whitespace-nowrap flex-shrink-0 transition-colors duration-150 flex items-center gap-1.5",
+                "w-full min-[400px]:w-auto ml-auto justify-center",
+                activeFilterCount > 0
                   ? "border-primary text-primary bg-primary/10"
                   : "border-border text-muted-foreground"
               )}
@@ -505,9 +517,9 @@ export default function ExplorePage() {
                 <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
               </svg>
               Filters
-              {(sortBy !== 'latest' || selectedLanguage !== 'All' || showMyShared) && (
+              {activeFilterCount > 0 && (
                 <span className="bg-primary text-primary-foreground rounded-full text-[9px] font-bold px-1.5 py-0.5 ml-0.5">
-                  {[sortBy !== 'latest', selectedLanguage !== 'All', showMyShared].filter(Boolean).length}
+                  {activeFilterCount}
                 </span>
               )}
             </button>
@@ -788,6 +800,31 @@ export default function ExplorePage() {
               <button onClick={() => setBottomSheetOpen(false)} style={{ fontSize: '18px', color: 'hsl(var(--muted-foreground))', background: 'none', border: 'none', cursor: 'pointer', padding: '0 4px' }}>×</button>
             </div>
             <div style={{ padding: '16px 20px' }}>
+              {/* Diet Type (Hidden Chips on main bar for narrow screens) */}
+              <div style={{ marginBottom: '20px' }}>
+                <p style={{ fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', color: 'hsl(var(--muted-foreground))', marginBottom: '10px' }}>Diet Type</p>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  {(['All', 'Vegetarian', 'Non-Vegetarian'] as const).map((d) => (
+                    <button
+                      key={d}
+                      onClick={() => setDietFilter(d)}
+                      style={{
+                        fontSize: '13px',
+                        padding: '7px 14px',
+                        borderRadius: '8px',
+                        border: '0.5px solid',
+                        borderColor: dietFilter === d ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                        color: dietFilter === d ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
+                        background: dietFilter === d ? 'hsl(var(--primary) / 0.1)' : 'transparent',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {d === 'All' ? 'All' : d === 'Vegetarian' ? 'Veg' : 'Non-Veg'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div style={{ marginBottom: '20px' }}>
                 <p style={{ fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', color: 'hsl(var(--muted-foreground))', marginBottom: '10px' }}>Sort by</p>
                 <div style={{ display: 'flex', gap: '8px' }}>
