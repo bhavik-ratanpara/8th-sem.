@@ -58,7 +58,7 @@ export function RecipeForm({ onSubmit, isLoading, selectedDishName }: RecipeForm
 
   return (
     <div className="relative bg-card border border-border p-8 rounded-lg shadow-sm mt-16">
-      {/* Peeking Chef Image - Adjusted to place hands on the border */}
+      {/* Peeking Chef Image - Positioned further up so hands sit on the border */}
       <img 
         src="/chefsee.png" 
         alt="Chef looking into form" 
