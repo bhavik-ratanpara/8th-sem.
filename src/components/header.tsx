@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { Loader2, Search, LogOut, User as UserIcon, ChefHat, Moon, Sun, BookMarked, Star, X, Globe } from 'lucide-react';
+import { Loader2, Search, LogOut, User as UserIcon, ChefHat, Moon, Sun, BookMarked, Star, X, Globe, Info } from 'lucide-react';
 import { Popover, PopoverContent } from '@/components/ui/popover';
 import { YoutubeSearchResults, type YouTubeVideo } from './youtube-search-results';
 import { useAuth, useUser } from '@/firebase';
@@ -119,6 +119,10 @@ export function Header() {
               </Link>
             </>
           )}
+          <span className="nav-separator">/</span>
+          <Link href="/about" className={cn("nav-link text-[15px]", pathname === "/about" && "active")}>
+            About
+          </Link>
         </nav>
 
         {/* RIGHT - Actions */}
@@ -245,6 +249,14 @@ export function Header() {
                         >
                           <Star className="h-4 w-4 text-amber-500" />
                           Favourites
+                        </Link>
+                        <Link 
+                          href="/about" 
+                          className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-md transition-colors"
+                          onClick={() => setDropdownOpen(false)}
+                        >
+                          <Info className="h-4 w-4 text-muted-foreground" />
+                          About Cooking Lab
                         </Link>
                       </div>
                       
