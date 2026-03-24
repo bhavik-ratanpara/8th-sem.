@@ -340,8 +340,8 @@ export default function ExplorePage() {
           )}
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-6 items-center justify-between mb-10 bg-card p-6 rounded-xl border border-border shadow-sm">
-          <div className="flex items-center gap-2 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0 flex-wrap">
+        <div className="flex flex-col lg:flex-row gap-6 items-center justify-between mb-10 bg-card p-6 rounded-xl border border-border shadow-sm relative overflow-visible">
+          <div className="flex items-center gap-2 w-full lg:w-auto flex-wrap overflow-visible relative">
             <Filter className="h-4 w-4 text-muted-foreground shrink-0" />
             
             {(['All', 'Vegetarian', 'Non-Vegetarian'] as const).map((filter) => (
@@ -392,7 +392,7 @@ export default function ExplorePage() {
               Most Liked
             </Button>
 
-            {/* Language dropdown */}
+            {/* Language dropdown wrapper */}
             <div className="relative">
               <button
                 onClick={() => 
@@ -441,68 +441,90 @@ export default function ExplorePage() {
               {/* Dropdown menu */}
               {languageDropdownOpen && (
                 <>
-                  {/* Backdrop to close on outside click */}
                   <div
-                    className="fixed inset-0 z-10"
+                    className="fixed inset-0 z-40"
                     onClick={() => setLanguageDropdownOpen(false)}
                   />
-
-                  {/* Dropdown list */}
-                  <div className="
-                    absolute top-full left-0 mt-1
-                    bg-background border border-border
-                    rounded-lg shadow-md
-                    z-20 min-w-[140px]
-                    overflow-hidden
-                  ">
-                    {/* All option */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '100%',
+                      left: 0,
+                      marginTop: '6px',
+                      backgroundColor: 'var(--background)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '8px',
+                      zIndex: 50,
+                      minWidth: '160px',
+                      boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+                      overflow: 'visible',
+                    }}
+                  >
                     <button
                       onClick={() => {
                         setSelectedLanguage('All')
                         setLanguageDropdownOpen(false)
                       }}
-                      className={cn(
-                        "w-full text-left px-3 py-2",
-                        "text-sm transition-colors duration-150",
-                        "hover:bg-accent",
-                        selectedLanguage === 'All'
-                          ? "text-primary font-medium"
-                          : "text-muted-foreground"
-                      )}
+                      style={{
+                        width: '100%',
+                        textAlign: 'left',
+                        padding: '8px 12px',
+                        fontSize: '13px',
+                        color: selectedLanguage === 'All'
+                          ? 'var(--primary)'
+                          : 'var(--muted-foreground)',
+                        fontWeight: selectedLanguage === 'All'
+                          ? 600 : 400,
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        borderRadius: '8px 8px 0 0',
+                      }}
                     >
                       All Languages
                     </button>
 
-                    {/* Divider */}
-                    <div className="border-t border-border"/>
+                    <div style={{
+                      height: '1px',
+                      background: 'var(--border)',
+                      margin: '0',
+                    }}/>
 
-                    {/* Dynamic language options */}
-                    {availableLanguages.map((lang) => (
-                      <button
-                        key={lang}
-                        onClick={() => {
-                          setSelectedLanguage(lang)
-                          setLanguageDropdownOpen(false)
-                        }}
-                        className={cn(
-                          "w-full text-left px-3 py-2",
-                          "text-sm transition-colors duration-150",
-                          "hover:bg-accent",
-                          selectedLanguage === lang
-                            ? "text-primary font-medium"
-                            : "text-muted-foreground"
-                        )}
-                      >
-                        {lang}
-                      </button>
-                    ))}
-
-                    {/* Empty state */}
-                    {availableLanguages.length === 0 && (
-                      <div className="px-3 py-2 text-sm 
-                        text-muted-foreground">
+                    {availableLanguages.length === 0 ? (
+                      <div style={{
+                        padding: '8px 12px',
+                        fontSize: '13px',
+                        color: 'var(--muted-foreground)',
+                      }}>
                         No languages found
                       </div>
+                    ) : (
+                      availableLanguages.map((lang) => (
+                        <button
+                          key={lang}
+                          onClick={() => {
+                            setSelectedLanguage(lang)
+                            setLanguageDropdownOpen(false)
+                          }}
+                          style={{
+                            width: '100%',
+                            textAlign: 'left',
+                            padding: '8px 12px',
+                            fontSize: '13px',
+                            color: selectedLanguage === lang
+                              ? 'var(--primary)'
+                              : 'var(--muted-foreground)',
+                            fontWeight: selectedLanguage === lang
+                              ? 600 : 400,
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            display: 'block',
+                          }}
+                        >
+                          {lang}
+                        </button>
+                      ))
                     )}
                   </div>
                 </>
