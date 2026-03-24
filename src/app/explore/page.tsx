@@ -200,7 +200,6 @@ export default function ExplorePage() {
         description: "Please try again.",
       })
     } finally {
-      setIsSaving(false);
       setSavingIds(prev => prev.filter(id => id !== recipe.id))
     }
   }
@@ -784,7 +783,7 @@ export default function ExplorePage() {
             }}
           >
             <div style={{ width: '32px', height: '3px', background: 'hsl(var(--muted))', borderRadius: '999px', margin: '12px auto 0' }}/>
-            <div style={{ display: 'flex', alignItems: 'center', justify-content: 'space-between', padding: '16px 20px 12px', borderBottom: '0.5px solid hsl(var(--border))' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px 12px', borderBottom: '0.5px solid hsl(var(--border))' }}>
               <span style={{ fontSize: '14px', fontWeight: 600, color: 'hsl(var(--foreground))' }}>Filters</span>
               <button onClick={() => setBottomSheetOpen(false)} style={{ fontSize: '18px', color: 'hsl(var(--muted-foreground))', background: 'none', border: 'none', cursor: 'pointer', padding: '0 4px' }}>×</button>
             </div>
