@@ -7,7 +7,7 @@ import { getSavedRecipes, deleteRecipe, toggleFavourite, shareRecipePublic, unsh
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Heart, Trash2, Search, BookMarked, Filter, ArrowRight, ArrowLeft, Globe, Loader2, Share2, X } from 'lucide-react';
+import { Star, Trash2, Search, BookMarked, Filter, ArrowRight, ArrowLeft, Globe, Loader2, Share2, X } from 'lucide-react';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
@@ -95,7 +95,7 @@ function HistoryContent() {
       await toggleFavourite(user.uid, recipeId, current);
       setRecipes(prev => prev.map(r => r.id === recipeId ? { ...r, isFavourite: !current } : r));
       toast({
-        title: !current ? "Added to Favourites ❤️" : "Removed from Favourites",
+        title: !current ? "Added to Favourites ⭐" : "Removed from Favourites",
         duration: 2000,
       });
     } catch (error) {
@@ -401,10 +401,10 @@ function HistoryContent() {
                       onClick={() => recipe.id && handleToggleFav(recipe.id, recipe.isFavourite)}
                       className="transition-transform active:scale-125"
                     >
-                      <Heart 
+                      <Star 
                         className={cn(
                           "h-5 w-5 transition-colors", 
-                          recipe.isFavourite ? "fill-red-500 text-red-500" : "text-muted-foreground/40 hover:text-red-400"
+                          recipe.isFavourite ? "fill-yellow-500 text-yellow-500" : "text-muted-foreground/40 hover:text-yellow-400"
                         )} 
                       />
                     </button>
