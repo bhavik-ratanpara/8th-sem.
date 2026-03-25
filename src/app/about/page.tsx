@@ -241,7 +241,7 @@ export default function AboutPage() {
               ">
                 <div className="
                   text-5xl font-bold
-                  text-muted-foreground/10
+                  text-primary/30
                   mb-4 leading-none
                 ">
                   {item.step}
@@ -432,17 +432,18 @@ export default function AboutPage() {
           <div className="
             inline-flex flex-col
             items-center gap-6
-            p-8 rounded-2xl
+            p-10 rounded-2xl
             border border-border
             bg-background
+            shadow-sm
           ">
             <div className="
-              w-20 h-20 rounded-full 
+              w-24 h-24 rounded-full 
               bg-primary/10 text-primary 
               flex items-center justify-center 
-              text-2xl font-bold 
-              border-2 border-primary/20
-              shadow-sm
+              text-3xl font-bold 
+              border-4 border-background
+              shadow-lg
             ">
               BR
             </div>
