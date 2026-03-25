@@ -5,7 +5,9 @@ import { useAuth, useFirestore, useUser } from '@/firebase';
 import { 
   signInWithEmailAndPassword, 
   GoogleAuthProvider, 
-  signInWithPopup
+  signInWithPopup,
+  linkWithCredential,
+  fetchSignInMethodsForEmail
 } from 'firebase/auth';
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
@@ -55,7 +57,6 @@ export default function LoginPage() {
     }
   };
 
-  // Automatically redirect if user is already logged in
   useEffect(() => {
     if (!isUserLoading && user) {
       router.push('/');
@@ -95,12 +96,81 @@ export default function LoginPage() {
     });
     
     try {
+      console.log('Starting Google Sign In...')
       const result = await signInWithPopup(auth, provider);
+      console.log('Google Sign In successful')
       if (result.user) {
         await syncUserToFirestore(result.user);
         router.push('/');
       }
     } catch (error: any) {
+      console.log('Google sign in error:', error)
+      console.log('Error code:', error.code)
+      console.log('Error customData:', error.customData)
+      console.log('Error email:', error.customData?.email)
+      console.log('Full error object:', JSON.stringify(error, null, 2))
+
+      if (error.code === 'auth/account-exists-with-different-credential') {
+        console.log('Account conflict detected!')
+        try {
+          const email = error.customData?.email
+          if (!email) {
+            toast({
+              title: 'Login failed',
+              description: 'Could not get email from Google.',
+              variant: 'destructive',
+            })
+            return
+          }
+
+          const methods = await fetchSignInMethodsForEmail(auth, email)
+
+          if (methods.includes('password')) {
+            const password = window.prompt(
+              `This email is registered with a password.\n\nEnter your password to link both login methods:\n(${email})`
+            )
+
+            if (!password) return
+
+            const emailResult = await signInWithEmailAndPassword(auth, email, password)
+            const googleCredential = GoogleAuthProvider.credentialFromError(error)
+
+            if (!googleCredential) return
+
+            await linkWithCredential(emailResult.user, googleCredential)
+            await syncUserToFirestore(emailResult.user);
+
+            toast({
+              title: 'Accounts linked successfully',
+              description: 'You can now login with both Google and email+password.',
+            })
+
+            router.push('/');
+            return
+          }
+        } catch (linkError: any) {
+          console.error('Linking error:', linkError)
+          if (linkError.code === 'auth/wrong-password') {
+            toast({
+              title: 'Wrong password',
+              description: 'Incorrect password. Could not link accounts.',
+              variant: 'destructive',
+            })
+            return
+          }
+          toast({
+            title: 'Could not link accounts',
+            description: linkError.message,
+            variant: 'destructive',
+          })
+        }
+        return
+      }
+
+      if (error.code === 'auth/popup-closed-by-user') {
+        return
+      }
+
       toast({
         variant: "destructive",
         title: "Error",
@@ -172,6 +242,60 @@ export default function LoginPage() {
             </div>
           </div>
           
+          <div style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '8px',
+            padding: '10px 12px',
+            borderRadius: '8px',
+            background: 'hsl(var(--muted))',
+            border: '0.5px solid hsl(var(--border))',
+            marginBottom: '12px',
+          }}>
+            <div style={{ position: 'relative' }}>
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                style={{
+                  color: 'hsl(var(--muted-foreground))',
+                  flexShrink: 0,
+                  marginTop: '1px',
+                  cursor: 'pointer',
+                }}
+              >
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 8v4M12 16h.01"/>
+              </svg>
+            </div>
+            <p style={{
+              fontSize: '11px',
+              color: 'hsl(var(--muted-foreground))',
+              lineHeight: '1.6',
+              margin: 0,
+            }}>
+              If you registered with email and password,
+              please use that to login — not Google.
+              {' '}
+              <span style={{
+                display: 'block',
+                marginTop: '4px',
+                fontSize: '10px',
+                color: 'hsl(var(--muted-foreground))',
+                opacity: 0.8,
+              }}>
+                Note: If you sign in with Google using 
+                an email already registered with a password,
+                your account will switch to Google login
+                and you will no longer be able to login
+                with your email and password.
+              </span>
+            </p>
+          </div>
+
           <Button variant="outline" type="button" disabled={isLoading} onClick={onGoogleLogin} className="w-full h-10">
             {isLoading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

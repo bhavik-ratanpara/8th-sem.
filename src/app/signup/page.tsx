@@ -59,7 +59,6 @@ export default function SignupPage() {
     }
   };
 
-  // Redirect if already logged in
   useEffect(() => {
     if (!isUserLoading && user) {
       router.push('/');
@@ -201,6 +200,56 @@ export default function SignupPage() {
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-card px-2 text-secondary-foreground">Or continue with</span>
             </div>
+          </div>
+
+          <div style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '8px',
+            padding: '10px 12px',
+            borderRadius: '8px',
+            background: 'hsl(var(--muted))',
+            border: '0.5px solid hsl(var(--border))',
+            marginBottom: '12px',
+          }}>
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              style={{
+                color: 'hsl(var(--muted-foreground))',
+                flexShrink: 0,
+                marginTop: '1px',
+              }}
+            >
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 8v4M12 16h.01"/>
+            </svg>
+            <p style={{
+              fontSize: '11px',
+              color: 'hsl(var(--muted-foreground))',
+              lineHeight: '1.6',
+              margin: 0,
+            }}>
+              Choose one login method and stick with it.
+              {' '}
+              <span style={{
+                display: 'block',
+                marginTop: '4px',
+                fontSize: '10px',
+                color: 'hsl(var(--muted-foreground))',
+                opacity: 0.8,
+              }}>
+                If you sign up with Google, always use
+                Google to login. If you sign up with
+                email and password, always use email
+                and password. Mixing both may cause
+                login issues.
+              </span>
+            </p>
           </div>
 
           <Button variant="outline" type="button" disabled={isLoading} onClick={onGoogleLogin} className="w-full h-10">
