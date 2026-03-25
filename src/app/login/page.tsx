@@ -103,8 +103,17 @@ export default function LoginPage() {
         router.push('/');
       }
     } catch (error: any) {
+      console.log('Google sign in error:', error);
+      console.log('Error code:', error.code);
+      console.log('Error customData:', error.customData);
+      console.log('Error email:', error.customData?.email);
+      console.log('Full error object:', JSON.stringify(error, null, 2));
+
       // Account exists with different credential
       if (error.code === 'auth/account-exists-with-different-credential') {
+        console.log('Account conflict detected!');
+        console.log('Email from error:', error.customData?.email);
+        
         try {
           // Get the email from the error
           const email = error.customData?.email;
