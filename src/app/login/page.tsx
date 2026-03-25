@@ -104,78 +104,92 @@ export default function LoginPage() {
         router.push('/');
       }
     } catch (error: any) {
-      console.log('Google sign in error:', error)
-      console.log('Error code:', error.code)
-      console.log('Error customData:', error.customData)
-      console.log('Error email:', error.customData?.email)
-      console.log('Full error object:', JSON.stringify(error, null, 2))
+      console.log('Google sign in error:', error);
+      console.log('Error code:', error.code);
+      console.log('Error customData:', error.customData);
+      console.log('Error email:', error.customData?.email);
+      console.log('Full error object:', JSON.stringify(error, null, 2));
 
+      // Account exists with different credential
       if (error.code === 'auth/account-exists-with-different-credential') {
-        console.log('Account conflict detected!')
+        console.log('Account conflict detected!');
+        
         try {
-          const email = error.customData?.email
+          // Get the email from the error
+          const email = error.customData?.email;
+
           if (!email) {
             toast({
               title: 'Login failed',
               description: 'Could not get email from Google.',
               variant: 'destructive',
-            })
-            return
+            });
+            return;
           }
 
-          const methods = await fetchSignInMethodsForEmail(auth, email)
+          // Check what methods this email uses
+          const methods = await fetchSignInMethodsForEmail(auth, email);
 
+          // If email+pass method exists
           if (methods.includes('password')) {
+            // Ask user for their password to verify identity before linking
             const password = window.prompt(
               `This email is registered with a password.\n\nEnter your password to link both login methods:\n(${email})`
-            )
+            );
 
-            if (!password) return
+            if (!password) {
+              setIsLoading(false);
+              return;
+            }
 
-            const emailResult = await signInWithEmailAndPassword(auth, email, password)
-            const googleCredential = GoogleAuthProvider.credentialFromError(error)
+            // Sign in with email+pass first
+            const emailResult = await signInWithEmailAndPassword(auth, email, password);
 
-            if (!googleCredential) return
+            // Get Google credential from error
+            const googleCredential = GoogleAuthProvider.credentialFromError(error);
 
-            await linkWithCredential(emailResult.user, googleCredential)
-            await syncUserToFirestore(emailResult.user);
+            if (!googleCredential) {
+              setIsLoading(false);
+              return;
+            }
 
+            // Link Google to existing account
+            await linkWithCredential(emailResult.user, googleCredential);
+
+            // Success — both methods now linked
             toast({
               title: 'Accounts linked successfully',
               description: 'You can now login with both Google and email+password.',
-            })
+            });
 
+            await syncUserToFirestore(emailResult.user);
             router.push('/');
-            return
+            return;
           }
         } catch (linkError: any) {
-          console.error('Linking error:', linkError)
+          console.error('Linking error:', linkError);
           if (linkError.code === 'auth/wrong-password') {
             toast({
               title: 'Wrong password',
               description: 'Incorrect password. Could not link accounts.',
               variant: 'destructive',
-            })
-            return
+            });
+          } else {
+            toast({
+              title: 'Could not link accounts',
+              description: linkError.message,
+              variant: 'destructive',
+            });
           }
-          toast({
-            title: 'Could not link accounts',
-            description: linkError.message,
-            variant: 'destructive',
-          })
         }
-        return
+      } else if (error.code !== 'auth/popup-closed-by-user') {
+        // Any other error (ignore popup closed)
+        toast({
+          title: 'Google sign in failed',
+          description: error.message,
+          variant: 'destructive',
+        });
       }
-
-      if (error.code === 'auth/popup-closed-by-user') {
-        return
-      }
-
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
     } finally {
       setIsLoading(false);
     }
