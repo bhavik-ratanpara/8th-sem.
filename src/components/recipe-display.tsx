@@ -167,7 +167,7 @@ export function RecipeDisplay({ recipe, setRecipe, isLoading, originalInput, onR
 
   if (!displayedRecipe) {
     return (
-       <div className="text-center py-24 border border-border border-dashed rounded-lg bg-secondary/10">
+       <div className="text-center py-16 border border-border border-dashed rounded-lg bg-secondary/10">
         <h3 className="text-sm font-medium text-secondary-foreground">Your recipe will appear here</h3>
       </div>
     );

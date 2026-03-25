@@ -112,14 +112,14 @@ export default function Home() {
       {/* Typewriter Hero Section */}
       <TypewriterHero />
 
-      <main className="max-content px-4 pt-6 pb-16 space-y-20">
+      <main className="max-content px-4 pt-6 pb-8 space-y-12">
         {isUserLoading ? (
           <div className="space-y-12">
             <Skeleton className="h-48 w-full rounded-lg" />
             <Skeleton className="h-96 w-full rounded-lg" />
           </div>
         ) : user ? (
-          <div className="space-y-20">
+          <div className="space-y-12">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
               <div className="lg:col-span-4">
                 <DishSuggester onSuggestionSelect={handleSuggestionSelect} />

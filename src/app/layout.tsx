@@ -45,7 +45,7 @@ export default function RootLayout({
           <Header />
           <div className="pt-16 min-h-screen flex flex-col">
             <main className="flex-1">{children}</main>
-            <footer className="border-t border-border bg-background py-16 mt-auto">
+            <footer className="border-t border-border bg-background py-10 mt-auto">
               <div className="max-w-6xl mx-auto px-6">
                 
                 {/* MOBILE FOOTER — only on small screens */}
