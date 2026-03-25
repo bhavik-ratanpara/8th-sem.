@@ -7,7 +7,7 @@ import { getSavedRecipes, deleteRecipe, toggleFavourite, shareRecipePublic, unsh
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Star, Trash2, Search, BookMarked, Filter, ArrowRight, ArrowLeft, Globe, Loader2, Share2, X } from 'lucide-react';
+import { Star, Trash2, Search, BookMarked, Filter, ArrowRight, ArrowLeft, Globe, Loader2, Share2, X, ArrowUpDown, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
@@ -25,6 +25,8 @@ function HistoryContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [dietFilter, setDietFilter] = useState<'All' | 'Vegetarian' | 'Non-Vegetarian'>('All');
+  const [sortBy, setSortBy] = useState<'newest' | 'oldest'>('newest');
+  const [isSortOpen, setIsSortOpen] = useState(false);
 
   // Share prompt states
   const [showSharePrompt, setShowSharePrompt] = useState(false);
@@ -58,7 +60,7 @@ function HistoryContent() {
   }, [user, searchParams]);
 
   useEffect(() => {
-    let result = recipes;
+    let result = [...recipes];
     
     if (dietFilter !== 'All') {
       result = result.filter(r => r.dietType === dietFilter);
@@ -75,13 +77,20 @@ function HistoryContent() {
       result = result.filter(r => r.isFavourite);
     }
 
+    // Apply Sorting
+    result.sort((a, b) => {
+      const dateA = a.generatedAt?.seconds || 0;
+      const dateB = b.generatedAt?.seconds || 0;
+      return sortBy === 'newest' ? dateB - dateA : dateA - dateB;
+    });
+
     setFilteredRecipes(result);
-  }, [recipes, dietFilter, searchQuery, searchParams]);
+  }, [recipes, dietFilter, searchQuery, searchParams, sortBy]);
 
   // Reset page on filter change
   useEffect(() => {
     setCurrentPage(1);
-  }, [dietFilter, searchQuery, searchParams]);
+  }, [dietFilter, searchQuery, searchParams, sortBy]);
 
   const totalPages = Math.ceil(filteredRecipes.length / RECIPES_PER_PAGE);
   const paginatedRecipes = filteredRecipes.slice(
@@ -371,6 +380,46 @@ function HistoryContent() {
                 {filter}
               </button>
             ))}
+
+            <div className="w-[1px] h-4 bg-border mx-1 flex-shrink-0" />
+
+            <div className="relative">
+              <button
+                onClick={() => setIsSortOpen(!isSortOpen)}
+                style={filterButtonStyle(sortBy !== 'newest')}
+                className="flex items-center gap-1.5"
+              >
+                <ArrowUpDown className="h-3 w-3" />
+                Sort
+                <ChevronDown className={cn("h-3 w-3 transition-transform", isSortOpen && "rotate-180")} />
+              </button>
+
+              {isSortOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setIsSortOpen(false)} />
+                  <div className="absolute top-full left-0 mt-1.5 bg-card border border-border rounded-lg shadow-xl z-50 min-w-[140px] overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+                    <button
+                      onClick={() => { setSortBy('newest'); setIsSortOpen(false); }}
+                      className={cn(
+                        "w-full text-left px-3 py-2 text-[13px] transition-colors",
+                        sortBy === 'newest' ? "bg-primary/5 text-primary font-semibold" : "text-foreground hover:bg-secondary/50"
+                      )}
+                    >
+                      Newest First
+                    </button>
+                    <button
+                      onClick={() => { setSortBy('oldest'); setIsSortOpen(false); }}
+                      className={cn(
+                        "w-full text-left px-3 py-2 text-[13px] transition-colors",
+                        sortBy === 'oldest' ? "bg-primary/5 text-primary font-semibold" : "text-foreground hover:bg-secondary/50"
+                      )}
+                    >
+                      Oldest First
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
 
           <div className="relative w-full lg:w-[320px]">
