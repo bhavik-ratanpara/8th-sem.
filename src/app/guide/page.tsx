@@ -122,7 +122,7 @@ export default function GuidePage() {
   return (
     <div className="min-h-screen bg-background">
       {/* ── HERO SECTION ── */}
-      <section className="pt-12 pb-8 md:pt-24 md:pb-16 px-6 border-b border-border">
+      <section className="pt-12 pb-8 md:pt-16 md:pb-12 px-6 border-b border-border">
         <div className="max-w-4xl mx-auto text-center">
           <Link 
             href="/"
@@ -141,13 +141,13 @@ export default function GuidePage() {
       </section>
 
       {/* ── GUIDE STEPS ── */}
-      <section className="py-8 md:py-16 px-6">
-        <div className="max-w-6xl mx-auto space-y-12 md:space-y-24">
+      <section className="py-8 md:py-12 px-6">
+        <div className="max-w-6xl mx-auto space-y-12 md:space-y-16">
           {steps.map((step, index) => {
             const isOdd = (index + 1) % 2 !== 0;
             return (
               <div key={step.step} className="group">
-                <div className={`flex flex-col ${isOdd ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-6 md:gap-20`}>
+                <div className={`flex flex-col ${isOdd ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-6 md:gap-12`}>
                   {/* IMAGE SIDE */}
                   <div className="w-full md:w-1/2">
                     <div
@@ -201,7 +201,7 @@ export default function GuidePage() {
                   </div>
 
                   {/* TEXT SIDE */}
-                  <div className="w-full md:w-1/2 space-y-4 md:space-y-6">
+                  <div className="w-full md:w-1/2 space-y-4 md:space-y-5">
                     <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] md:text-xs font-bold tracking-widest uppercase">
                       Step {step.step}
                     </div>
@@ -227,7 +227,7 @@ export default function GuidePage() {
                   </div>
                 </div>
                 {index < steps.length - 1 && (
-                  <div className="h-px w-full bg-border mt-12 md:mt-24" />
+                  <div className="h-px w-full bg-border mt-12 md:mt-16" />
                 )}
               </div>
             );
@@ -236,7 +236,7 @@ export default function GuidePage() {
       </section>
 
       {/* ── FINAL CTA SECTION ── */}
-      <section className="py-16 md:py-24 px-6 bg-secondary/10 border-t border-border">
+      <section className="py-12 md:py-16 px-6 bg-secondary/10 border-t border-border">
         <div className="max-w-3xl mx-auto text-center space-y-6 md:space-y-8">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-2">
             <ChefHat className="h-8 w-8 text-primary" />
