@@ -4,153 +4,216 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { 
   ArrowLeft, 
-  ChefHat, 
-  Sparkles, 
-  BookMarked, 
-  Youtube, 
-  Search,
-  MessageSquare,
-  Zap,
-  Globe
+  ChefHat,
+  ChevronRight
 } from 'lucide-react';
-import { FoodDecorations } from '@/components/FoodDecorations';
 import { Button } from '@/components/ui/button';
 
 export default function GuidePage() {
   const steps = [
     {
-      title: "Step 1: Define Your Dish",
-      description: "Start by entering the name of the dish you want to cook. You can specify the number of servings, preferred cuisine (e.g., Italian, Indian), and your dietary preference (Vegetarian or Non-Vegetarian).",
-      icon: ChefHat,
-      hint: "recipe form",
-      image: "https://picsum.photos/seed/guide1/800/500",
-      details: [
-        "Select your preferred language for the recipe.",
-        "Use the 'AI Recipe Assistant' on the left for creative cravings or mood-based suggestions.",
-        "Exact serving calculations are handled automatically by the AI."
+      step: 1,
+      title: "Getting Started — Sign Up",
+      description: "Click the 'Sign Up' button in the top-right corner of the navbar to create your account. You can register using your Email and Password, or continue with Google OAuth. If you already have an account, click 'Log In' at the bottom of the form. Note: Choose one login method and stick with it to avoid any login issues.",
+      image: "/guide/step1.png",
+      highlights: [
+        "Sign Up button located in top-right corner",
+        "Multiple registration options (Email or Google)",
+        "Easy access to Log In for existing users"
       ]
     },
     {
-      title: "Step 2: AI Generation & Customization",
-      description: "Our Gemini-powered AI creates a professional recipe with exact quantities. Not happy with an ingredient? Remove it and click 'Update Instructions' to let the AI rewrite the steps instantly.",
-      icon: Sparkles,
-      hint: "ai generation",
-      image: "https://picsum.photos/seed/guide2/800/500",
-      details: [
-        "Modify the recipe further by typing requests like 'make it spicy' or 'no oven' in the modification box.",
-        "Adjust servings on the fly to see quantities scale precisely.",
-        "High-performance markdown formatting ensures easy reading."
+      step: 2,
+      title: "Create Your Account",
+      description: "Fill in your Full Name, Email Address, and Password to register. Click 'Sign Up' to create an Email + Password account. Or click the 'Google' button at the bottom to sign in with Google OAuth. If you already have an account, click the 'Log In' link at the bottom. Important: The warning box reminds you to choose one login method and always use the same one.",
+      image: "/guide/step2.png",
+      highlights: [
+        "Option 1: Standard Email + Password registration",
+        "Option 2: Fast Google OAuth sign-in",
+        "Account integrity warning for consistent login"
       ]
     },
     {
-      title: "Step 3: Save & Share",
-      description: "Once you have the perfect recipe, save it to your private collection. From there, you can mark it as a favourite or share it with the Cooking Lab community on the Explore page.",
-      icon: BookMarked,
-      hint: "recipe history",
-      image: "https://picsum.photos/seed/guide3/800/500",
-      details: [
-        "Access 'My Recipes' to view your full history of culinary creations.",
-        "Publicly shared recipes can be 'Liked' by other members of the community.",
-        "Directly share recipe links with friends and family."
+      step: 3,
+      title: "Home Page — Navigation & Profile Menu",
+      description: "Once logged in, you will see the full navigation bar at the top with links to Home, Explore, My Recipes, Favourites, Guide, and About. Click your profile avatar (letter icon) in the top-right corner to open the Profile Menu, which works on both Desktop and Mobile. From the profile menu you can navigate to any page or Sign Out.",
+      image: "/guide/step3.png",
+      highlights: [
+        "Consolidated Navigation Bar for quick access",
+        "Interactive Profile Menu with all navigation options",
+        "Cross-device compatible interface"
       ]
     },
     {
-      title: "Step 4: Master the Technique",
-      description: "Need a visual guide? Use our integrated YouTube search in the header to find curated video tutorials for the exact dish you are making.",
-      icon: Youtube,
-      hint: "video search",
-      image: "https://picsum.photos/seed/guide4/800/500",
-      details: [
-        "Search videos directly from the navigation bar while you cook.",
-        "Videos are filtered to show high-relevance 'how-to' guides.",
-        "Seamlessly switch between text instructions and video tutorials."
+      step: 4,
+      title: "Search Cooking Videos from YouTube",
+      description: "Use the Search Bar in the top-right of the navbar to search for any food item. As you type, a dropdown will appear showing relevant cooking tutorial videos fetched live from YouTube. Click any video to watch it directly. This feature lets you find cooking guidance without leaving the app.",
+      image: "/guide/step4.png",
+      highlights: [
+        "Live YouTube search integration",
+        "Contextual video tutorials for any dish",
+        "Seamless in-app preview results"
+      ]
+    },
+    {
+      step: 5,
+      title: "Generate a Recipe with AI",
+      description: "On the Home page, you will find two tools side by side. The AI Recipe Assistant (left) — type ingredients or cravings to get recipe name suggestions instantly. The Create Your Recipe form (right) — fill in Recipe Name, Number of Servings, Cuisine/Region, Language, and Diet Type (Vegetarian or Non-Vegetarian), then click 'Generate Recipe' to let AI create a complete recipe for you.",
+      image: "/guide/step5.png",
+      highlights: [
+        "AI Recipe Assistant for creative inspiration",
+        "Structured generation form for precise needs",
+        "Custom servings, language, and diet controls"
+      ]
+    },
+    {
+      step: 6,
+      title: "View, Save & Customize Your Recipe",
+      description: "After generating a recipe, you can view the complete ingredients list and step-by-step cooking instructions. Click 'Save Recipe' to store it in your personal My Recipes page so you can access it anytime. Click 'View My Recipes' to see all your saved recipes. Use the 'Make Changes' box at the bottom to customize the recipe instantly.",
+      image: "/guide/step6.png",
+      highlights: [
+        "Permanent storage with 'Save Recipe' button",
+        "Real-time customization via 'Make Changes' box",
+        "Instant instruction regeneration"
+      ]
+    },
+    {
+      step: 7,
+      title: "My Recipes — Manage Your Collection",
+      description: "The My Recipes page shows all recipes you have saved. Use the filter buttons (All, Vegetarian, Non-Vegetarian) and Sort options (Newest First, Oldest First) to organize your recipes. Use the search bar to find a specific recipe. Click 'View Recipe' to open any recipe. Click 'Share to Public' to make your recipe visible to all users.",
+      image: "/guide/step7.png",
+      highlights: [
+        "Comprehensive filter and sort system",
+        "Recipe search functionality",
+        "Public sharing toggle for community contribution"
+      ]
+    },
+    {
+      step: 8,
+      title: "Explore Community Recipes",
+      description: "The Explore page shows all recipes shared publicly by all users in the community. Use filters like Veg, Non-Veg, Shared by Me, Most Liked, and Language to find recipes. Click 'Save' on any recipe card to add it to your My Recipes collection — the button will change to 'Saved ✓' once done.",
+      image: "/guide/step8.png",
+      highlights: [
+        "Discover trending and most-liked recipes",
+        "Community language and diet filters",
+        "Instant one-click save to personal cookbook"
+      ]
+    },
+    {
+      step: 9,
+      title: "Share Recipe Link with Anyone",
+      description: "After a recipe is shared to the Explore section, you can share its direct link with anyone outside the app. Click the Share icon (top-right of the recipe card) to open the system share dialog. You can copy the link or share it directly via WhatsApp, Gmail, Facebook, Twitter, Discord, and more.",
+      image: "/guide/step9.png",
+      highlights: [
+        "External sharing via system share dialog",
+        "Support for all major social platforms",
+        "Direct public URL generation"
       ]
     }
   ];
 
   return (
-    <div className="relative min-h-screen bg-background overflow-hidden">
-      <FoodDecorations />
-      
-      <div className="max-content px-6 py-12 relative z-10">
-        <Link 
-          href="/"
-          className="flex items-center gap-2 text-primary font-bold text-sm mb-10 hover:translate-x-[-4px] transition-transform w-fit"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Home
-        </Link>
-
-        <div className="max-w-3xl mb-16">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-foreground mb-6" style={{ fontFamily: "Inter, sans-serif" }}>
-            How to use <span className="text-primary">Cooking Lab</span>
+    <div className="min-h-screen bg-background">
+      {/* ── HERO SECTION ── */}
+      <section className="pt-24 pb-16 px-6 border-b border-border">
+        <div className="max-w-4xl mx-auto text-center">
+          <Link 
+            href="/"
+            className="inline-flex items-center gap-2 text-primary font-bold text-sm mb-8 hover:translate-x-[-4px] transition-transform"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Home
+          </Link>
+          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-foreground mb-6" style={{ fontFamily: "Inter, sans-serif" }}>
+            App Guide
           </h1>
-          <p className="text-lg text-muted-foreground leading-relaxed">
-            Follow this visual guide to master our AI-powered culinary platform and start creating professional-grade recipes in seconds.
+          <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+            Learn how to use <span className="text-primary font-semibold">Cooking Lab</span> step by step and master our AI-powered culinary platform.
           </p>
         </div>
+      </section>
 
-        <div className="space-y-32">
-          {steps.map((step, index) => (
-            <div key={index} className={`flex flex-col ${index % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-12 items-center`}>
-              <div className="flex-1 space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                    <step.icon className="h-5 w-5 text-primary" />
+      {/* ── GUIDE STEPS ── */}
+      <section className="py-20 px-6">
+        <div className="max-w-6xl mx-auto space-y-32">
+          {steps.map((step, index) => {
+            const isOdd = (index + 1) % 2 !== 0;
+            return (
+              <div key={step.step} className="space-y-32">
+                <div className={`flex flex-col ${isOdd ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-12 lg:gap-20`}>
+                  {/* IMAGE SIDE */}
+                  <div className="w-full md:w-1/2">
+                    <div className="relative group">
+                      <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-transparent rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                      <Image 
+                        src={step.image} 
+                        alt={step.title}
+                        width={800}
+                        height={500}
+                        className="relative rounded-xl w-full object-cover shadow-2xl border border-border"
+                      />
+                    </div>
                   </div>
-                  <h2 className="text-2xl font-bold text-foreground">{step.title}</h2>
-                </div>
-                
-                <p className="text-muted-foreground text-lg leading-relaxed">
-                  {step.description}
-                </p>
 
-                <ul className="space-y-3">
-                  {step.details.map((detail, dIndex) => (
-                    <li key={dIndex} className="flex items-start gap-3">
-                      <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
-                      <span className="text-sm text-muted-foreground">{detail}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="flex-1 w-full">
-                <div className="relative rounded-2xl overflow-hidden border border-border shadow-2xl group">
-                  <div className="absolute inset-0 bg-primary/5 group-hover:bg-transparent transition-colors z-10" />
-                  <Image 
-                    src={step.image} 
-                    alt={step.title}
-                    width={800}
-                    height={500}
-                    data-ai-hint={step.hint}
-                    className="w-full h-auto object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-500"
-                  />
-                  <div className="absolute top-4 left-4 z-20 bg-background/90 backdrop-blur-sm px-3 py-1 rounded-full border border-border text-[10px] font-bold uppercase tracking-widest text-primary">
-                    Instructional Preview
+                  {/* TEXT SIDE */}
+                  <div className="w-full md:w-1/2 space-y-6">
+                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase">
+                      Step {step.step}
+                    </div>
+                    <h2 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">
+                      {step.title}
+                    </h2>
+                    <p className="text-lg text-muted-foreground leading-relaxed">
+                      {step.description}
+                    </p>
+                    <div className="space-y-3 pt-2">
+                      <p className="text-sm font-semibold text-foreground uppercase tracking-wider">Key Highlights:</p>
+                      <ul className="space-y-3">
+                        {step.highlights.map((highlight, hIndex) => (
+                          <li key={hIndex} className="flex items-start gap-3 text-muted-foreground text-sm">
+                            <div className="mt-1 flex-shrink-0">
+                              <div className="h-4 w-4 rounded-full bg-primary/20 flex items-center justify-center">
+                                <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                              </div>
+                            </div>
+                            {highlight}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
+                {index < steps.length - 1 && (
+                  <div className="h-px w-full bg-gradient-to-r from-transparent via-border to-transparent" />
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
+      </section>
 
-        {/* FAQ / Final CTA */}
-        <div className="mt-40 mb-20 text-center py-20 bg-secondary/20 rounded-3xl border border-border">
-          <h2 className="text-3xl font-bold mb-4">Ready to start cooking?</h2>
-          <p className="text-muted-foreground mb-8 max-w-lg mx-auto px-4">
-            Now that you know how it works, why not try generating your first intelligent recipe?
+      {/* ── FINAL CTA SECTION ── */}
+      <section className="py-24 px-6 bg-secondary/10 border-t border-border">
+        <div className="max-w-3xl mx-auto text-center space-y-8">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-4">
+            <ChefHat className="h-10 w-10 text-primary" />
+          </div>
+          <h2 className="text-4xl font-bold text-foreground tracking-tight">
+            You're all set! 🎉
+          </h2>
+          <p className="text-xl text-muted-foreground leading-relaxed">
+            You now know everything about Cooking Lab. Start generating your first AI recipe today and transform your cooking experience.
           </p>
-          <div className="flex justify-center gap-4">
-            <Button asChild size="lg" className="px-10 h-12 rounded-xl">
-              <Link href="/">Try it Now</Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="px-10 h-12 rounded-xl">
-              <Link href="/explore">Browse Community</Link>
+          <div className="pt-4">
+            <Button asChild size="lg" className="h-14 px-10 rounded-xl text-lg font-bold shadow-lg shadow-primary/20">
+              <Link href="/" className="flex items-center gap-2">
+                Generate a Recipe
+                <ChevronRight className="h-5 w-5" />
+              </Link>
             </Button>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
